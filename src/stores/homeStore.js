@@ -2,7 +2,7 @@
 import { create } from "zustand";
 
 const HOME_ENDPOINT =
-  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/events";
+  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/home";
 
 const useUniversityStore = create((set, get) => ({
   // State variables for different data sections
