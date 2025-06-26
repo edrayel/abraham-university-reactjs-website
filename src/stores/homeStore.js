@@ -6,136 +6,208 @@ const HOME_ENDPOINT =
 
 const useUniversityStore = create((set, get) => ({
   // State variables for different data sections
-  heroSlides: [],
+  hero: null,
+  statistics: [],
+  aboutFeatures: [],
   featuredPrograms: [],
   upcomingEvents: [],
   latestNews: [],
-  stats: [],
+  timestamp: null,
+  cacheDuration: null,
+  
+  // Loading state
+  isLoading: false,
+  
+  // Error state
+  error: null,
 
-  // Loading states
-  isLoadingAll: false,
-
-  // Error states
-  generalError: null,
-
-  // Fetch all data at once
+  // Fetch all data
   fetchAllData: async () => {
-    set({ isLoadingAll: true, generalError: null });
-
+    set({ isLoading: true, error: null });
+    
     try {
       const response = await fetch(HOME_ENDPOINT);
-
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      
       const data = await response.json();
-
+      
       set({
-        heroSlides: data.hero_slides || [],
+        hero: data.hero || null,
+        statistics: data.statistics || [],
+        aboutFeatures: data.about_features || [],
         featuredPrograms: data.featured_programs || [],
         upcomingEvents: data.upcoming_events || [],
         latestNews: data.latest_news || [],
-        stats: data.stats || [],
-        isLoadingAll: false,
-        generalError: null,
+        timestamp: data.timestamp || null,
+        cacheDuration: data.cache_duration || null,
+        isLoading: false,
+        error: null
       });
-
+      
       return data;
     } catch (error) {
       set({
-        isLoadingAll: false,
-        generalError: error.message,
+        isLoading: false,
+        error: error.message
       });
       throw error;
     }
   },
 
-  // Manual setters for individual sections (if you need to update from cached data or other sources)
-  setHeroSlides: (slides) => set({ heroSlides: slides }),
+  // Manual setters for individual sections
+  setHero: (hero) => set({ hero }),
+  setStatistics: (statistics) => set({ statistics }),
+  setAboutFeatures: (features) => set({ aboutFeatures: features }),
   setFeaturedPrograms: (programs) => set({ featuredPrograms: programs }),
   setUpcomingEvents: (events) => set({ upcomingEvents: events }),
   setLatestNews: (news) => set({ latestNews: news }),
-  setStats: (stats) => set({ stats: stats }),
+  setTimestamp: (timestamp) => set({ timestamp }),
+  setCacheDuration: (duration) => set({ cacheDuration: duration }),
 
   // Utility methods
   clearAllData: () => {
     set({
-      heroSlides: [],
+      hero: null,
+      statistics: [],
+      aboutFeatures: [],
       featuredPrograms: [],
       upcomingEvents: [],
       latestNews: [],
-      stats: [],
-      generalError: null,
+      timestamp: null,
+      cacheDuration: null,
+      error: null
     });
   },
 
-  clearErrors: () => {
-    set({
-      generalError: null,
-    });
+  clearError: () => {
+    set({ error: null });
   },
 
   // Getters for computed values
   getFeaturedEvents: () => {
     const { upcomingEvents } = get();
-    return upcomingEvents.filter((event) => event.featured_event);
+    return upcomingEvents.filter(event => event.featured_event);
   },
 
   getProgramsByCategory: (categorySlug) => {
     const { featuredPrograms } = get();
-    return featuredPrograms.filter((program) =>
-      program.categories?.some((cat) => cat.slug === categorySlug)
+    return featuredPrograms.filter(program =>
+      program.categories?.some(cat => cat.slug === categorySlug)
     );
   },
 
   getEventsByCategory: (categorySlug) => {
     const { upcomingEvents } = get();
-    return upcomingEvents.filter((event) =>
-      event.categories?.some((cat) => cat.slug === categorySlug)
+    return upcomingEvents.filter(event =>
+      event.categories?.some(cat => cat.slug === categorySlug)
     );
   },
 
-  // Check if any data is loading
-  isLoading: () => {
-    const state = get();
-    return state.isLoadingAll;
+  getStatisticByLabel: (label) => {
+    const { statistics } = get();
+    return statistics.find(stat => stat.label.toLowerCase() === label.toLowerCase());
   },
+
+  getFeatureByTitle: (title) => {
+    const { aboutFeatures } = get();
+    return aboutFeatures.find(feature => 
+      feature.title.toLowerCase().includes(title.toLowerCase())
+    );
+  },
+
+  // Cache management utilities
+  isCacheExpired: () => {
+    const { timestamp, cacheDuration } = get();
+    if (!timestamp || !cacheDuration) return true;
+    
+    const now = Math.floor(Date.now() / 1000);
+    return (now - timestamp) > cacheDuration;
+  },
+
+  getRemainingCacheTime: () => {
+    const { timestamp, cacheDuration } = get();
+    if (!timestamp || !cacheDuration) return 0;
+    
+    const now = Math.floor(Date.now() / 1000);
+    const elapsed = now - timestamp;
+    return Math.max(0, cacheDuration - elapsed);
+  },
+
+  // Refresh data if cache is expired
+  refreshIfExpired: async (apiUrl) => {
+    const { isCacheExpired, fetchAllData } = get();
+    
+    if (isCacheExpired()) {
+      return await fetchAllData(apiUrl);
+    }
+    
+    return null; // Data is still fresh
+  }
 }));
 
 export default useUniversityStore;
 
 // Usage example:
 /*
-import useUniversityStore from './useUniversityStore';
+import useUniversityStore from './stores/universityStore';
 
 const MyComponent = () => {
   const {
-    heroSlides,
+    hero,
+    statistics,
+    aboutFeatures,
     featuredPrograms,
     upcomingEvents,
-    isLoadingAll,
-    generalError,
+    latestNews,
+    isLoading,
+    error,
     fetchAllData,
-    setHeroSlides, // For manual updates
-    getFeaturedEvents
+    isCacheExpired,
+    getStatisticByLabel
   } = useUniversityStore();
 
   useEffect(() => {
-    // Fetch all data from single endpoint
+    // Fetch all data from API
     fetchAllData('/api/university-data');
   }, []);
 
-  if (isLoadingAll) return <div>Loading...</div>;
-  if (generalError) return <div>Error: {generalError}</div>;
+  // Get specific statistic
+  const studentCount = getStatisticByLabel('Students');
 
-  const featuredEvents = getFeaturedEvents();
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      {heroSlides.map(slide => (
-        <div key={slide.id}>{slide.title}</div>
-      ))}
+      {hero && (
+        <section>
+          <h1>{hero.title}</h1>
+          <h2>{hero.subtitle}</h2>
+          <p>{hero.description}</p>
+          <a href={hero.cta_link}>{hero.cta_text}</a>
+        </section>
+      )}
+      
+      <section>
+        {statistics.map((stat, index) => (
+          <div key={index}>
+            <span>{stat.value}</span>
+            <span>{stat.label}</span>
+          </div>
+        ))}
+      </section>
+      
+      <section>
+        {aboutFeatures.map((feature, index) => (
+          <div key={index}>
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+          </div>
+        ))}
+      </section>
     </div>
   );
 };
