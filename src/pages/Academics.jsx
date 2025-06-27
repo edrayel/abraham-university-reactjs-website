@@ -13,7 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import useProgramsStore from "@/stores/programStore"; // Adjust the import path as needed
 
 const Academics = () => {
-  const { programs, categories, isLoading, error, fetchAllData } =
+  const { programs, schools, categories, isLoading, error, fetchAllData } =
     useProgramsStore();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,33 +47,33 @@ const Academics = () => {
   }));
 
   // Static schools data (unchanged, as not provided in JSON)
-  const schools = [
-    {
-      name: "School of Engineering",
-      programs: 15,
-      description:
-        "Leading innovation in technology and engineering solutions.",
-      image: "Engineering school building",
-    },
-    {
-      name: "School of Business",
-      programs: 12,
-      description: "Developing future business leaders and entrepreneurs.",
-      image: "Business school modern building",
-    },
-    {
-      name: "School of Medicine",
-      programs: 8,
-      description: "Training the next generation of healthcare professionals.",
-      image: "Medical school and hospital",
-    },
-    {
-      name: "School of Arts & Sciences",
-      programs: 25,
-      description: "Exploring human knowledge across diverse disciplines.",
-      image: "Liberal arts building with students",
-    },
-  ];
+  // const schools = [
+  //   {
+  //     name: "School of Engineering",
+  //     programs: 15,
+  //     description:
+  //       "Leading innovation in technology and engineering solutions.",
+  //     image: "Engineering school building",
+  //   },
+  //   {
+  //     name: "School of Business",
+  //     programs: 12,
+  //     description: "Developing future business leaders and entrepreneurs.",
+  //     image: "Business school modern building",
+  //   },
+  //   {
+  //     name: "School of Medicine",
+  //     programs: 8,
+  //     description: "Training the next generation of healthcare professionals.",
+  //     image: "Medical school and hospital",
+  //   },
+  //   {
+  //     name: "School of Arts & Sciences",
+  //     programs: 25,
+  //     description: "Exploring human knowledge across diverse disciplines.",
+  //     image: "Liberal arts building with students",
+  //   },
+  // ];
 
   // Filter programs based on category and search term
   const filteredPrograms = mappedPrograms.filter((program) => {
