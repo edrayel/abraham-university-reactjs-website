@@ -1,4 +1,5 @@
-import React from 'react';
+// import React, { useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion } from 'framer-motion';
 import { Users, Calendar, Home, Utensils, Dumbbell, Music, Camera, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,8 @@ import DiningSection from '@/components/campus-life/DiningSection';
 import WellnessSupport from '@/components/campus-life/WellnessSupport';
 import CampusGallery from '@/components/campus-life/CampusGallery';
 import CampusLifeCTA from '@/components/campus-life/CampusLifeCTA';
+import useCampusStore from "@/stores/useCampusStore";
+
 
 const activitiesData = [
   {
@@ -131,6 +134,15 @@ const galleryImagesData = [
 ];
 
 const CampusLife = () => {
+
+   const { housingOptions, isLoading, error, fetchAllData } = useCampusStore();
+
+   // Fetch data on component mount
+   useEffect(() => {
+     fetchAllData();
+   }, []);
+
+
   const handleJoinClick = () => {
     toast({
       title: "🚧 Student Organizations",
@@ -151,6 +163,25 @@ const CampusLife = () => {
       description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
     });
   };
+
+  
+  if (isLoading) {
+    return (
+      <section className="section-padding bg-gray-50">
+        <div className="container mx-auto px-4 text-center">
+          Loading housing options...
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="section-padding bg-gray-50">
+        <div className="container mx-auto px-4 text-center">Error: {error}</div>
+      </section>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20">
