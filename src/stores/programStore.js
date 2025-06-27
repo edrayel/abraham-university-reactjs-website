@@ -6,6 +6,7 @@ const PROGRAMS_ENDPOINT =
 const useProgramsStore = create((set, get) => ({
   // State variables for JSON response objects
   programs: [],
+  schools: [],
   categories: [],
   requirements: [],
   applicationDeadlines: [],
@@ -33,6 +34,7 @@ const useProgramsStore = create((set, get) => ({
 
       set({
         programs: data.programs || [],
+        schools: data.schools || [],
         categories: data.categories || [],
         requirements: data.requirements || [],
         applicationDeadlines: data.application_deadlines || [],
@@ -54,6 +56,7 @@ const useProgramsStore = create((set, get) => ({
 
   // Manual setters for individual sections
   setPrograms: (programs) => set({ programs }),
+  setSchools: (schools) => set({ schools }),
   setCategories: (categories) => set({ categories }),
   setRequirements: (requirements) => set({ requirements }),
   setApplicationDeadlines: (deadlines) =>
@@ -65,6 +68,7 @@ const useProgramsStore = create((set, get) => ({
   clearAllData: () => {
     set({
       programs: [],
+      schools: [],
       categories: [],
       requirements: [],
       applicationDeadlines: [],

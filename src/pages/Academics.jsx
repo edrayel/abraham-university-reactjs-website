@@ -7,14 +7,22 @@ import {
   Clock,
   ChevronRight,
   Search,
+  Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import useProgramsStore from "@/stores/programStore"; // Adjust the import path as needed
 
 const Academics = () => {
-  const { programs, schools, categories, isLoading, error, fetchAllData } =
-    useProgramsStore();
+  const {
+    programs,
+    schools,
+    categories,
+    isLoading,
+    error,
+    fetchAllData,
+    // getProgramsBySchool,
+  } = useProgramsStore();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -34,46 +42,30 @@ const Academics = () => {
 
   // Map JSON programs to component format
   const mappedPrograms = programs.map((program, index) => ({
-    id: index + 1, // Generate a unique ID
+    id: index + 1,
     title: program.name,
     category: program.category
       ? program.category.toLowerCase()
-      : "undergraduate", // Default to 'undergraduate' if empty
+      : "undergraduate",
     degree: program.degree,
     duration: program.duration,
     description: program.description,
-    image: "Placeholder image", // Placeholder, as JSON doesn't provide image
+    image: "https://images.unsplash.com/photo-1591206246224-04b4624adef4", // Use consistent image
     features: [], // Empty, as JSON doesn't provide features
   }));
 
-  // Static schools data (unchanged, as not provided in JSON)
-  // const schools = [
-  //   {
-  //     name: "School of Engineering",
-  //     programs: 15,
-  //     description:
-  //       "Leading innovation in technology and engineering solutions.",
-  //     image: "Engineering school building",
-  //   },
-  //   {
-  //     name: "School of Business",
-  //     programs: 12,
-  //     description: "Developing future business leaders and entrepreneurs.",
-  //     image: "Business school modern building",
-  //   },
-  //   {
-  //     name: "School of Medicine",
-  //     programs: 8,
-  //     description: "Training the next generation of healthcare professionals.",
-  //     image: "Medical school and hospital",
-  //   },
-  //   {
-  //     name: "School of Arts & Sciences",
-  //     programs: 25,
-  //     description: "Exploring human knowledge across diverse disciplines.",
-  //     image: "Liberal arts building with students",
-  //   },
-  // ];
+  // Map JSON schools to component format
+  const mappedSchools = schools.map((school) => ({
+    name: school.name,
+    description: school.description,
+    image:
+      school.image_url ||
+      "https://images.unsplash.com/photo-1658308910802-b71fa184aa48",
+    // programs: getProgramsBySchool(school.name).length || "Multiple Programs",
+    icon: school.icon === "building" ? Building2 : Building2, // Fallback to Building2
+    color: school.color || "#000000",
+    exploreProgramsUrl: school.explore_programs_url || "#",
+  }));
 
   // Filter programs based on category and search term
   const filteredPrograms = mappedPrograms.filter((program) => {
@@ -103,7 +95,36 @@ const Academics = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20 text-center">Loading programs...</div>
+      <div className="min-h-screen pt-20">
+        <section className="section-padding bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                Our <span className="text-gradient">Schools</span>
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Explore our diverse schools and colleges, each offering
+                specialized programs and expertise.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[...Array(4)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
+                >
+                  <div className="h-48 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-6 bg-gray-200 rounded mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
     );
   }
 
@@ -111,16 +132,44 @@ const Academics = () => {
     return <div className="min-h-screen pt-20 text-center">Error: {error}</div>;
   }
 
-  if (!mappedPrograms.length) {
+  if (!mappedPrograms.length && !mappedSchools.length) {
     return (
       <div className="min-h-screen pt-20 text-center">
-        No programs available.
+        No programs or schools available.
       </div>
     );
   }
 
   return (
     <div className="min-h-screen pt-20">
+      <style>
+        {`
+          .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+          .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+          }
+          .text-gradient {
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+          .animate-pulse {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          }
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0.5;
+            }
+          }
+        `}
+      </style>
+
       {/* Hero Section */}
       <section className="section-padding hero-gradient">
         <div className="container mx-auto px-4">
@@ -191,12 +240,20 @@ const Academics = () => {
                 transition={{ delay: index * 0.1 }}
                 className="bg-white rounded-xl shadow-lg overflow-hidden card-hover cursor-pointer"
                 onClick={handleProgramClick}
+                role="button"
+                tabIndex={0}
+                aria-label={`View details for ${program.title}`}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleProgramClick();
+                  }
+                }}
               >
                 <div className="h-48 bg-gradient-to-br from-blue-500 to-cyan-500 relative overflow-hidden">
                   <img
                     className="w-full h-full object-cover"
                     alt={program.title}
-                    src="https://images.unsplash.com/photo-1591206246224-04b4624adef4"
+                    src={program.image}
                   />
                   <div className="absolute top-4 left-4">
                     <span className="bg-white/90 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
@@ -237,7 +294,7 @@ const Academics = () => {
                         e.stopPropagation();
                         handleApplyClick();
                       }}
-                      className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
+                      className="bg-gradient-to-r from-blue-700 to-cyan-600 hover:from-blue-800 hover:to-cyan-700"
                     >
                       Apply
                     </Button>
@@ -268,7 +325,7 @@ const Academics = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {schools.map((school, index) => (
+            {mappedSchools.map((school, index) => (
               <motion.div
                 key={school.name}
                 initial={{ opacity: 0, y: 30 }}
@@ -277,16 +334,34 @@ const Academics = () => {
                 transition={{ delay: index * 0.1 }}
                 className="bg-white rounded-xl shadow-lg overflow-hidden card-hover cursor-pointer"
                 onClick={handleProgramClick}
+                role="button"
+                tabIndex={0}
+                aria-label={`Explore ${school.name}`}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleProgramClick();
+                  }
+                }}
               >
-                <div className="h-48 bg-gradient-to-br from-blue-500 to-cyan-500 relative overflow-hidden">
+                <div
+                  className="h-48 relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(to bottom right, ${school.color}, #06b6d4)`,
+                  }}
+                >
                   <img
                     className="w-full h-full object-cover"
                     alt={school.name}
-                    src="https://images.unsplash.com/photo-1658308910802-b71fa184aa48"
+                    src={school.image}
                   />
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-4 right-4 flex items-center space-x-2">
+                    <school.icon className="h-6 w-6 text-white" />
                     <span className="bg-white/90 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
-                      {school.programs} Programs
+                      {typeof school.programs === "number"
+                        ? `${school.programs} ${
+                            school.programs === 1 ? "Program" : "Programs"
+                          }`
+                        : school.programs}
                     </span>
                   </div>
                 </div>
@@ -295,10 +370,15 @@ const Academics = () => {
                     {school.name}
                   </h3>
                   <p className="text-gray-600 mb-4">{school.description}</p>
-                  <div className="flex items-center text-blue-600 font-medium">
+                  <a
+                    href={school.exploreProgramsUrl}
+                    className="flex items-center text-blue-600 font-medium hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label={`Explore programs for ${school.name}`}
+                  >
                     Explore Programs
                     <ChevronRight className="ml-1 h-4 w-4" />
-                  </div>
+                  </a>
                 </div>
               </motion.div>
             ))}
