@@ -14,8 +14,9 @@ const AdmissionsHero = ({ onApplyClick, onScheduleVisit }) => {
         >
           <h1 className="text-5xl md:text-6xl font-bold mb-6">Admissions</h1>
           <p className="text-xl text-blue-100 leading-relaxed mb-8">
-            Begin your journey at Abraham University. We're here to guide you through every step 
-            of the admissions process and help you achieve your academic goals.
+            Begin your journey at Abraham University. We're here to guide you
+            through every step of the admissions process and help you achieve
+            your academic goals.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -30,7 +31,7 @@ const AdmissionsHero = ({ onApplyClick, onScheduleVisit }) => {
               size="lg"
               variant="outline"
               onClick={onScheduleVisit}
-              className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4 rounded-full font-semibold"
+              className="border-white text-blue-600 hover:bg-white hover:text-blue-600 text-lg px-8 py-4 rounded-full font-semibold"
             >
               Schedule a Visit
             </Button>
