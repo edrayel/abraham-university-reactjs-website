@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 // import useResearchStore from "@/stores/useResearchStore";
 import useResearchStore from "@/stores/useResearchStore ";
 
-
-
 import { motion } from "framer-motion";
 import {
   Microscope,
@@ -193,11 +191,122 @@ const Research = () => {
 
   if (isLoading) {
     return (
-      <section className="section-padding bg-gray-50">
-        <div className="container mx-auto px-4 text-center">
-          Loading research areas...
-        </div>
-      </section>
+      <div className="min-h-screen pt-20 bg-gray-50">
+        {/* Hero Section Skeleton */}
+        <section className="section-padding hero-gradient">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="h-12 bg-gray-200 rounded mb-6"></div>
+              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto mb-8"></div>
+              <div className="h-10 w-48 bg-gray-200 rounded mx-auto"></div>
+            </div>
+          </div>
+        </section>
+        {/* Program Types Tabs Skeleton */}
+        <section className="py-12 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {[...Array(4)].map((_, index) => (
+                  <div
+                    key={index}
+                    className="p-6 bg-gray-200 rounded-xl animate-pulse"
+                  >
+                    <div className="h-8 w-8 bg-gray-300 rounded-full mx-auto mb-3"></div>
+                    <div className="h-6 bg-gray-300 rounded mx-auto"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Requirements and Deadlines Skeleton */}
+        <section className="section-padding bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div>
+                <div className="h-10 bg-gray-200 rounded mb-6"></div>
+                <div className="bg-white rounded-xl shadow-lg p-6 animate-pulse">
+                  {[...Array(6)].map((_, index) => (
+                    <div
+                      key={index}
+                      className="flex items-start space-x-3 mb-4"
+                    >
+                      <div className="h-5 w-5 bg-gray-200 rounded-full mt-0.5"></div>
+                      <div className="h-4 bg-gray-200 rounded w-full"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="h-10 bg-gray-200 rounded mb-6"></div>
+                <div className="space-y-4">
+                  {[...Array(4)].map((_, index) => (
+                    <div
+                      key={index}
+                      className="bg-white rounded-xl shadow-lg p-6 animate-pulse"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                          <div className="h-4 bg-gray-200 rounded"></div>
+                        </div>
+                        <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Application Process Skeleton */}
+        <section className="section-padding bg-white">
+          <div className="container mx-auto px-4">
+            <div className="h-10 bg-gray-200 rounded mb-6 max-w-md mx-auto"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[...Array(4)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-50 rounded-lg shadow-sm p-6 animate-pulse"
+                >
+                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        {/* Financial Aid Skeleton */}
+        <section className="section-padding bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="h-10 bg-gray-200 rounded mb-6 max-w-md mx-auto"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[...Array(4)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl shadow-lg p-6 animate-pulse"
+                >
+                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        {/* CTA Skeleton */}
+        <section className="section-padding bg-blue-700">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto">
+              <div className="h-12 w-12 bg-gray-200 rounded-full mx-auto mb-6"></div>
+              <div className="h-10 bg-gray-200 rounded mb-4"></div>
+              <div className="h-6 bg-gray-200 rounded mb-8 max-w-3xl mx-auto"></div>
+              <div className="h-10 w-40 bg-gray-200 rounded mx-auto"></div>
+            </div>
+          </div>
+        </section>
+      </div>
     );
   }
 
