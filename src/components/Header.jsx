@@ -52,8 +52,8 @@ const Header = () => {
       initial={{ y: -120 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white'
-      }`}
+        scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      }`} 
     >
       <div className="container mx-auto px-4">
         <div className="hidden lg:flex justify-end items-center py-2 border-b border-gray-200">
@@ -63,9 +63,9 @@ const Header = () => {
                 key={item.name}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`text-xs font-medium transition-colors hover:text-blue-700 flex items-center ${
-                  location.pathname === item.path ? 'text-blue-700' : 'text-gray-600'
-                }`}
+                className={`text-xs font-medium transition-colors hover:text-primary flex items-center ${
+                  location.pathname === item.path ? 'text-primary' : scrolled ? 'text-gray-600' : 'text-white'
+                }`} 
               >
                 {item.icon && <item.icon className="mr-1 h-4 w-4" />}
                 {item.name}
@@ -77,10 +77,15 @@ const Header = () => {
         <nav className="py-3">
           <div className="flex items-center justify-between">
             <Link to="/" onClick={closeMobileMenu} className="flex items-center space-x-2">
-              <GraduationCap className="h-10 w-10 text-blue-700" />
+              {/* Replace GraduationCap with an img tag for a square logo with transparent background */}
+              <img
+                src="/path/to/your/square-logo.png" // Placeholder: Replace with actual logo path
+                alt="Abraham University Logo"
+                className={`h-10 w-10 ${scrolled ? 'filter-none' : 'filter brightness-200'}`} // Adjust filter for visibility on transparent background
+              />
               <div>
-                <span className="text-2xl font-bold text-gray-800">Abraham University</span>
-                <span className="block text-xs text-blue-700 font-medium tracking-wider">Founded 1874</span>
+                <span className={`text-2xl font-bold font-libreBaskerville ${scrolled ? 'text-gray-800' : 'text-white'}`}>Abraham University</span>
+                <span className={`block text-xs font-medium tracking-wider ${scrolled ? 'text-primary' : 'text-white'}`}>Founded 1874</span>
               </div>
             </Link>
 
@@ -90,23 +95,23 @@ const Header = () => {
                   key={item.name}
                   to={item.path}
                   onClick={closeMobileMenu}
-                  className={`relative font-semibold transition-colors hover:text-blue-700 flex items-center ${
-                    location.pathname === item.path ? 'text-blue-700' : 'text-gray-700'
-                  }`}
+                  className={`relative font-semibold transition-colors hover:text-primary flex items-center ${
+                    location.pathname === item.path ? 'text-primary' : scrolled ? 'text-gray-700' : 'text-white'
+                  }`} 
                 >
                   {item.icon && <item.icon className="mr-1.5 h-4 w-4" />}
                   {item.name}
                   {location.pathname === item.path && (
                     <motion.div
                       layoutId="activeMainTab"
-                      className="absolute -bottom-2 left-0 right-0 h-1 bg-blue-700 rounded-full"
+                      className={`absolute -bottom-2 left-0 right-0 h-1 ${scrolled ? 'bg-primary' : 'bg-white'} rounded-full`}
                     />
                   )}
                 </Link>
               ))}
               <Button 
                 onClick={handleApplyNowClick}
-                className="bg-blue-700 hover:bg-blue-800 text-white rounded-md"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
               >
                 Apply Now
               </Button>
@@ -132,8 +137,8 @@ const Header = () => {
                   key={item.name}
                   to={item.path}
                   onClick={closeMobileMenu}
-                  className={`flex items-center px-4 py-3 font-medium transition-colors hover:text-blue-700 hover:bg-blue-50 ${
-                    location.pathname === item.path ? 'text-blue-700 bg-blue-50' : 'text-gray-700'
+                  className={`flex items-center px-4 py-3 font-medium transition-colors hover:text-primary hover:bg-primary/10 ${
+                    location.pathname === item.path ? 'text-primary bg-primary/10' : 'text-gray-700'
                   }`}
                 >
                   {item.icon && <item.icon className="mr-2 h-5 w-5" />}
@@ -146,7 +151,7 @@ const Header = () => {
                     handleApplyNowClick();
                     closeMobileMenu();
                   }}
-                  className="w-full bg-blue-700 hover:bg-blue-800 text-white rounded-md"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
                 >
                   Apply Now
                 </Button>
