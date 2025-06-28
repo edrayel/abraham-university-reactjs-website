@@ -45,8 +45,8 @@ const ProgramsSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            Explore Our <span className="text-blue-700">Programs</span>
+          <h2 className="text-4xl font-bold text-gray-800 mb-4 font-libreBaskerville">
+            Explore Our <span className="text-primary">Programs</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Discover world-class academic programs designed to prepare you for success in your chosen field.
@@ -69,9 +69,9 @@ const ProgramsSection = () => {
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300"></div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">{program.title}</h3>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary transition-colors font-libreBaskerville">{program.title}</h3>
                   <p className="text-gray-600 text-sm mb-4">{program.description}</p>
-                  <div className="flex items-center text-blue-600 font-medium group-hover:underline">
+                  <div className="flex items-center text-primary font-medium group-hover:underline">
                     Learn More
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </div>
@@ -82,7 +82,7 @@ const ProgramsSection = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Button asChild size="lg" className="bg-blue-700 hover:bg-blue-800 text-white rounded-md px-8 py-3">
+          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-3">
             <Link to="/academics">View All Programs</Link>
           </Button>
         </div>

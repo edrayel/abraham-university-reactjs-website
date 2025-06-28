@@ -39,7 +39,7 @@ const Footer = () => {
 
 
   return (
-    <footer className="bg-gray-800 text-gray-300">
+    <footer className="bg-primary text-primary-foreground/80">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <motion.div
@@ -49,20 +49,20 @@ const Footer = () => {
             className="space-y-6"
           >
             <Link to="/" className="flex items-center space-x-3">
-              <GraduationCap className="h-10 w-10 text-blue-400" />
+              <GraduationCap className="h-10 w-10 text-gold" />
               <div>
-                <span className="text-xl font-bold text-white">Abraham University</span>
-                <span className="block text-xs text-blue-300 tracking-wider">Founded 1874</span>
+                <span className="text-xl font-bold text-primary-foreground font-libreBaskerville">Abraham University</span>
+                <span className="block text-xs text-primary-foreground/70 tracking-wider">Founded 1874</span>
               </div>
             </Link>
             <p className="leading-relaxed">
               Empowering minds, shaping futures. Abraham University is committed to academic excellence and innovation in higher education.
             </p>
             <div className="flex space-x-4">
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors"><Facebook className="h-6 w-6" /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors"><Twitter className="h-6 w-6" /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors"><Instagram className="h-6 w-6" /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors"><Linkedin className="h-6 w-6" /></a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><Facebook className="h-6 w-6" /></a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><Twitter className="h-6 w-6" /></a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><Instagram className="h-6 w-6" /></a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><Linkedin className="h-6 w-6" /></a>
             </div>
           </motion.div>
 
@@ -72,13 +72,13 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
           >
-            <span className="text-lg font-semibold text-white mb-4 block">Quick Links</span>
+            <span className="text-lg font-semibold text-primary-foreground mb-4 block font-libreBaskerville">Quick Links</span>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="hover:text-blue-300 transition-colors flex items-center"
+                    className="hover:text-gold transition-colors flex items-center"
                   >
                     {link.name}
                   </Link>
@@ -93,13 +93,13 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
-            <span className="text-lg font-semibold text-white mb-4 block">For You</span>
+            <span className="text-lg font-semibold text-primary-foreground mb-4 block font-libreBaskerville">For You</span>
             <ul className="space-y-3">
               {audienceLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="hover:text-blue-300 transition-colors"
+                    className="hover:text-gold transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -114,52 +114,52 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <span className="text-lg font-semibold text-white mb-4 block">Resources</span>
+            <span className="text-lg font-semibold text-primary-foreground mb-4 block font-libreBaskerville">Resources</span>
             <ul className="space-y-3 mb-6">
               {resourceLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="hover:text-blue-300 transition-colors flex items-center"
+                    className="hover:text-gold transition-colors flex items-center"
                   >
-                    {link.icon && <link.icon className="mr-2 h-4 w-4 text-blue-400" />}
+                    {link.icon && <link.icon className="mr-2 h-4 w-4 text-gold" />}
                     {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-            <span className="text-lg font-semibold text-white mb-4 block">Contact Info</span>
+            <span className="text-lg font-semibold text-primary-foreground mb-4 block font-libreBaskerville">Contact Info</span>
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                <MapPin className="h-5 w-5 text-gold mt-0.5 flex-shrink-0" />
                 <span>
                   123 University Avenue<br />
                   Education City, EC 12345
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                <Phone className="h-5 w-5 text-gold flex-shrink-0" />
                 <span>+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                <Mail className="h-5 w-5 text-gold flex-shrink-0" />
                 <span>info@abrahamuniversity.edu</span>
               </div>
             </div>
           </motion.div>
         </div>
 
-        <div className="border-t border-gray-700 mt-12 pt-8 text-center">
-          <p className="text-gray-400 text-sm">
+        <div className="border-t border-primary/30 mt-12 pt-8 text-center">
+          <p className="text-primary-foreground/60 text-sm">
             © {new Date().getFullYear()} Abraham University. All rights reserved.
           </p>
           <div className="mt-2 space-x-2">
             {utilityLinks.map((link, index) => (
                 <React.Fragment key={link.name}>
-                    <Link to={link.path} className="text-gray-400 hover:text-blue-300 text-xs">
+                    <Link to={link.path} className="text-primary-foreground/60 hover:text-gold text-xs">
                         {link.name}
                     </Link>
-                    {index < utilityLinks.length - 1 && <span className="text-gray-500 text-xs">|</span>}
+                    {index < utilityLinks.length - 1 && <span className="text-primary-foreground/40 text-xs">|</span>}
                 </React.Fragment>
             ))}
           </div>

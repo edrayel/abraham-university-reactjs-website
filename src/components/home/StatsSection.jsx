@@ -51,9 +51,9 @@ const StatsSection = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div className="flex justify-center mb-4">
-                {stat.icon && <stat.icon className="h-8 w-8 text-blue-600" />}
+                {stat.icon && <stat.icon className="h-8 w-8 text-primary" />}
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-2xl font-bold text-gray-900 font-libreBaskerville">
                 {stat.number}
               </h3>
               <p className="mt-2 text-gray-600">{stat.label}</p>
