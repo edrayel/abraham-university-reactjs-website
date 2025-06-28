@@ -41,8 +41,8 @@ const NewsSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            Latest <span className="text-blue-700">News</span>
+          <h2 className="text-4xl font-bold text-gray-800 mb-4 font-libreBaskerville">
+            Latest <span className="text-primary">News</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Stay updated with the latest happenings at Abraham University.
@@ -64,10 +64,10 @@ const NewsSection = () => {
                   <img-replace src={`https://source.unsplash.com/random/400x300/?${article.imageQuery}`} alt={article.imageAlt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
                 <div className="p-6">
-                  <div className="text-xs text-blue-600 font-semibold mb-2 uppercase tracking-wider">{article.date}</div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">{article.title}</h3>
+                  <div className="text-xs text-primary font-semibold mb-2 uppercase tracking-wider">{article.date}</div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors font-libreBaskerville">{article.title}</h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">{article.excerpt}</p>
-                  <div className="flex items-center text-blue-600 font-medium group-hover:underline">
+                  <div className="flex items-center text-primary font-medium group-hover:underline">
                     Read More
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </div>
@@ -77,7 +77,7 @@ const NewsSection = () => {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button asChild size="lg" variant="outline" className="border-blue-700 text-blue-700 hover:bg-blue-50 hover:text-blue-800 rounded-md px-8 py-3">
+          <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 hover:text-primary/90 rounded-md px-8 py-3">
             <Link to="/news">View All News</Link>
           </Button>
         </div>

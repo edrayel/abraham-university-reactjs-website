@@ -23,14 +23,14 @@ const VisitSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <VisitIcon className="h-12 w-12 mb-4 text-blue-700" />
-            <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              Visit Our <span className="text-blue-700">Campus</span>
+            <VisitIcon className="h-12 w-12 mb-4 text-primary" />
+            <h2 className="text-4xl font-bold text-gray-800 mb-6 font-libreBaskerville">
+              Visit Our <span className="text-primary">Campus</span>
             </h2>
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
               Experience the vibrant atmosphere of Abraham University firsthand. Schedule a campus tour, attend an information session, or explore our virtual tour options.
             </p>
-            <Button asChild size="lg" className="bg-blue-700 hover:bg-blue-800 text-white rounded-md px-8 py-3">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-3">
               <Link to="/visit">Plan Your Visit</Link>
             </Button>
           </motion.div>

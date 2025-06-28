@@ -97,7 +97,7 @@ const EventFliersSection = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl font-bold text-gray-800 mb-3">
+          <h2 className="text-4xl font-bold text-gray-800 mb-3 font-libreBaskerville">
             Don't Miss Out! <span className="text-blue-700">Upcoming Events</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -125,7 +125,7 @@ const EventFliersSection = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="text-3xl md:text-4xl font-bold mb-4 leading-tight"
+                  className="text-3xl md:text-4xl font-bold mb-4 leading-tight font-libreBaskerville"
                 >
                   {currentFlier.title}
                 </motion.h3>

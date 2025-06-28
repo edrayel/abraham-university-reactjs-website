@@ -41,8 +41,8 @@ const EventsSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            Upcoming <span className="text-blue-700">Events</span>
+          <h2 className="text-4xl font-bold text-gray-800 mb-4 font-libreBaskerville">
+            Upcoming <span className="text-primary">Events</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Join us for exciting events and activities on campus and beyond.
@@ -63,10 +63,10 @@ const EventsSection = () => {
                   <img-replace src={`https://source.unsplash.com/random/400x300/?${event.imageQuery}`} alt={event.imageAlt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
                 <div className="p-6">
-                  <div className="text-xs text-blue-600 font-semibold mb-1 uppercase tracking-wider">{event.date}</div>
+                  <div className="text-xs text-primary font-semibold mb-1 uppercase tracking-wider">{event.date}</div>
                   <div className="text-xs text-gray-500 mb-2">{event.location}</div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">{event.title}</h3>
-                  <div className="flex items-center text-blue-600 font-medium group-hover:underline">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors font-libreBaskerville">{event.title}</h3>
+                  <div className="flex items-center text-primary font-medium group-hover:underline">
                     Event Details
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </div>
@@ -76,7 +76,7 @@ const EventsSection = () => {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button asChild size="lg" variant="outline" className="border-blue-700 text-blue-700 hover:bg-blue-50 hover:text-blue-800 rounded-md px-8 py-3">
+          <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 hover:text-primary/90 rounded-md px-8 py-3">
             <Link to="/events">View All Events</Link>
           </Button>
         </div>

@@ -21,8 +21,8 @@ const AboutSection = () => {
             viewport={{ once: true, amount: 0.3 }}
             className="order-2 lg:order-1"
           >
-            <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              Why Choose <span className="text-blue-700">Abraham University?</span>
+            <h2 className="text-4xl font-bold text-gray-800 mb-6 font-libreBaskerville">
+              Why Choose <span className="text-primary">Abraham University?</span>
             </h2>
             <p className="text-lg text-gray-600 mb-6 leading-relaxed">
               For over 150 years, Abraham University has been at the forefront of higher education, 
@@ -31,12 +31,12 @@ const AboutSection = () => {
             <ul className="space-y-4 mb-8">
               {features.map((item, idx) => (
                 <li key={idx} className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-2.5 h-2.5 bg-blue-700 rounded-full mt-1.5"></div>
+                  <div className="flex-shrink-0 w-2.5 h-2.5 bg-primary rounded-full mt-1.5"></div>
                   <span className="text-gray-700">{item}</span>
                 </li>
               ))}
             </ul>
-            <Button asChild size="lg" className="bg-blue-700 hover:bg-blue-800 text-white rounded-md px-8 py-3">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-3">
               <Link to="/about">Learn More About Us</Link>
             </Button>
           </motion.div>
@@ -51,7 +51,7 @@ const AboutSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
             </div>
             <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-6 float-animation hidden md:block">
-              <div className="text-3xl font-bold text-blue-700">150+</div>
+              <div className="text-3xl font-bold text-primary">150+</div>
               <div className="text-gray-600">Years of Excellence</div>
             </div>
           </motion.div>

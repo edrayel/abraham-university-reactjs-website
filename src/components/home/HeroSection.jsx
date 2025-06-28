@@ -40,7 +40,7 @@ const HeroSection = () => {
   // Show loading state
   if (isLoading) {
     return (
-      <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center bg-gradient-to-br from-blue-800 via-blue-600 to-sky-500 text-white overflow-hidden pt-20">
+      <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-primary via-primary to-primary text-white overflow-hidden pt-[80px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto"></div>
           <p className="mt-4 text-xl">Loading...</p>
@@ -52,7 +52,7 @@ const HeroSection = () => {
   // Show error state
   if (error) {
     return (
-      <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center bg-gradient-to-br from-red-800 via-red-600 to-red-500 text-white overflow-hidden pt-20">
+      <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-red-800 via-red-600 to-red-500 text-white overflow-hidden pt-[80px]">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Error Loading Content</h2>
           <p className="text-xl">{error}</p>
@@ -74,7 +74,7 @@ const HeroSection = () => {
     "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
 
   return (
-    <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center bg-gradient-to-br from-blue-800 via-blue-600 to-sky-500 text-white overflow-hidden pt-20">
+    <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-black via-black to-black text-white overflow-hidden pt-[80px]">
       <div className="absolute inset-0 opacity-20">
         <img
           src={backgroundImage}
@@ -94,18 +94,18 @@ const HeroSection = () => {
           transition={{ duration: 0.8 }}
           className="text-center max-w-4xl mx-auto"
         >
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight">
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight font-libreBaskerville">
             {heroTitle}
-            <span className="block text-sky-300">{heroSubtitle}</span>
+            <span className="block text-gold">{heroSubtitle}</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-10 text-blue-100 leading-relaxed font-light">
+          <p className="text-xl md:text-2xl mb-10 text-primary-foreground/90 leading-relaxed font-light">
             {heroDescription}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
               onClick={handleApplyClick}
-              className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-10 py-6 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 text-lg px-10 py-6 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               {ctaText}
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -114,7 +114,7 @@ const HeroSection = () => {
               size="lg"
               variant="outline"
               asChild
-              className="border-white text-white hover:bg-white hover:text-blue-700 text-lg px-10 py-6 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-lg px-10 py-6 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Link to="/about">Learn More</Link>
             </Button>
@@ -122,8 +122,8 @@ const HeroSection = () => {
         </motion.div>
       </div>
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
-        <div className="w-8 h-12 border-2 border-sky-300 rounded-full flex justify-center items-center p-1">
-          <div className="w-1 h-3 bg-sky-300 rounded-full animate-pulse"></div>
+        <div className="w-8 h-12 border-2 border-gold rounded-full flex justify-center items-center p-1">
+          <div className="w-1 h-3 bg-gold rounded-full animate-pulse"></div>
         </div>
       </div>
     </section>
