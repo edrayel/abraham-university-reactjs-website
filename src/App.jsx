@@ -25,7 +25,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background font-openSans">
         <Header />
         <main>
           <Routes>
