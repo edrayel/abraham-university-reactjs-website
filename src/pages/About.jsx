@@ -65,14 +65,14 @@ const About = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20 text-center">
+      <div className="min-h-screen text-center">
         Loading about data...
       </div>
     );
   }
 
   if (error) {
-    return <div className="min-h-screen pt-20 text-center">Error: {error}</div>;
+    return <div className="min-h-screen text-center">Error: {error}</div>;
   }
 
   if (
@@ -84,16 +84,16 @@ const About = () => {
     !mappedStatistics.length
   ) {
     return (
-      <div className="min-h-screen pt-20 text-center">
+      <div className="min-h-screen text-center">
         No about data available.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="section-padding hero-gradient">
+      <section className="pt-60 pb-40 hero-gradient">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -177,8 +177,8 @@ const About = () => {
                 transition={{ delay: index * 0.1 }}
                 className="bg-white rounded-xl p-6 shadow-lg text-center card-hover"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                  <value.icon className="h-8 w-8 text-blue-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
+                  <value.icon className="h-8 w-8 text-amber-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   {value.title}
@@ -209,7 +209,7 @@ const About = () => {
           </motion.div>
           <div className="max-w-4xl mx-auto">
             <div className="relative">
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-blue-200"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-amber-200"></div>
               {mappedMilestones.map((milestone, index) => (
                 <motion.div
                   key={milestone.year}
@@ -226,14 +226,14 @@ const About = () => {
                       index % 2 === 0 ? "pr-8 text-right" : "pl-8 text-left"
                     }`}
                   >
-                    <div className="bg-white rounded-lg shadow-lg p-6">
-                      <div className="text-2xl font-bold text-blue-600 mb-2">
+                    <div className="bg-white rounded-lg border border-gray-200 p-6 transition-colors duration-300 hover:bg-gray-50">
+                      <div className="text-2xl font-bold text-amber-600 mb-2 transition-colors duration-300 hover:text-amber-600">
                         {milestone.year}
                       </div>
-                      <div className="text-gray-700">{milestone.event}</div>
+                      <div className="text-gray-700 transition-colors duration-300 hover:text-gray-700">{milestone.event}</div>
                     </div>
                   </div>
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-lg"></div>
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-600 rounded-full border-4 border-white shadow-lg"></div>
                 </motion.div>
               ))}
             </div>

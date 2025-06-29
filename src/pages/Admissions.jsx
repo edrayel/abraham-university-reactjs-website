@@ -264,7 +264,7 @@ const Admissions = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50">
+      <div className="min-h-screen bg-gray-50">
         {/* Hero Section Skeleton */}
         <section className="section-padding hero-gradient">
           <div className="container mx-auto px-4">
@@ -387,7 +387,7 @@ const Admissions = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50 text-center">
+      <div className="min-h-screen bg-gray-50 text-center">
         Error: {error}
       </div>
     );
@@ -395,14 +395,14 @@ const Admissions = () => {
 
   if (!requirements.length && !deadlines.length && !financialAid.length) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50 text-center">
+      <div className="min-h-screen bg-gray-50 text-center">
         No admissions data available.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen">
       <style>
         {`
           .animate-pulse {
@@ -459,7 +459,7 @@ const Admissions = () => {
   );
 
   // return (
-  //   <div className="min-h-screen pt-20">
+  //   <div className="min-h-screen">
   //     <AdmissionsHero
   //       onApplyClick={handleApplyClick}
   //       onScheduleVisit={handleScheduleVisit}

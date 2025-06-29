@@ -85,7 +85,7 @@ const Alumni = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50">
+      <div className="min-h-screen bg-gray-50">
         <section className="section-padding hero-gradient">
           <div className="container mx-auto px-4">
             <div className="text-center text-white max-w-4xl mx-auto">
@@ -165,7 +165,7 @@ const Alumni = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50 text-center">
+      <div className="min-h-screen bg-gray-50 text-center">
         Error: {error}
       </div>
     );
@@ -177,14 +177,14 @@ const Alumni = () => {
     !mappedServices.length
   ) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50 text-center">
+      <div className="min-h-screen bg-gray-50 text-center">
         No alumni data available.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <style>
         {`
           .card-hover {

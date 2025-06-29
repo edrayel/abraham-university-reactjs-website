@@ -27,7 +27,7 @@ const WebApp = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-br from-gray-100 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-100">
       <header className="bg-white shadow-md py-4">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <Link to="/portals" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">

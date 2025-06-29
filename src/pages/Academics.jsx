@@ -95,7 +95,7 @@ const Academics = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20">
+      <div className="min-h-screen">
         <section className="section-padding hero-gradient">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-4xl mx-auto">
@@ -137,19 +137,19 @@ const Academics = () => {
   
 
   if (error) {
-    return <div className="min-h-screen pt-20 text-center">Error: {error}</div>;
+    return <div className="min-h-screen text-center">Error: {error}</div>;
   }
 
   if (!mappedPrograms.length && !mappedSchools.length) {
     return (
-      <div className="min-h-screen pt-20 text-center">
+      <div className="min-h-screen text-center">
         No programs or schools available.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen">
       <style>
         {`
           .card-hover {

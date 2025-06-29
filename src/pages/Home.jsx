@@ -29,7 +29,7 @@ const Home = () => {
     fetchAllData();
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className="flex items-center justify-center h-screen text-2xl text-minimalist-blue">Loading Abraham University content... Please wait.</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (

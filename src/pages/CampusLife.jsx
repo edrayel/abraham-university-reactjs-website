@@ -257,7 +257,7 @@ const CampusLife = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20">
+      <div className="min-h-screen">
         <section className="section-padding hero-gradient">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-4xl mx-auto">
@@ -306,7 +306,7 @@ const CampusLife = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen">
       <CampusLifeHero />
       <ActivitiesOverview
         activities={activitiesData}

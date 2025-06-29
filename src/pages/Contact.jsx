@@ -131,7 +131,7 @@ const Contact = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50">
+      <div className="min-h-screen bg-gray-50">
         {/* Hero Section Skeleton */}
         <section className="section-padding hero-gradient">
           <div className="container mx-auto px-4">
@@ -224,7 +224,7 @@ const Contact = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50 text-center">
+      <div className="min-h-screen bg-gray-50 text-center">
         Error: {error}
       </div>
     );
@@ -232,14 +232,14 @@ const Contact = () => {
 
   if (!departments.length && !faq.length) {
     return (
-      <div className="min-h-screen pt-20 bg-gray-50 text-center">
+      <div className="min-h-screen bg-gray-50 text-center">
         No contact data available.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen">
       <style>
         {`
           .animate-pulse {
@@ -382,7 +382,7 @@ export default Contact;
 //   };
 
 //   return (
-//     <div className="min-h-screen pt-20">
+//     <div className="min-h-screen">
 //       <ContactHero />
 //       <ContactInfoGrid contactInfo={contactInfoData} />
 //       <ContactFormSection

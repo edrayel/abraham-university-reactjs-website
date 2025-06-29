@@ -121,7 +121,7 @@ const Events = () => {
 
 
   return (
-    <div className="min-h-screen pt-20 bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="section-padding hero-gradient">
         <div className="container mx-auto px-4">
