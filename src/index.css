@@ -83,10 +83,11 @@ body {
 }
 
 .text-gradient { /* Adjusted to match Victorian gold */
-  background: linear-gradient(135deg, #DAA520, #FFD700); /* Goldenrod to Gold */
+  background: linear-gradient(135deg, #DAA520, #FFD700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  padding-bottom: 8px; /* Increased padding to prevent clipping of descenders */
 }
 
 .card-hover {
