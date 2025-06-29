@@ -17,8 +17,8 @@ module.exports = {
 		},
 		extend: {
 			fontFamily: {
-				libreBaskerville: ['Libre Baskerville', 'serif'],
-				openSans: ['Open Sans', 'sans-serif'],
+				heading: ['Libre Baskerville', 'serif'], // Victorian feel for headings
+				body: ['Open Sans', 'sans-serif'], // Minimalist for body text
 			},
 
 			colors: {
@@ -28,8 +28,8 @@ module.exports = {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'rgb(29, 53, 87)',
-					foreground: 'white',
+					DEFAULT: 'hsl(var(--primary))', // Deep, rich tone
+					foreground: 'hsl(var(--primary-foreground))',
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -55,7 +55,20 @@ module.exports = {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
 				},
-				gold: '#FFD700',
+				victorian: {
+							dark: '#003366', // Deep Blue (example, adjust as needed)
+							medium: '#8B4513', // Saddle Brown
+							light: '#D2B48C', // Tan
+							cream: '#F5F5DC', // Beige
+							gold: '#DAA520', // Goldenrod
+							'gold-bright': '#FFD700', // Bright Gold
+						},
+				minimalist: {
+							black: '#1A1A1A',
+							gray: '#A0A0A0',
+							lightGray: '#F0F0F0',
+							white: '#FFFFFF',
+						},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -71,10 +84,15 @@ module.exports = {
 					from: { height: 'var(--radix-accordion-content-height)' },
 					to: { height: 0 },
 				},
+				'page-loader-spin': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+				'page-loader-spin': 'page-loader-spin 0.8s linear infinite',
 			},
 		},
 	},
