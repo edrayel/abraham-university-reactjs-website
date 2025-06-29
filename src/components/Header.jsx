@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
-import { Menu, X, GraduationCap, LogIn, CalendarDays, Gift, Map, Award, Users, Image as ImageIcon } from 'lucide-react';
+import { Menu, X, GraduationCap, LogIn, CalendarDays, Gift, Map, Award, Users, Image as ImageIcon, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 
@@ -36,7 +36,7 @@ const Header = () => {
     { name: 'Events', path: '/events', icon: CalendarDays },
     { name: 'Giving', path: '/giving', icon: Gift },
     { name: 'Visit', path: '/visit', icon: Map },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Contact', path: '/contact', icon: Phone },
     { name: 'Portals', path: '/portals', icon: LogIn },
   ];
 
