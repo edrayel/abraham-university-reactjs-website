@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
 import { motion } from 'framer-motion';
 import { Menu, X, GraduationCap, LogIn, CalendarDays, Gift, Map, Award, Users, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -56,109 +57,105 @@ const Header = () => {
       }`} 
     >
       <div className="container mx-auto px-4">
-        <div className="hidden lg:flex justify-end items-center py-2 border-b border-gray-200">
-          <div className="flex items-center space-x-5">
-            {topNavItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                onClick={closeMobileMenu}
-                className={`text-xs font-medium transition-colors hover:text-primary flex items-center ${
-                  location.pathname === item.path ? 'text-primary' : scrolled ? 'text-gray-600' : 'text-white'
-                }`} 
-              >
-                {item.icon && <item.icon className="mr-1 h-4 w-4" />}
-                {item.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <nav className="py-3">
-          <div className="flex items-center justify-between">
-            <Link to="/" onClick={closeMobileMenu} className="flex items-center space-x-2">
-              {/* Replace GraduationCap with an img tag for a square logo with transparent background */}
-              <img
-                src="/path/to/your/square-logo.png" // Placeholder: Replace with actual logo path
-                alt="Abraham University Logo"
-                className={`h-10 w-10 ${scrolled ? 'filter-none' : 'filter brightness-200'}`} // Adjust filter for visibility on transparent background
-              />
-              <div>
-                <span className={`text-2xl font-bold font-libreBaskerville ${scrolled ? 'text-gray-800' : 'text-white'}`}>Abraham University</span>
-                <span className={`block text-xs font-medium tracking-wider ${scrolled ? 'text-primary' : 'text-white'}`}>Founded 1874</span>
-              </div>
-            </Link>
-
-            <div className="hidden lg:flex items-center space-x-6">
-              {mainNavItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  onClick={closeMobileMenu}
-                  className={`relative font-semibold transition-colors hover:text-primary flex items-center ${
-                    location.pathname === item.path ? 'text-primary' : scrolled ? 'text-gray-700' : 'text-white'
-                  }`} 
-                >
-                  {item.icon && <item.icon className="mr-1.5 h-4 w-4" />}
-                  {item.name}
-                  {location.pathname === item.path && (
-                    <motion.div
-                      layoutId="activeMainTab"
-                      className={`absolute -bottom-2 left-0 right-0 h-1 ${scrolled ? 'bg-primary' : 'bg-white'} rounded-full`}
-                    />
-                  )}
-                </Link>
-              ))}
-              <Button 
-                onClick={handleApplyNowClick}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
-              >
-                Apply Now
-              </Button>
+        <div className="flex items-center justify-between py-2">
+          <Link to="/" onClick={closeMobileMenu} className="flex items-center space-x-2">
+            <img
+              src="/path/to/your/square-logo.png" // Placeholder: Replace with actual logo path
+              alt="Abraham University Logo"
+              className={`h-10 w-10 ${scrolled ? 'filter-none' : 'filter brightness-200'}`}
+            />
+            <div>
+              <span className={`text-2xl font-bold font-libreBaskerville ${scrolled ? 'text-gray-800' : 'text-white'}`}>Abraham University</span>
+              <span className={`block text-xs font-medium tracking-wider ${scrolled ? 'text-primary' : 'text-white'}`}>Founded 1874</span>
             </div>
+          </Link>
 
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 rounded-md hover:bg-gray-100"
-            >
-              {isOpen ? <X className="h-6 w-6 text-gray-700" /> : <Menu className="h-6 w-6 text-gray-700" />}
-            </button>
-          </div>
-
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="lg:hidden mt-4 py-4 bg-white rounded-lg shadow-xl border border-gray-200"
-            >
-              {[...mainNavItems, ...topNavItems].map((item) => (
+          <div className="hidden lg:flex flex-col items-end">
+            <div className="flex items-center space-x-5">
+              {topNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
                   onClick={closeMobileMenu}
-                  className={`flex items-center px-4 py-3 font-medium transition-colors hover:text-primary hover:bg-primary/10 ${
-                    location.pathname === item.path ? 'text-primary bg-primary/10' : 'text-gray-700'
-                  }`}
+                  className={`relative text-xs font-medium transition-colors hover:text-primary flex items-center px-3 py-1 rounded-md ${scrolled ? 'text-gray-600 bg-gray-100/50 backdrop-blur-sm' : 'text-white bg-white/20 backdrop-blur-sm'} ${location.pathname === item.path ? 'text-primary' : ''}`}
                 >
-                  {item.icon && <item.icon className="mr-2 h-5 w-5" />}
+                  {item.icon && <item.icon className="mr-1 h-4 w-4" />}
                   {item.name}
                 </Link>
               ))}
-              <div className="px-4 py-3 mt-2">
+            </div>
+            <div className="py-3">
+              <div className="flex items-center space-x-6">
+                {mainNavItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    onClick={closeMobileMenu}
+                    className={`relative font-semibold transition-colors hover:text-primary flex items-center ${
+                      location.pathname === item.path ? 'text-primary' : scrolled ? 'text-gray-700' : 'text-white'
+                    }`} 
+                  >
+                    {item.icon && <item.icon className="mr-1.5 h-4 w-4" />}
+                    {item.name}
+                    {location.pathname === item.path && (
+                      <motion.div
+                        layoutId="activeMainTab"
+                        className={`absolute -bottom-2 left-0 right-0 h-1 ${scrolled ? 'bg-primary' : 'bg-white'} rounded-full`}
+                      />
+                    )}
+                  </Link>
+                ))}
                 <Button 
-                  onClick={() => {
-                    handleApplyNowClick();
-                    closeMobileMenu();
-                  }}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
+                  onClick={handleApplyNowClick}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
                 >
                   Apply Now
                 </Button>
               </div>
-            </motion.div>
-          )}
-        </nav>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+          >
+            {isOpen ? <X className="h-6 w-6 text-gray-700" /> : <Menu className="h-6 w-6 text-gray-700" />}
+          </button>
+        </div>
+
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="lg:hidden mt-4 py-4 bg-white rounded-lg shadow-xl border border-gray-200"
+          >
+            {[...mainNavItems, ...topNavItems].map((item) => (
+              <Link
+                key={item.name}
+                to={item.path}
+                onClick={closeMobileMenu}
+                className={`flex items-center px-4 py-3 font-medium transition-colors hover:text-primary hover:bg-primary/10 ${
+                  location.pathname === item.path ? 'text-primary bg-primary/10' : 'text-gray-700'
+                }`}
+              >
+                {item.icon && <item.icon className="mr-2 h-5 w-5" />}
+                {item.name}
+              </Link>
+            ))}
+            <div className="px-4 py-3 mt-2">
+              <Button 
+                onClick={() => {
+                  handleApplyNowClick();
+                  closeMobileMenu();
+                }}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
+              >
+                Apply Now
+              </Button>
+            </div>
+          </motion.div>
+        )}
       </div>
     </motion.header>
   );
