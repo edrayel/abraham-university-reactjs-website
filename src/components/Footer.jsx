@@ -39,7 +39,7 @@ const Footer = () => {
 
 
   return (
-    <footer className="bg-primary text-primary-foreground/80">
+    <footer className="bg-victorian-dark text-minimalist-white/80">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <motion.div
@@ -49,20 +49,17 @@ const Footer = () => {
             className="space-y-6"
           >
             <Link to="/" className="flex items-center space-x-3">
-              <GraduationCap className="h-10 w-10 text-gold" />
-              <div>
-                <span className="text-xl font-bold text-primary-foreground font-libreBaskerville">Abraham University</span>
-                <span className="block text-xs text-primary-foreground/70 tracking-wider">Founded 1874</span>
-              </div>
+              <img
+                src="/assets/img/abraham-logo.avif"
+                alt="Abraham University Logo"
+                className="h-48 w-48 filter-none"
+              />
             </Link>
-            <p className="leading-relaxed">
-              Empowering minds, shaping futures. Abraham University is committed to academic excellence and innovation in higher education.
-            </p>
             <div className="flex space-x-4">
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><Facebook className="h-6 w-6" /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><Twitter className="h-6 w-6" /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><Instagram className="h-6 w-6" /></a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors"><Linkedin className="h-6 w-6" /></a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-minimalist-gray hover:text-victorian-gold transition-colors"><Facebook className="h-6 w-6" /></a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-minimalist-gray hover:text-victorian-gold transition-colors"><Twitter className="h-6 w-6" /></a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-minimalist-gray hover:text-victorian-gold transition-colors"><Instagram className="h-6 w-6" /></a>
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-minimalist-gray hover:text-victorian-gold transition-colors"><Linkedin className="h-6 w-6" /></a>
             </div>
           </motion.div>
 
@@ -72,18 +69,18 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
           >
-            <span className="text-lg font-semibold text-primary-foreground mb-4 block font-libreBaskerville">Quick Links</span>
-            <ul className="space-y-3">
+            <span className="text-lg font-semibold font-heading text-minimalist-white mb-4 block">Quick Links</span>
+            <ul className="space-y-3 font-body">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="hover:text-gold transition-colors flex items-center"
+                    className="hover:text-victorian-gold transition-colors flex items-center"
                   >
                     {link.name}
                   </Link>
                 </li>
-              ))}
+              ))} 
             </ul>
           </motion.div>
 
@@ -93,18 +90,18 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
-            <span className="text-lg font-semibold text-primary-foreground mb-4 block font-libreBaskerville">For You</span>
-            <ul className="space-y-3">
+            <span className="text-lg font-semibold font-heading text-minimalist-white mb-4 block">For You</span>
+            <ul className="space-y-3 font-body">
               {audienceLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="hover:text-gold transition-colors"
+                    className="hover:text-victorian-gold transition-colors"
                   >
                     {link.name}
                   </Link>
                 </li>
-              ))}
+              ))} 
             </ul>
           </motion.div>
 
@@ -114,52 +111,52 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <span className="text-lg font-semibold text-primary-foreground mb-4 block font-libreBaskerville">Resources</span>
-            <ul className="space-y-3 mb-6">
+            <span className="text-lg font-semibold font-heading text-minimalist-white mb-4 block">Resources</span>
+            <ul className="space-y-3 mb-6 font-body">
               {resourceLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="hover:text-gold transition-colors flex items-center"
+                    className="hover:text-victorian-gold transition-colors flex items-center"
                   >
-                    {link.icon && <link.icon className="mr-2 h-4 w-4 text-gold" />}
+                    {link.icon && <link.icon className="mr-2 h-4 w-4 text-victorian-gold" />}
                     {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-            <span className="text-lg font-semibold text-primary-foreground mb-4 block font-libreBaskerville">Contact Info</span>
-            <div className="space-y-3">
+            <span className="text-lg font-semibold font-heading text-minimalist-white mb-4 block">Contact Info</span>
+            <div className="space-y-3 font-body">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-gold mt-0.5 flex-shrink-0" />
+                <MapPin className="h-5 w-5 text-victorian-gold mt-0.5 flex-shrink-0" />
                 <span>
                   123 University Avenue<br />
                   Education City, EC 12345
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-gold flex-shrink-0" />
+                <Phone className="h-5 w-5 text-victorian-gold flex-shrink-0" />
                 <span>+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-gold flex-shrink-0" />
+                <Mail className="h-5 w-5 text-victorian-gold flex-shrink-0" />
                 <span>info@abrahamuniversity.edu</span>
               </div>
             </div>
           </motion.div>
         </div>
 
-        <div className="border-t border-primary/30 mt-12 pt-8 text-center">
-          <p className="text-primary-foreground/60 text-sm">
+        <div className="border-t border-minimalist-white/30 mt-12 pt-8 text-center">
+          <p className="text-minimalist-white/60 text-sm font-body">
             © {new Date().getFullYear()} Abraham University. All rights reserved.
           </p>
           <div className="mt-2 space-x-2">
             {utilityLinks.map((link, index) => (
                 <React.Fragment key={link.name}>
-                    <Link to={link.path} className="text-primary-foreground/60 hover:text-gold text-xs">
+                    <Link to={link.path} className="text-minimalist-white/60 hover:text-victorian-gold text-xs font-body">
                         {link.name}
                     </Link>
-                    {index < utilityLinks.length - 1 && <span className="text-primary-foreground/40 text-xs">|</span>}
+                    {index < utilityLinks.length - 1 && <span className="text-minimalist-white/40 text-xs">|</span>}
                 </React.Fragment>
             ))}
           </div>

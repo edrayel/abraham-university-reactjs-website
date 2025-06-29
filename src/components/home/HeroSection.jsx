@@ -42,7 +42,7 @@ const HeroSection = () => {
     return (
       <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-primary via-primary to-primary text-white overflow-hidden pt-[80px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-white mx-auto"></div>
           <p className="mt-4 text-xl">Loading...</p>
         </div>
       </section>
@@ -74,7 +74,7 @@ const HeroSection = () => {
     "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
 
   return (
-    <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-black via-black to-black text-white overflow-hidden pt-[80px]">
+    <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-black via-black to-black text-white pt-[80px]">
       <div className="absolute inset-0 opacity-20">
         <img
           src={backgroundImage}
@@ -98,7 +98,7 @@ const HeroSection = () => {
             {heroTitle}
             <span className="block text-gold">{heroSubtitle}</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-10 text-primary-foreground/90 leading-relaxed font-light">
+          <p className="text-lg md:text-xl mb-10 text-primary-foreground/90 leading-relaxed font-light">
             {heroDescription}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

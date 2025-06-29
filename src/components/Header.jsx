@@ -13,11 +13,13 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      if (location.pathname === '/') {
+        setScrolled(window.scrollY > 10);
+      }
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   const mainNavItems = [
     { name: 'About', path: '/about' },
@@ -52,62 +54,58 @@ const Header = () => {
     <motion.header
       initial={{ y: -120 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
-      }`} 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${location.pathname === '/' ? (scrolled ? 'bg-primary/60 backdrop-blur-sm shadow-md' : 'bg-transparent') : 'bg-primary/60 backdrop-blur-sm shadow-md'}`} 
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-2">
           <Link to="/" onClick={closeMobileMenu} className="flex items-center space-x-2">
             <img
-              src="/path/to/your/square-logo.png" // Placeholder: Replace with actual logo path
+              src="/assets/img/abraham-logo.avif"
               alt="Abraham University Logo"
-              className={`h-10 w-10 ${scrolled ? 'filter-none' : 'filter brightness-200'}`}
+              className="h-20 w-20 filter-none"
             />
             <div>
-              <span className={`text-2xl font-bold font-libreBaskerville ${scrolled ? 'text-gray-800' : 'text-white'}`}>Abraham University</span>
-              <span className={`block text-xs font-medium tracking-wider ${scrolled ? 'text-primary' : 'text-white'}`}>Founded 1874</span>
+              <span className="text-2xl font-bold font-heading text-minimalist-white">Abraham University</span>
+              <span className="block text-xs font-body font-medium tracking-wider text-minimalist-gray">Founded 1874</span>
             </div>
           </Link>
 
           <div className="hidden lg:flex flex-col items-end">
-            <div className="flex items-center space-x-5">
+            <div className="flex flex-wrap items-center space-x-5">
               {topNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
                   onClick={closeMobileMenu}
-                  className={`relative text-xs font-medium transition-colors hover:text-primary flex items-center px-3 py-1 rounded-md ${scrolled ? 'text-gray-600 bg-gray-100/50 backdrop-blur-sm' : 'text-white bg-white/20 backdrop-blur-sm'} ${location.pathname === item.path ? 'text-primary' : ''}`}
+                  className={`relative text-xs font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold focus:text-victorian-gold-bright flex items-center px-3 py-1 rounded-md bg-minimalist-lightGray/10 backdrop-blur-sm ${location.pathname === item.path ? 'text-victorian-gold-bright' : ''}`}  
                 >
                   {item.icon && <item.icon className="mr-1 h-4 w-4" />}
                   {item.name}
                 </Link>
               ))}
             </div>
-            <div className="py-3">
-              <div className="flex items-center space-x-6">
+            <div className="pt-3">
+              <div className="flex flex-wrap items-center space-x-6">
                 {mainNavItems.map((item) => (
                   <Link
                     key={item.name}
                     to={item.path}
                     onClick={closeMobileMenu}
-                    className={`relative font-semibold transition-colors hover:text-primary flex items-center ${
-                      location.pathname === item.path ? 'text-primary' : scrolled ? 'text-gray-700' : 'text-white'
-                    }`} 
+                    className={`relative font-heading font-semibold transition-colors text-minimalist-white/80 hover:text-victorian-gold focus:text-victorian-gold-bright flex items-center ${location.pathname === item.path ? 'text-victorian-gold-bright' : ''}`}   
                   >
                     {item.icon && <item.icon className="mr-1.5 h-4 w-4" />}
                     {item.name}
                     {location.pathname === item.path && (
                       <motion.div
                         layoutId="activeMainTab"
-                        className={`absolute -bottom-2 left-0 right-0 h-1 ${scrolled ? 'bg-primary' : 'bg-white'} rounded-full`}
+                        className="absolute -bottom-2 left-0 right-0 h-1 bg-victorian-gold-bright rounded-full"
                       />
                     )}
                   </Link>
                 ))}
                 <Button 
                   onClick={handleApplyNowClick}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
+                  className="bg-victorian-gold hover:bg-victorian-gold/90 text-minimalist-white rounded-md"
                 >
                   Apply Now
                 </Button>
@@ -117,9 +115,9 @@ const Header = () => {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            className="lg:hidden p-2 rounded-md hover:bg-minimalist-lightGray"
           >
-            {isOpen ? <X className="h-6 w-6 text-gray-700" /> : <Menu className="h-6 w-6 text-gray-700" />}
+            {isOpen ? <X className="h-6 w-6 text-minimalist-black" /> : <Menu className="h-6 w-6 text-minimalist-white" />}
           </button>
         </div>
 
@@ -128,16 +126,14 @@ const Header = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden mt-4 py-4 bg-white rounded-lg shadow-xl border border-gray-200"
+            className="lg:hidden mt-4 py-4 bg-minimalist-white rounded-lg shadow-xl border border-minimalist-lightGray"
           >
             {[...mainNavItems, ...topNavItems].map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`flex items-center px-4 py-3 font-medium transition-colors hover:text-primary hover:bg-primary/10 ${
-                  location.pathname === item.path ? 'text-primary bg-primary/10' : 'text-gray-700'
-                }`}
+                className={`flex items-center px-4 py-3 font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold focus:text-victorian-gold-bright hover:bg-minimalist-lightGray/50 ${location.pathname === item.path ? 'text-victorian-gold-bright bg-minimalist-lightGray/50' : ''}`}  
               >
                 {item.icon && <item.icon className="mr-2 h-5 w-5" />}
                 {item.name}
@@ -149,7 +145,7 @@ const Header = () => {
                   handleApplyNowClick();
                   closeMobileMenu();
                 }}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
+                className="w-full bg-victorian-gold hover:bg-victorian-gold/90 text-minimalist-white rounded-md"
               >
                 Apply Now
               </Button>
