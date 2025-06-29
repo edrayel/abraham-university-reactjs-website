@@ -133,8 +133,7 @@ const About = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center text-white max-w-4xl mx-auto"
-          >
+            className="text-center text-white max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               About Abraham University
             </h1>
@@ -277,7 +276,7 @@ const About = () => {
       </section>
 
       {/* Leadership */}
-      <section className="section-padding bg-gray-50">
+      <section className="section-padding bg-gray-900">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -285,10 +284,10 @@ const About = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-white mb-4">
               Our <span className="text-gradient">Leadership</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Meet the visionary leaders who guide Abraham University toward
               excellence.
             </p>
@@ -301,20 +300,20 @@ const About = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl overflow-hidden shadow-lg card-hover"
+                className="bg-white rounded-xl overflow-hidden shadow-lg card-hover flex flex-col h-full"
               >
-                <div className="h-64 bg-gradient-to-br from-blue-500 to-cyan-500">
+                <div className="h-64 bg-gradient-to-br from-amber-500 to-amber-700">
                   <img
                     className="w-full h-full object-cover"
                     alt={leader.name}
                     src={leader.image}
                   />
                 </div>
-                <div className="p-6 text-center">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <div className="p-6 text-center bg-gray-800 flex-grow flex flex-col justify-center group-hover:bg-gradient-to-br group-hover:from-amber-500 group-hover:to-amber-700">
+                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-black">
                     {leader.name}
                   </h3>
-                  <p className="text-gray-600">{leader.title}</p>
+                  <p className="text-gray-300 group-hover:text-black">{leader.title}</p>
                 </div>
               </motion.div>
             ))}
@@ -323,7 +322,7 @@ const About = () => {
       </section>
 
       {/* Stats */}
-      <section className="section-padding hero-gradient">
+      <section className="section-padding bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center text-white">
             {mappedStatistics.map((stat, index) => (
@@ -334,9 +333,9 @@ const About = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <stat.icon className="h-12 w-12 mx-auto mb-4 text-cyan-300" />
+                <stat.icon className="h-12 w-12 mx-auto mb-4 text-amber-500" />
                 <div className="text-4xl font-bold mb-2">{stat.number}</div>
-                <div className="text-blue-100">{stat.label}</div>
+                <div className="text-gray-300">{stat.label}</div>
               </motion.div>
             ))}
           </div>
