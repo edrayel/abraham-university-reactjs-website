@@ -12,7 +12,7 @@ const CampusGallery = ({ images, onEventClick }) => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Campus <span className="text-gradient">Gallery</span>
+            Campus <span className="text-blue-700">Gallery</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Take a visual tour of our beautiful campus and vibrant student life.
@@ -31,7 +31,11 @@ const CampusGallery = ({ images, onEventClick }) => {
               onClick={onEventClick}
             >
               <div className="h-64 bg-gradient-to-br from-blue-500 to-cyan-500">
-                <img  className="w-full h-full object-cover" alt={`Campus life ${index + 1}`} src="https://images.unsplash.com/photo-1595872018818-97555653a011" />
+                <img
+                  className="w-full h-full object-cover"
+                  alt={`Campus life ${index + 1}`}
+                  src="https://images.unsplash.com/photo-1595872018818-97555653a011"
+                />
               </div>
               <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors"></div>
             </motion.div>

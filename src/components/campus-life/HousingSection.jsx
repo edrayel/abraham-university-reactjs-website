@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 // import useCampusStore from "./useCampusStore";
 import useCampusStore from "@/stores/useCampusStore";
- // Adjust the import path as needed
+// Adjust the import path as needed
 
 const HousingSection = ({ onHousingClick }) => {
   const { housingOptions, isLoading, error, fetchAllData } = useCampusStore();
@@ -66,7 +66,7 @@ const HousingSection = ({ onHousingClick }) => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Campus <span className="text-gradient">Housing</span>
+            Campus <span className="text-blue-700">Housing</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Find your home away from home in our diverse housing options
