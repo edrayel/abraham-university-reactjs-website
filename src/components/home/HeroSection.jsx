@@ -96,7 +96,7 @@ const HeroSection = () => {
         >
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight font-libreBaskerville">
             {heroTitle}
-            <span className="block text-gold">{heroSubtitle}</span>
+            <span className="block text-gradient">{heroSubtitle}</span>
           </h1>
           <p className="text-lg md:text-xl mb-10 text-primary-foreground/90 leading-relaxed font-light">
             {heroDescription}
