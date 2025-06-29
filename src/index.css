@@ -7,57 +7,61 @@
 @tailwind utilities;
 
 :root {
-  --background: 220 20% 98%; /* Lighter gray for background */
-  --foreground: 222.2 47.4% 11.2%; /* Dark blue-gray for text */
+  --background: 0 0% 100%; /* Minimalist white background */
+  --foreground: 240 10% 3.9%; /* Near-black for minimalist text */
   
   --card: 0 0% 100%; /* White */
-  --card-foreground: 222.2 47.4% 11.2%;
+  --card-foreground: 240 10% 3.9%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 47.4% 11.2%;
+  --popover-foreground: 240 10% 3.9%;
   
-  /* Primary color now defined directly in tailwind.config.js */
+  --primary: 240 5.9% 10%; /* Dark, subtle primary for minimalist */
+  --primary-foreground: 0 0% 98%; /* Off-white for contrast */
   
-  --secondary: 220 14.3% 95.9%; /* Light gray */
-  --secondary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 240 4.8% 95.9%; /* Light gray for minimalist secondary */
+  --secondary-foreground: 240 5.9% 10%;
   
-  --muted: 220 14.3% 95.9%;
-  --muted-foreground: 220 8.9% 46.1%; /* Softer gray for muted text */
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%; /* Softer gray for muted text */
   
-  --accent: 220 14.3% 95.9%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
   
-  --destructive: 0 72.2% 50.6%; /* More traditional red */
-  --destructive-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%; /* A more muted red */
+  --destructive-foreground: 0 0% 98%;
   
-  --border: 220 13% 91%; /* Softer border color */
-  --input: 220 13% 91%;
-  --ring: 217 91% 60%; /* Primary blue for focus rings */
+  --border: 240 5.9% 90%; /* Light gray border */
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%; /* Dark ring for focus */
+  --victorian-dark: 210 100% 20%; /* Deep Blue */
+  --victorian-gold: 42 71% 50%;
+  --victorian-gold-bright: 42 100% 50%; /* Bright Gold */
 
-  --radius: 0.5rem; /* Slightly larger radius for a softer look */
+  --radius: 0.25rem; /* Sharper corners for minimalist */
 }
 
 /* Dark mode can be adjusted later if needed, for now focusing on light mode */
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 84% 4.9%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 94.1%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 5.9% 10%;
 }
 
 * {
@@ -67,18 +71,19 @@
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: 'Inter', sans-serif; /* A clean, modern sans-serif font */
+  font-family: var(--font-body); /* Use the new body font */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* More traditional university hero gradient */
+/* Victorian-inspired hero gradient with minimalist undertones */
 .hero-gradient {
-  background: linear-gradient(135deg, hsl(220, 40%, 25%) 0%, hsl(217, 71%, 53%) 50%, hsl(205, 65%, 65%) 100%); /* Deep blue to lighter sky blue */
+  background: linear-gradient(135deg, #4A2328 0%, #8B4513 50%, #D2B48C 100%); /* Deep Burgundy to Saddle Brown to Tan */
 }
 
-.text-gradient { /* Adjusted to match primary color */
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(205, 65%, 65%));
+.text-gradient { /* Adjusted to match Victorian gold */
+  background: linear-gradient(135deg, #DAA520, #FFD700); /* Goldenrod to Gold */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -100,6 +105,33 @@ body {
 
 .float-animation {
   animation: float 4s ease-in-out infinite; /* Slower animation */
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes page-loader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .section-padding {
@@ -172,4 +204,10 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary));
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
 }

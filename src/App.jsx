@@ -1,9 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
+import { AnimatePresence } from 'framer-motion';
+import PageTransition from '@/components/ui/PageTransition';
 import Home from '@/pages/Home.jsx';
 import About from '@/pages/About.jsx';
 import Academics from '@/pages/Academics.jsx';
@@ -21,6 +23,34 @@ import AwardsApplication from '@/pages/AwardsApplication.jsx';
 import Alumni from '@/pages/Alumni.jsx';
 import Gallery from '@/pages/Gallery.jsx';
 
+// Wrapper component for AnimatePresence
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+        <Route path="/academics" element={<PageTransition><Academics /></PageTransition>} />
+        <Route path="/admissions" element={<PageTransition><Admissions /></PageTransition>} />
+        <Route path="/campus-life" element={<PageTransition><CampusLife /></PageTransition>} />
+        <Route path="/research" element={<PageTransition><Research /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+        <Route path="/portals" element={<PageTransition><Portals /></PageTransition>} />
+        <Route path="/webapp/:userType" element={<PageTransition><WebApp /></PageTransition>} />
+        <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
+        <Route path="/giving" element={<PageTransition><Giving /></PageTransition>} />
+        <Route path="/visit" element={<PageTransition><Visit /></PageTransition>} />
+        <Route path="/news" element={<PageTransition><NewsPage /></PageTransition>} />
+        <Route path="/awards-application" element={<PageTransition><AwardsApplication /></PageTransition>} />
+        <Route path="/alumni" element={<PageTransition><Alumni /></PageTransition>} />
+        <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 function App() {
   return (
     <Router>
@@ -28,24 +58,7 @@ function App() {
       <div className="min-h-screen bg-background font-openSans">
         <Header />
         <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/academics" element={<Academics />} />
-            <Route path="/admissions" element={<Admissions />} />
-            <Route path="/campus-life" element={<CampusLife />} />
-            <Route path="/research" element={<Research />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/portals" element={<Portals />} />
-            <Route path="/webapp/:userType" element={<WebApp />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/giving" element={<Giving />} />
-            <Route path="/visit" element={<Visit />} />
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="/awards-application" element={<AwardsApplication />} />
-            <Route path="/alumni" element={<Alumni />} />
-            <Route path="/gallery" element={<Gallery />} />
-          </Routes>
+          <AnimatedRoutes />
         </main>
         <Footer />
         <Toaster />
