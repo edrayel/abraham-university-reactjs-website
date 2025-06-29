@@ -134,7 +134,6 @@ const Academics = () => {
       </div>
     );
   }
-  
 
   if (error) {
     return <div className="min-h-screen text-center">Error: {error}</div>;
@@ -324,10 +323,10 @@ const Academics = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Our <span className="text-gradient">Schools</span>
+              Our <span className="text-gradient">Colleges</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore our diverse schools and colleges, each offering
+              Explore our diverse colleges, each offering
               specialized programs and expertise.
             </p>
           </motion.div>

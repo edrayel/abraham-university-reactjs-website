@@ -114,7 +114,7 @@ const HeroSection = () => {
               size="lg"
               variant="outline"
               asChild
-              className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-lg px-10 py-6 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="border-white text-blue-700 hover:bg-white hover:text-blue-700 text-lg px-10 py-6 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Link to="/about">Learn More</Link>
             </Button>
