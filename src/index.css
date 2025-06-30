@@ -16,8 +16,10 @@
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
   
-  --primary: 240 5.9% 10%; /* Dark, subtle primary for minimalist */
+    --primary: var(--victorian-dark); /* Deep blue for primary */
   --primary-foreground: 0 0% 98%; /* Off-white for contrast */
+  --primary-dark: 210 100% 15%; /* A darker shade of primary */
+    --gold: 40 98% 50%; /* A vibrant gold color */
   
   --secondary: 240 4.8% 95.9%; /* Light gray for minimalist secondary */
   --secondary-foreground: 240 5.9% 10%;
@@ -87,6 +89,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  display: inline-block; /* Ensure gradient applies correctly to block-level elements */
   padding-bottom: 8px; /* Increased padding to prevent clipping of descenders */
 }
 
