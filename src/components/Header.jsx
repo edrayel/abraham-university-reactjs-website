@@ -77,7 +77,7 @@ const Header = () => {
                   key={item.name}
                   to={item.path}
                   onClick={closeMobileMenu}
-                  className={`relative text-xs font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold focus:text-victorian-gold-bright flex items-center px-3 py-1 rounded-md bg-minimalist-lightGray/10 backdrop-blur-sm ${location.pathname === item.path ? 'text-victorian-gold-bright' : ''}`}  
+                  className={`relative text-xs font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright flex items-center px-3 py-1 rounded-md bg-minimalist-lightGray/10 backdrop-blur-sm ${location.pathname === item.path ? 'text-victorian-gold-bright' : ''}`}  
                 >
                   {item.icon && <item.icon className="mr-1 h-4 w-4" />}
                   {item.name}
@@ -91,7 +91,7 @@ const Header = () => {
                     key={item.name}
                     to={item.path}
                     onClick={closeMobileMenu}
-                    className={`relative font-heading font-semibold transition-colors text-minimalist-white/80 hover:text-victorian-gold focus:text-victorian-gold-bright flex items-center ${location.pathname === item.path ? 'text-victorian-gold-bright' : ''}`}   
+                    className={`relative font-heading font-semibold transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright flex items-center ${location.pathname === item.path ? 'text-victorian-gold-bright' : ''}`}   
                   >
                     {item.icon && <item.icon className="mr-1.5 h-4 w-4" />}
                     {item.name}
@@ -105,7 +105,7 @@ const Header = () => {
                 ))}
                 <Button 
                   onClick={handleApplyNowClick}
-                  className="bg-victorian-gold hover:bg-victorian-gold/90 text-minimalist-white rounded-md"
+                  className="bg-victorian-gold-bright text-black hover:bg-victorian-gold-bright/90 rounded-md"
                 >
                   Apply Now
                 </Button>
@@ -133,7 +133,7 @@ const Header = () => {
                 key={item.name}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`flex items-center px-4 py-3 font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold focus:text-victorian-gold-bright hover:bg-minimalist-lightGray/50 ${location.pathname === item.path ? 'text-victorian-gold-bright bg-minimalist-lightGray/50' : ''}`}  
+                className={`flex items-center px-4 py-3 font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright hover:bg-minimalist-lightGray/50 ${location.pathname === item.path ? 'text-victorian-gold-bright bg-minimalist-lightGray/50' : ''}`}  
               >
                 {item.icon && <item.icon className="mr-2 h-5 w-5" />}
                 {item.name}
@@ -145,7 +145,7 @@ const Header = () => {
                   handleApplyNowClick();
                   closeMobileMenu();
                 }}
-                className="w-full bg-victorian-gold hover:bg-victorian-gold/90 text-minimalist-white rounded-md"
+                className="w-full bg-victorian-gold-bright text-black hover:bg-victorian-gold-bright/90 rounded-md"
               >
                 Apply Now
               </Button>
