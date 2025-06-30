@@ -12,7 +12,7 @@ const CampusGallery = ({ images, onEventClick }) => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Campus <span className="text-blue-700">Gallery</span>
+            Campus <span className="text-gradient">Gallery</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Take a visual tour of our beautiful campus and vibrant student life.

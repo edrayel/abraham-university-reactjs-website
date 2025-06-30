@@ -12,7 +12,7 @@ const ActivitiesOverview = ({ activities, onJoinClick }) => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Get <span className="text-blue-700">Involved</span>
+            Get <span className="text-gradient">Involved</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             With hundreds of opportunities to get involved, you'll find your
