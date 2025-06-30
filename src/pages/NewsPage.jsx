@@ -170,13 +170,13 @@ const NewsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="section-padding hero-gradient">
+      <section className="pt-60 pb-40 hero-gradient">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center text-white max-w-4xl mx-auto"
-          >
+            className="text-center text-white max-w-4xl mx-auto">
+          
             <Newspaper className="h-16 w-16 mx-auto mb-6 text-sky-300" />
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University News</h1>
             <p className="text-xl text-blue-100 leading-relaxed">

@@ -333,7 +333,7 @@ const About = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <stat.icon className="h-12 w-12 mx-auto mb-4 text-amber-500" />
+                <stat.icon className="h-12 w-12 mx-auto mb-4 text-victorian-gold-bright" />
                 <div className="text-4xl font-bold mb-2">{stat.number}</div>
                 <div className="text-gray-300">{stat.label}</div>
               </motion.div>

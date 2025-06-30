@@ -213,7 +213,8 @@ const Alumni = () => {
         `}
       </style>
 
-      <section className="section-padding hero-gradient">
+      {/* Hero Section */}
+      <section className="pt-60 pb-40 hero-gradient">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

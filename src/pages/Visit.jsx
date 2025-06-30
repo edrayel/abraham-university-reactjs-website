@@ -100,7 +100,7 @@ const Visit = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section Skeleton */}
-        <section className="section-padding hero-gradient">
+        <section className="pt-60 pb-40 hero-gradient">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-4xl mx-auto">
               <div className="h-16 w-16 bg-gray-200 rounded-full mx-auto mb-6"></div>
