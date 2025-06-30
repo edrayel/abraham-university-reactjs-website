@@ -103,20 +103,17 @@ const HeroSection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              size="lg"
               onClick={handleApplyClick}
-              className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 text-lg px-10 py-6 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="border border-white/60 bg-transparent text-white/60 hover:bg-white hover:text-black text-base px-6 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               {ctaText}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button
-              size="lg"
-              variant="outline"
               asChild
-              className="border-white text-blue-700 hover:bg-white hover:text-blue-700 text-lg px-10 py-6 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="border border-white/60 bg-transparent text-white/60 hover:bg-white hover:text-black text-base px-6 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <Link to="/about">Learn More</Link>
+              <Link to="/about" className="flex items-center justify-center">Learn More</Link>
             </Button>
           </div>
         </motion.div>

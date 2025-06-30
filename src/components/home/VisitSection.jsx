@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { MapPin as VisitIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ImagePlaceholder from '@/components/ui/ImagePlaceholder';
 
 const VisitSection = () => {
   return (
@@ -14,8 +15,9 @@ const VisitSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <div className="rounded-2xl overflow-hidden shadow-2xl aspect-w-16 aspect-h-9">
-              <img-replace src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" alt="Students walking on a beautiful university campus" className="w-full h-full object-cover" />
+            <div className="rounded-lg overflow-hidden shadow-md aspect-w-16 aspect-h-9">
+              <ImagePlaceholder src="https://placehold.co/400x300/E0E0E0/333333/png?text=University+Campus" alt="Students walking on a beautiful university campus" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300"></div>
             </div>
           </motion.div>
           <motion.div
@@ -23,9 +25,9 @@ const VisitSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <VisitIcon className="h-12 w-12 mb-4 text-primary" />
+
             <h2 className="text-4xl font-bold text-gray-800 mb-6 font-libreBaskerville">
-              Visit Our <span className="text-primary">Campus</span>
+              Visit <span className="text-gradient">Our Campus</span>
             </h2>
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
               Experience the vibrant atmosphere of Abraham University firsthand. Schedule a campus tour, attend an information session, or explore our virtual tour options.

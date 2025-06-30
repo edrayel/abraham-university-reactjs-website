@@ -22,7 +22,7 @@ const AboutSection = () => {
             className="order-2 lg:order-1"
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-6 font-libreBaskerville">
-              Why Choose <span className="text-primary">Abraham University?</span>
+              Why Choose <span className="text-gradient">Abraham University?</span>
             </h2>
             <p className="text-lg text-gray-600 mb-6 leading-relaxed">
               For over 150 years, Abraham University has been at the forefront of higher education, 

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ImagePlaceholder from '@/components/ui/ImagePlaceholder';
 
 const flierData = [
   {
@@ -13,9 +14,9 @@ const flierData = [
     description: 'Join leading tech visionaries, workshops, and networking opportunities. Discover the future of technology.',
     imageQuery: 'tech-summit-conference-futuristic',
     link: '/events#tech-summit',
-    bgColor: 'bg-gradient-to-br from-purple-600 to-indigo-700',
+    bgColor: 'bg-victorian-dark',
     textColor: 'text-white',
-    buttonColor: 'bg-white text-purple-700 hover:bg-purple-100',
+    buttonColor: 'bg-victorian-gold text-white hover:bg-victorian-gold-bright',
   },
   {
     id: 2,
@@ -25,9 +26,9 @@ const flierData = [
     description: 'Experience diverse cultures through music, dance, visual arts, and culinary delights. A celebration for all!',
     imageQuery: 'multicultural-arts-festival-vibrant',
     link: '/events#arts-festival',
-    bgColor: 'bg-gradient-to-br from-amber-500 to-orange-600',
+    bgColor: 'bg-victorian-medium',
     textColor: 'text-white',
-    buttonColor: 'bg-white text-amber-700 hover:bg-amber-100',
+    buttonColor: 'bg-victorian-gold text-white hover:bg-victorian-gold-bright',
   },
   {
     id: 3,
@@ -37,9 +38,9 @@ const flierData = [
     description: 'Students present innovative solutions for a greener future. Keynote by renowned environmentalists.',
     imageQuery: 'sustainability-event-green-technology',
     link: '/events#sustainability-challenge',
-    bgColor: 'bg-gradient-to-br from-green-500 to-teal-600',
+    bgColor: 'bg-victorian-dark',
     textColor: 'text-white',
-    buttonColor: 'bg-white text-green-700 hover:bg-green-100',
+    buttonColor: 'bg-victorian-gold text-white hover:bg-victorian-gold-bright',
   },
   {
     id: 4,
@@ -49,9 +50,9 @@ const flierData = [
     description: 'Reconnect with fellow graduates, celebrate achievements, and support the next generation of leaders.',
     imageQuery: 'elegant-gala-event-alumni',
     link: '/alumni#homecoming-gala',
-    bgColor: 'bg-gradient-to-br from-sky-600 to-blue-700',
+    bgColor: 'bg-victorian-medium',
     textColor: 'text-white',
-    buttonColor: 'bg-white text-sky-700 hover:bg-sky-100',
+    buttonColor: 'bg-victorian-gold text-white hover:bg-victorian-gold-bright',
   }
 ];
 
@@ -98,14 +99,14 @@ const EventFliersSection = () => {
           className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold text-gray-800 mb-3 font-libreBaskerville">
-            Don't Miss Out! <span className="text-blue-700">Upcoming Events</span>
+            Don't Miss Out! <span className="text-gradient">Upcoming Events</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Stay informed about the latest exciting events happening at Abraham University.
           </p>
         </motion.div>
 
-        <div className="relative h-[500px] md:h-[450px] w-full max-w-5xl mx-auto overflow-hidden rounded-2xl shadow-2xl">
+        <div className="relative h-[500px] md:h-[445px] w-full max-w-screen-2xl mx-auto overflow-hidden rounded-md">
           <AnimatePresence initial={false} custom={currentIndex}>
             <motion.div
               key={currentIndex}
@@ -158,7 +159,7 @@ const EventFliersSection = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
                 >
-                  <Button asChild size="lg" className={`${currentFlier.buttonColor} font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all`}>
+                  <Button asChild size="lg" className={`${currentFlier.buttonColor} font-semibold px-6 py-3 rounded-md transition-all`}>
                     <Link to={currentFlier.link}>
                       Learn More <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
@@ -169,10 +170,10 @@ const EventFliersSection = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 150 }}
-                className="md:w-1/2 h-48 md:h-full order-1 md:order-2 rounded-xl overflow-hidden shadow-lg"
+                className="md:w-1/2 h-48 md:h-48 md:h-full order-1 md:order-2 rounded-md overflow-hidden"
               >
-                <img-replace 
-                  src={`https://source.unsplash.com/random/600x600/?${currentFlier.imageQuery}`} 
+                <ImagePlaceholder 
+                  src={`https://placehold.co/600x600?text=${encodeURIComponent(currentFlier.imageQuery.replace(/-/g, '+'))}`} 
                   alt={currentFlier.title} 
                   className="w-full h-full object-cover" 
                 />

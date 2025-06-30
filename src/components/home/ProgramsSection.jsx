@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ImagePlaceholder from '@/components/ui/ImagePlaceholder';
 
 const programsData = [
   {
@@ -46,7 +47,7 @@ const ProgramsSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-gray-800 mb-4 font-libreBaskerville">
-            Explore Our <span className="text-primary">Programs</span>
+            Explore <span className="text-gradient">Our Programs</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Discover world-class academic programs designed to prepare you for success in your chosen field.
@@ -61,19 +62,20 @@ const ProgramsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-xl shadow-lg overflow-hidden card-hover group"
+              className="bg-white rounded-md shadow-lg overflow-hidden card-hover group"
             >
               <Link to={program.link} className="block">
-                <div className="h-56 relative overflow-hidden">
-                  <img-replace src={`https://source.unsplash.com/random/400x300/?${program.imageQuery}`} alt={program.imageAlt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300"></div>
-                </div>
+                <ImagePlaceholder
+                       src="https://placehold.co/400x300/E0E0E0/333333/png?text=Program+Image"
+                       alt={program.imageAlt}
+                       className="group-hover:scale-105 transition-transform duration-300"
+                   />
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary transition-colors font-libreBaskerville">{program.title}</h3>
                   <p className="text-gray-600 text-sm mb-4">{program.description}</p>
-                  <div className="flex items-center text-primary font-medium group-hover:underline">
+                  <div className="flex items-center text-primary font-medium group-hover:underline text-sm">
                     Learn More
-                    <ChevronRight className="ml-1 h-4 w-4" />
+                    <ChevronRight className="ml-1 h-4 w-4 inline-block align-middle" />
                   </div>
                 </div>
               </Link>

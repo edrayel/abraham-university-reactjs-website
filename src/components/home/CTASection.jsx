@@ -32,7 +32,8 @@ const CTASection = () => {
             <Button
               size="lg"
               onClick={handleApplyClick}
-              className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 text-lg px-8 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              variant="outline"
+              className="border border-white bg-transparent text-white hover:bg-white hover:text-black text-lg px-8 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               Apply Today
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -41,7 +42,7 @@ const CTASection = () => {
               size="lg"
               variant="outline"
               asChild
-              className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-lg px-8 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="border border-white bg-transparent text-white hover:bg-white hover:text-black text-lg px-8 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Link to="/contact">Contact Us</Link>
             </Button>
