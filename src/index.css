@@ -38,7 +38,7 @@
   --ring: 240 5.9% 10%; /* Dark ring for focus */
   --victorian-dark: 210 100% 20%; /* Deep Blue */
   --victorian-gold: 42 71% 50%;
-  --victorian-gold-bright: 42 100% 50%; /* Bright Gold */
+  ---gold-brvictorianight: 42 100% 50%; /* Bright Gold */
 
   --radius: 0.25rem; /* Sharper corners for minimalist */
 }
