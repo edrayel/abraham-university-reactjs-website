@@ -221,7 +221,7 @@ const Alumni = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-white max-w-4xl mx-auto"
           >
-            <Users className="h-16 w-16 mx-auto mb-6 text-sky-300" />
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Our Proud Alumni
             </h1>

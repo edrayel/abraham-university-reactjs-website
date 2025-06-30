@@ -76,7 +76,7 @@ const Gallery = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-white max-w-4xl mx-auto"
           >
-            <ImageIcon className="h-16 w-16 mx-auto mb-6 text-sky-300" />
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University Gallery</h1>
             <p className="text-xl text-blue-100 leading-relaxed">
               Explore the vibrant life, stunning campus, and memorable moments at Abraham University through our visual gallery.

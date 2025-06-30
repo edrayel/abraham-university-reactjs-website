@@ -130,7 +130,7 @@ const Events = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-white max-w-4xl mx-auto">
           
-            <CalendarDays className="h-16 w-16 mx-auto mb-6 text-sky-300" />
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University Events</h1>
             <p className="text-xl text-blue-100 leading-relaxed">
               Discover upcoming events, workshops, performances, and community gatherings at Abraham University.

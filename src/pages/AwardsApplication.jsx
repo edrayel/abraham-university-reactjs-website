@@ -83,7 +83,7 @@ const AwardsApplication = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-white max-w-4xl mx-auto"
           >
-            <Award className="h-16 w-16 mx-auto mb-6 text-sky-300" />
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">Awards & Scholarships</h1>
             <p className="text-xl text-blue-100 leading-relaxed">
               Discover various scholarship and award opportunities available to support your academic journey at Abraham University.

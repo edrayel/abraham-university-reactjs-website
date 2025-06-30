@@ -46,7 +46,7 @@ const Portals = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-white max-w-4xl mx-auto">
           
-            <LogIn className="h-16 w-16 mx-auto mb-6 text-cyan-300" />
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University Portals</h1>
             <p className="text-xl text-blue-100 leading-relaxed">
               Access your dedicated portal to find resources, manage information, and connect with the Abraham University community.
