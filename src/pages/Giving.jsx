@@ -242,7 +242,7 @@ const Giving = () => {
             <Button
               size="lg"
               onClick={() => handleDonateClick()}
-              className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-10 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-white text-gradient hover:bg-blue-50 text-lg px-10 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               asChild={donationPortalUrl}
             >
               {donationPortalUrl ? (
@@ -272,7 +272,7 @@ const Giving = () => {
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
               Where Your{" "}
-              <span className="text-blue-700">Gift Makes a Difference</span>
+              <span className="text-gradient">Gift Makes a Difference</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Choose an area that resonates with your passion and see the direct
@@ -301,7 +301,7 @@ const Giving = () => {
                   </div>
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3 group-hover:text-gradient transition-colors">
                     {area.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4 flex-grow">
@@ -342,7 +342,7 @@ const Giving = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Ways to <span className="text-blue-700">Give</span>
+              Ways to <span className="text-gradient">Give</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Explore various options for making your gift to Abraham
@@ -362,7 +362,7 @@ const Giving = () => {
                 role="presentation"
               >
                 <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <way.icon className="h-6 w-6 text-blue-700" />
+                  <way.icon className="h-6 w-6 text-gradient" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -404,7 +404,7 @@ const Giving = () => {
             className="text-center mb-12"
           >
             <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              The Impact of <span className="text-blue-700">Your Support</span>
+              The Impact of <span className="text-gradient">Your Support</span>
             </h2>
           </motion.div>
           <motion.div
@@ -459,7 +459,7 @@ const Giving = () => {
               <Button
                 size="lg"
                 onClick={() => handleDonateClick()}
-                className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-8 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-white text-gradient hover:bg-blue-50 text-lg px-8 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 asChild={donationPortalUrl}
               >
                 {donationPortalUrl ? (
@@ -474,7 +474,7 @@ const Giving = () => {
                 size="lg"
                 variant="outline"
                 asChild
-                className="border-white text-white hover:bg-white hover:text-blue-700 text-lg px-8 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                className="border-white text-white hover:bg-white hover:text-gradient text-lg px-8 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <Link to="/contact">Contact Development Office</Link>
               </Button>

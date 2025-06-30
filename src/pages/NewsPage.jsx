@@ -239,7 +239,7 @@ const NewsPage = () => {
                       <div className="text-sm text-blue-600 font-semibold mb-2 uppercase tracking-wider">
                         {newsCategories.find(c => c.id === article.category)?.name || article.category}
                       </div>
-                      <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">
+                      <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-3 group-hover:text-gradient transition-colors">
                         {article.title}
                       </h2>
                       <div className="flex items-center text-xs text-gray-500 mb-4 space-x-4">
@@ -263,7 +263,7 @@ const NewsPage = () => {
                       </div>
                       <Button 
                         variant="outline" 
-                        className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+                        className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-gradient"
                         onClick={() => handleReadMore(article.id)}
                       >
                         View Full Article

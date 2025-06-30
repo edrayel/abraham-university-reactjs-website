@@ -231,7 +231,7 @@ const Events = () => {
                       )}
                     </div>
                     <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">{event.title}</h3>
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-gradient transition-colors">{event.title}</h3>
                       <div className="text-sm text-gray-500 mb-1 flex items-center">
                         <CalendarDays className="h-4 w-4 mr-2 text-blue-600" />
                         {formatDate(event.start_date, event.end_date)} {eventTime && `· ${eventTime}`}

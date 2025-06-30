@@ -260,7 +260,7 @@ const Visit = () => {
                     ?.booking_url
                 )
               }
-              className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-10 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-white text-gradient hover:bg-blue-50 text-lg px-10 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               Schedule Your Visit
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -280,7 +280,7 @@ const Visit = () => {
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
               Ways to{" "}
-              <span className="text-blue-700">Experience Our Campus</span>
+              <span className="text-gradient">Experience Our Campus</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Choose the visit option that best suits your interests and
@@ -309,7 +309,7 @@ const Visit = () => {
                   </div>
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-2xl font-semibold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-3 group-hover:text-gradient transition-colors">
                     {option.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-2">
@@ -370,7 +370,7 @@ const Visit = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Campus <span className="text-blue-700">Highlights</span>
+              Campus <span className="text-gradient">Highlights</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Discover some of the most iconic and beloved spots on our historic
@@ -396,7 +396,7 @@ const Visit = () => {
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-gradient transition-colors">
                     {highlight.name}
                   </h3>
                   <p className="text-gray-600 text-sm">
@@ -425,7 +425,7 @@ const Visit = () => {
                 <div>
                   <p className="text-gray-700 mb-4">
                     We are located at: <br />
-                    <strong className="text-blue-700">{address}</strong>
+                    <strong className="text-gradient">{address}</strong>
                   </p>
                   <p className="text-gray-700 mb-6">
                     Find information about parking, accommodations, and local
@@ -488,7 +488,7 @@ const Visit = () => {
             <Button
               asChild
               size="lg"
-              className="bg-white text-blue-700 hover:bg-blue-50 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-white text-gradient hover:bg-blue-50 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <a
                 href={`mailto:${contactEmail}`}

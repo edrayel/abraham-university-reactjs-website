@@ -101,7 +101,7 @@ const AwardsApplication = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Available <span className="text-blue-700">Scholarships</span>
+              Available <span className="text-gradient">Scholarships</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               We offer a range of scholarships based on merit, need, and specific talents. Explore the options below.
@@ -150,7 +150,7 @@ const AwardsApplication = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Application <span className="text-blue-700">Process</span>
+              Application <span className="text-gradient">Process</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Follow these steps to successfully apply for scholarships and awards.
@@ -167,7 +167,7 @@ const AwardsApplication = () => {
                 className="bg-white p-6 rounded-xl shadow-lg text-center card-hover"
               >
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6">
-                  <step.icon className="h-8 w-8 text-blue-700" />
+                  <step.icon className="h-8 w-8 text-gradient" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">{step.title}</h3>
                 <p className="text-gray-600 text-sm">{step.description}</p>
@@ -199,7 +199,7 @@ const AwardsApplication = () => {
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
               Our Financial Aid office is here to help you navigate the awards and application process. Don't hesitate to reach out with your questions.
             </p>
-            <Button asChild size="lg" className="bg-white text-blue-700 hover:bg-blue-50 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300">
+            <Button asChild size="lg" className="bg-white text-gradient hover:bg-blue-50 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300">
               <Link to="/contact">Contact Financial Aid</Link>
             </Button>
           </motion.div>

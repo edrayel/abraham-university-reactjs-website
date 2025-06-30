@@ -246,7 +246,7 @@ const Alumni = () => {
                 role="presentation"
               >
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                  <stat.icon className="h-8 w-8 text-blue-700" />
+                  <stat.icon className="h-8 w-8 text-gradient" />
                 </div>
                 <div className="text-3xl font-bold text-gray-800 mb-1">
                   {stat.number}
@@ -267,7 +267,7 @@ const Alumni = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Notable <span className="text-blue-700">Alumni</span>
+              Notable <span className="text-gradient">Alumni</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Our graduates have gone on to achieve great things in various
@@ -294,7 +294,7 @@ const Alumni = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-1 group-hover:text-blue-700">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-1 group-hover:text-gradient">
                     {alumnus.name}
                   </h3>
                   <p className="text-sm text-blue-600 font-medium mb-1">
@@ -317,7 +317,7 @@ const Alumni = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Alumni <span className="text-blue-700">Services & Benefits</span>
+              Alumni <span className="text-gradient">Services & Benefits</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               As a graduate of Abraham University, you have access to a wide
@@ -336,7 +336,7 @@ const Alumni = () => {
                 role="presentation"
               >
                 <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <service.icon className="h-6 w-6 text-blue-700" />
+                  <service.icon className="h-6 w-6 text-gradient" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -387,7 +387,7 @@ const Alumni = () => {
               <Button
                 size="lg"
                 onClick={() => handleAlumniAction("Update Your Info")}
-                className="bg-white text-blue-700 hover:bg-blue-50 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-white text-gradient hover:bg-blue-50 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Update Your Info
               </Button>
@@ -395,7 +395,7 @@ const Alumni = () => {
                 size="lg"
                 variant="outline"
                 onClick={() => handleAlumniAction("Find an Event")}
-                className="border-white text-white hover:bg-white hover:text-blue-700 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
+                className="border-white text-white hover:bg-white hover:text-gradient font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Find an Event
               </Button>
