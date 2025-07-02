@@ -62,7 +62,7 @@ const Header = () => {
             <img
               src="/assets/img/abraham-logo.avif"
               alt="Abraham University Logo"
-              className="h-20 w-20 filter-none"
+              className="w-20 filter-none"
             />
             <div>
               <span className="text-2xl font-bold font-heading text-minimalist-white">Abraham University</span>

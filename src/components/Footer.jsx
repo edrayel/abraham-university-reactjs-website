@@ -52,7 +52,7 @@ const Footer = () => {
               <img
                 src="/assets/img/abraham-logo.avif"
                 alt="Abraham University Logo"
-                className="h-48 w-48 filter-none"
+                className="w-48 filter-none"
               />
             </Link>
             <div className="flex space-x-4">
