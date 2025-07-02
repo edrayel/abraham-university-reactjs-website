@@ -121,16 +121,16 @@ const Events = () => {
 
 
   return (
-    <div className="min-h-screen pt-20 bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="section-padding hero-gradient">
+      <section className="pt-60 pb-40 hero-gradient">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center text-white max-w-4xl mx-auto"
-          >
-            <CalendarDays className="h-16 w-16 mx-auto mb-6 text-sky-300" />
+            className="text-center text-white max-w-4xl mx-auto">
+          
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University Events</h1>
             <p className="text-xl text-blue-100 leading-relaxed">
               Discover upcoming events, workshops, performances, and community gatherings at Abraham University.
@@ -231,7 +231,7 @@ const Events = () => {
                       )}
                     </div>
                     <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">{event.title}</h3>
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-gradient transition-colors">{event.title}</h3>
                       <div className="text-sm text-gray-500 mb-1 flex items-center">
                         <CalendarDays className="h-4 w-4 mr-2 text-blue-600" />
                         {formatDate(event.start_date, event.end_date)} {eventTime && `· ${eventTime}`}

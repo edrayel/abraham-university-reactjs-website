@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const ContactHero = () => {
   return (
-    <section className="section-padding hero-gradient">
+    <section className="pt-60 pb-40 hero-gradient">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

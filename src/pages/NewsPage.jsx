@@ -168,15 +168,15 @@ const NewsPage = () => {
 
 
   return (
-    <div className="min-h-screen pt-20 bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="section-padding hero-gradient">
+      <section className="pt-60 pb-40 hero-gradient">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center text-white max-w-4xl mx-auto"
-          >
+            className="text-center text-white max-w-4xl mx-auto">
+          
             <Newspaper className="h-16 w-16 mx-auto mb-6 text-sky-300" />
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University News</h1>
             <p className="text-xl text-blue-100 leading-relaxed">
@@ -239,7 +239,7 @@ const NewsPage = () => {
                       <div className="text-sm text-blue-600 font-semibold mb-2 uppercase tracking-wider">
                         {newsCategories.find(c => c.id === article.category)?.name || article.category}
                       </div>
-                      <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">
+                      <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-3 group-hover:text-gradient transition-colors">
                         {article.title}
                       </h2>
                       <div className="flex items-center text-xs text-gray-500 mb-4 space-x-4">
@@ -263,7 +263,7 @@ const NewsPage = () => {
                       </div>
                       <Button 
                         variant="outline" 
-                        className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+                        className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-gradient"
                         onClick={() => handleReadMore(article.id)}
                       >
                         View Full Article

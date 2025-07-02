@@ -68,15 +68,15 @@ const Gallery = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-gray-50">
-      <section className="section-padding hero-gradient">
+    <div className="min-h-screen bg-gray-50">
+      <section className="pt-60 pb-40 hero-gradient">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-white max-w-4xl mx-auto"
           >
-            <ImageIcon className="h-16 w-16 mx-auto mb-6 text-sky-300" />
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University Gallery</h1>
             <p className="text-xl text-blue-100 leading-relaxed">
               Explore the vibrant life, stunning campus, and memorable moments at Abraham University through our visual gallery.
