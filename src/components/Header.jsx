@@ -115,9 +115,9 @@ const Header = () => {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-md hover:bg-minimalist-lightGray"
+            className="lg:hidden p-2 rounded-md hover:bg-minimalist-lightGray/20"
           >
-            {isOpen ? <X className="h-6 w-6 text-minimalist-black" /> : <Menu className="h-6 w-6 text-minimalist-white" />}
+            {isOpen ? <X className="h-6 w-6 text-minimalist-white" /> : <Menu className="h-6 w-6 text-minimalist-white" />}
           </button>
         </div>
 
@@ -126,14 +126,14 @@ const Header = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden mt-4 py-4 bg-minimalist-white rounded-lg shadow-xl border border-minimalist-lightGray"
+            className="lg:hidden mt-4 py-4 bg-primary/60 backdrop-blur-sm rounded-lg shadow-xl border border-minimalist-lightGray/20"
           >
             {[...mainNavItems, ...topNavItems].map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`flex items-center px-4 py-3 font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright hover:bg-minimalist-lightGray/50 ${location.pathname === item.path ? 'text-victorian-gold-bright bg-minimalist-lightGray/50' : ''}`}  
+                className={`flex items-center px-4 py-3 font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright hover:bg-minimalist-lightGray/20 ${location.pathname === item.path ? 'text-victorian-gold-bright bg-minimalist-lightGray/20' : ''}`}  
               >
                 {item.icon && <item.icon className="mr-2 h-5 w-5" />}
                 {item.name}
