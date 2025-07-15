@@ -37,7 +37,7 @@ const AboutSection = () => {
               ))}
             </ul>
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-3">
-              <Link to="/about">Learn More About Us</Link>
+              <Link to="/about">Learn More About Us!!</Link>
             </Button>
           </motion.div>
           <motion.div
