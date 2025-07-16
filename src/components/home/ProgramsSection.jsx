@@ -1,38 +1,42 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import ImagePlaceholder from '@/components/ui/ImagePlaceholder';
+import React from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
 
 const programsData = [
   {
-    title: 'Computer Science',
-    description: 'Cutting-edge technology and programming',
-    imageAlt: 'Students collaborating in a modern computer lab',
-    imageQuery: 'computer-science-students',
-    link: '/academics',
+    title: "Computer Science",
+    description: "Technology-driven, problem-solving STEM education",
+    imageAlt: "Students collaborating in a modern computer lab",
+    imageQuery:
+      "https://abrahamuniversity-v1.edwardrajah.com/photo-by-marvin-meyer/",
+    link: "/academics",
   },
   {
-    title: 'Business Administration',
-    description: 'Leadership and entrepreneurship skills',
-    imageAlt: 'Diverse group of business students in discussion',
-    imageQuery: 'business-students-discussion',
-    link: '/academics',
+    title: "Business Administration",
+    description: "Equipping ethical, visionary business pioneers",
+    imageAlt: "Diverse group of business students in discussion",
+    imageQuery:
+      "https://abrahamuniversity-v1.edwardrajah.com/photo-by-christina-wocintechchat-com/",
+    link: "/academics",
   },
   {
-    title: 'Engineering',
-    description: 'Innovation and problem-solving',
-    imageAlt: 'Engineering students working with advanced equipment',
-    imageQuery: 'engineering-students-equipment',
-    link: '/academics',
+    title: "Bible Literature",
+    description: "Exploring scripture with insight",
+    imageAlt: "Medical students in a state-of-the-art laboratory",
+    imageQuery:
+      "https://abrahamuniversity-v1.edwardrajah.com/photo-by-sincerely-media/",
+    link: "/academics",
   },
   {
-    title: 'Medicine',
-    description: 'Healthcare and medical research',
-    imageAlt: 'Medical students in a state-of-the-art laboratory',
-    imageQuery: 'medical-students-lab',
-    link: '/academics',
+    title: "Healthcare Administration",
+    description: "Spirit-empowered leadership for transformative care",
+    imageAlt: "Engineering students working with advanced equipment",
+    imageQuery:
+      "https://abrahamuniversity-v1.edwardrajah.com/photo-by-luis-melendez/",
+    link: "/academics",
   },
 ];
 
@@ -50,7 +54,8 @@ const ProgramsSection = () => {
             Explore <span className="text-gradient">Our Programs</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover world-class academic programs designed to prepare you for success in your chosen field.
+            Discover world-class academic programs designed to prepare you for
+            success in your chosen field.
           </p>
         </motion.div>
 
@@ -66,13 +71,17 @@ const ProgramsSection = () => {
             >
               <Link to={program.link} className="block">
                 <ImagePlaceholder
-                       src="https://placehold.co/400x300/E0E0E0/333333/png?text=Program+Image"
-                       alt={program.imageAlt}
-                       className="group-hover:scale-105 transition-transform duration-300"
-                   />
+                  src={program.imageQuery}
+                  alt={program.imageAlt}
+                  className="group-hover:scale-105 transition-transform duration-300"
+                />
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary transition-colors font-libreBaskerville">{program.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{program.description}</p>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary transition-colors font-libreBaskerville">
+                    {program.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {program.description}
+                  </p>
                   <div className="flex items-center text-primary font-medium group-hover:underline text-sm">
                     Learn More
                     <ChevronRight className="ml-1 h-4 w-4 inline-block align-middle" />
@@ -84,7 +93,11 @@ const ProgramsSection = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-3">
+          <Button
+            asChild
+            size="lg"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-3"
+          >
             <Link to="/academics">View All Programs</Link>
           </Button>
         </div>

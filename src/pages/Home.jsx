@@ -29,7 +29,6 @@ const Home = () => {
     fetchAllData();
   }, []);
 
-  
   if (isLoading) {
     return (
       <div className="min-h-screen pt-20">
@@ -72,18 +71,16 @@ const Home = () => {
     );
   }
 
-  
-  
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <HeroSection />
       <StatsSection />
-      <EventFliersSection />
+      {/* <EventFliersSection /> */}
       <ProgramsSection />
       <AboutSection />
-      <NewsSection />
+      {/* <NewsSection /> */}
       <EventsSection />
       <GivingSection />
       <VisitSection />

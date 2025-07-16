@@ -1,34 +1,37 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import ImagePlaceholder from '@/components/ui/ImagePlaceholder';
+import React from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
 
 const eventsData = [
   {
-    title: 'Annual Research Symposium',
-    date: 'July 15, 2025',
-    location: 'University Grand Hall',
-    imageAlt: 'Students presenting research at a symposium',
-    imageQuery: 'research-symposium-event',
-    link: '/events#research-symposium',
+    title: "Annual Research Symposium",
+    date: "July 15, 2025",
+    location: "University Grand Hall",
+    imageAlt: "Students presenting research at a symposium",
+    imageQuery:
+      "https://abrahamuniversity-v1.edwardrajah.com/wp-content/uploads/2025/07/gkuc4tmhoiy.jpg",
+    link: "/events#research-symposium",
   },
   {
-    title: 'Homecoming Weekend',
-    date: 'October 10-12, 2025',
-    location: 'Campus Wide',
-    imageAlt: 'Alumni and students at a homecoming football game',
-    imageQuery: 'homecoming-event',
-    link: '/events#homecoming-2025',
+    title: "Homecoming Weekend",
+    date: "October 10-12, 2025",
+    location: "Campus Wide",
+    imageAlt: "Alumni and students at a homecoming football game",
+    imageQuery:
+      "https://abrahamuniversity-v1.edwardrajah.com/wp-content/uploads/2025/07/q1p7bh3shj8.jpg",
+    link: "/events#homecoming-2025",
   },
   {
-    title: 'Distinguished Speaker Series: Dr. Jane Goodall',
-    date: 'November 5, 2025',
-    location: 'Performing Arts Center',
-    imageAlt: 'Dr. Jane Goodall speaking on stage',
-    imageQuery: 'speaker-series-event',
-    link: '/events#speaker-goodall',
+    title: "Distinguished Speaker Series: Dr. Jane Goodall",
+    date: "November 5, 2025",
+    location: "Performing Arts Center",
+    imageAlt: "Dr. Jane Goodall speaking on stage",
+    imageQuery:
+      "https://abrahamuniversity-v1.edwardrajah.com/wp-content/uploads/2025/07/vcfxt2yt1eq.jpg",
+    link: "/events#speaker-goodall",
   },
 ];
 
@@ -61,14 +64,20 @@ const EventsSection = () => {
             >
               <Link to={event.link} className="block">
                 <ImagePlaceholder
-                    src="https://placehold.co/400x300/E0E0E0/333333/png?text=Event+Image"
-                    alt={event.imageAlt}
-                    className="w-full group-hover:scale-105 transition-transform duration-300"
+                  src={event.imageQuery}
+                  alt={event.imageAlt}
+                  className="w-full group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="p-6">
-                  <div className="text-xs text-primary font-semibold mb-1 uppercase tracking-wider">{event.date}</div>
-                  <div className="text-xs text-gray-500 mb-2">{event.location}</div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors font-libreBaskerville">{event.title}</h3>
+                  <div className="text-xs text-primary font-semibold mb-1 uppercase tracking-wider">
+                    {event.date}
+                  </div>
+                  <div className="text-xs text-gray-500 mb-2">
+                    {event.location}
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors font-libreBaskerville">
+                    {event.title}
+                  </h3>
                   <div className="flex items-center text-primary font-medium group-hover:underline text-sm">
                     Event Details
                     <ChevronRight className="ml-1 h-4 w-4 inline-block align-middle" />
@@ -79,7 +88,12 @@ const EventsSection = () => {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 hover:text-primary/90 rounded-md px-8 py-3">
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="border-primary text-primary hover:bg-primary/10 hover:text-primary/90 rounded-md px-8 py-3"
+          >
             <Link to="/events">View All Events</Link>
           </Button>
         </div>
