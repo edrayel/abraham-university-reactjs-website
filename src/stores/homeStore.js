@@ -1,8 +1,6 @@
-// import { create } from "zustand";
 import { create } from "zustand";
+import apiService from "../services/apiService";
 
-const HOME_ENDPOINT =
-  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/home";
 
 const useUniversityStore = create((set, get) => ({
   // State variables for different data sections
@@ -26,13 +24,7 @@ const useUniversityStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     
     try {
-      const response = await fetch(HOME_ENDPOINT);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
+      const data = await apiService.getHomeData();
       
       set({
         hero: data.hero || null,
@@ -137,11 +129,11 @@ const useUniversityStore = create((set, get) => ({
   },
 
   // Refresh data if cache is expired
-  refreshIfExpired: async (apiUrl) => {
+  refreshIfExpired: async () => {
     const { isCacheExpired, fetchAllData } = get();
     
     if (isCacheExpired()) {
-      return await fetchAllData(apiUrl);
+      return await fetchAllData();
     }
     
     return null; // Data is still fresh

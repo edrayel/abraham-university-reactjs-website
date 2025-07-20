@@ -1,7 +1,5 @@
 import { create } from "zustand";
-
-const ADMISSIONS_ENDPOINT =
-  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/admissions"; // Replace with actual endpoint
+import apiService from "../services/apiService";
 
 const useAdmissionsStore = create((set, get) => ({
   // State variables for JSON response objects
@@ -20,13 +18,7 @@ const useAdmissionsStore = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await fetch(ADMISSIONS_ENDPOINT);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await apiService.getAdmissionsData();
 
       set({
         requirements: Array.isArray(data.requirements) ? data.requirements : [],
