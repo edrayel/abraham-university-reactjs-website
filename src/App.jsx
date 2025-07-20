@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from '@/components/ui/PageTransition';
+import ApiStatusIndicator from '@/components/ui/ApiStatusIndicator';
 import Home from '@/pages/Home.jsx';
 import About from '@/pages/About.jsx';
 import Academics from '@/pages/Academics.jsx';
@@ -22,6 +23,7 @@ import NewsPage from '@/pages/NewsPage.jsx';
 import AwardsApplication from '@/pages/AwardsApplication.jsx';
 import Alumni from '@/pages/Alumni.jsx';
 import Gallery from '@/pages/Gallery.jsx';
+import ApiTest from '@/pages/ApiTest.jsx';
 
 // Wrapper component for AnimatePresence
 const AnimatedRoutes = () => {
@@ -46,6 +48,10 @@ const AnimatedRoutes = () => {
         <Route path="/awards-application" element={<PageTransition><AwardsApplication /></PageTransition>} />
         <Route path="/alumni" element={<PageTransition><Alumni /></PageTransition>} />
         <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
+        {/* Only available in development mode */}
+        {import.meta.env.DEV && (
+          <Route path="/api-test" element={<PageTransition><ApiTest /></PageTransition>} />
+        )}
       </Routes>
     </AnimatePresence>
   );
@@ -62,6 +68,8 @@ function App() {
         </main>
         <Footer />
         <Toaster />
+        {/* Only show API status indicator in development mode */}
+        {import.meta.env.DEV && <ApiStatusIndicator />}
       </div>
     </Router>
   );
