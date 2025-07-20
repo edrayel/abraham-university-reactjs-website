@@ -4,38 +4,25 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
-
-const eventsData = [
-  {
-    title: "Annual Research Symposium",
-    date: "July 15, 2025",
-    location: "University Grand Hall",
-    imageAlt: "Students presenting research at a symposium",
-    imageQuery:
-      "https://abrahamuniversity-v1.edwardrajah.com/wp-content/uploads/2025/07/gkuc4tmhoiy.jpg",
-    link: "/events#research-symposium",
-  },
-  {
-    title: "Homecoming Weekend",
-    date: "October 10-12, 2025",
-    location: "Campus Wide",
-    imageAlt: "Alumni and students at a homecoming football game",
-    imageQuery:
-      "https://abrahamuniversity-v1.edwardrajah.com/wp-content/uploads/2025/07/q1p7bh3shj8.jpg",
-    link: "/events#homecoming-2025",
-  },
-  {
-    title: "Distinguished Speaker Series: Dr. Jane Goodall",
-    date: "November 5, 2025",
-    location: "Performing Arts Center",
-    imageAlt: "Dr. Jane Goodall speaking on stage",
-    imageQuery:
-      "https://abrahamuniversity-v1.edwardrajah.com/wp-content/uploads/2025/07/vcfxt2yt1eq.jpg",
-    link: "/events#speaker-goodall",
-  },
-];
+import useUniversityStore from "@/stores/homeStore";
 
 const EventsSection = () => {
+  const { upcomingEvents } = useUniversityStore();
+  
+  // Format date for display
+  const formatEventDate = (startDate, endDate) => {
+    if (!startDate) return "";
+    
+    const start = new Date(startDate);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    
+    if (endDate && endDate !== startDate) {
+      const end = new Date(endDate);
+      return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`;
+    }
+    
+    return start.toLocaleDateString('en-US', options);
+  };
   return (
     <section className="section-padding bg-white">
       <div className="container mx-auto px-4">
@@ -53,39 +40,51 @@ const EventsSection = () => {
           </p>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {eventsData.map((event, index) => (
-            <motion.div
-              key={event.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-md border border-gray-200 overflow-hidden card-hover group"
-            >
-              <Link to={event.link} className="block">
-                <ImagePlaceholder
-                  src={event.imageQuery}
-                  alt={event.imageAlt}
-                  className="w-full group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="p-6">
-                  <div className="text-xs text-primary font-semibold mb-1 uppercase tracking-wider">
-                    {event.date}
+          {upcomingEvents && upcomingEvents.length > 0 ? (
+            upcomingEvents.map((event, index) => (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-md border border-gray-200 overflow-hidden card-hover group"
+              >
+                <Link to={event.permalink || `/events/${event.slug}`} className="block">
+                  <ImagePlaceholder
+                    src={event.featured_image}
+                    alt={event.title}
+                    className="w-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="p-6">
+                    <div className="text-xs text-primary font-semibold mb-1 uppercase tracking-wider">
+                      {formatEventDate(event.start_date, event.end_date)}
+                    </div>
+                    <div className="text-xs text-gray-500 mb-2">
+                      {event.location || "Location TBA"}
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors font-libreBaskerville">
+                      {event.title}
+                    </h3>
+                    {event.featured_event && (
+                      <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full inline-block mb-2">
+                        Featured Event
+                      </div>
+                    )}
+                    <div className="flex items-center text-primary font-medium group-hover:underline text-sm">
+                      Event Details
+                      <ChevronRight className="ml-1 h-4 w-4 inline-block align-middle" />
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500 mb-2">
-                    {event.location}
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors font-libreBaskerville">
-                    {event.title}
-                  </h3>
-                  <div className="flex items-center text-primary font-medium group-hover:underline text-sm">
-                    Event Details
-                    <ChevronRight className="ml-1 h-4 w-4 inline-block align-middle" />
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500 text-lg">No upcoming events at this time.</p>
+              <p className="text-gray-400 text-sm mt-2">Check back soon for exciting events and activities!</p>
+            </div>
+          )}
         </div>
         <div className="text-center mt-12">
           <Button
