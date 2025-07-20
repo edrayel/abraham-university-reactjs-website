@@ -1,23 +1,69 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, AlertTriangle, Home, Settings, UserCircle, FileText, Calendar, DollarSign, Briefcase, Building, UserCog } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, Home, Settings, UserCircle, FileText, Calendar, DollarSign, Briefcase, Building, UserCog, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+import usePortalsStore from '@/stores/usePortalsStore';
 
-const userTypeDetails = {
+// Default user type details as fallback
+const defaultUserTypeDetails = {
   student: { title: 'Student WebApp', icon: UserCircle, features: ['View Grades', 'Course Registration', 'Library Access', 'Student Services'] },
   parent: { title: 'Parent WebApp', icon: UserCircle, features: ['Student Progress', 'Fee Payment', 'Notifications', 'University News'] },
   alumni: { title: 'Alumni WebApp', icon: UserCog, features: ['Networking', 'Events', 'Career Services', 'Giving Back'] },
   faculty: { title: 'Faculty WebApp', icon: Briefcase, features: ['Course Management', 'Research Tools', 'Student Advising', 'Academic Calendar'] },
-  employee: { title: 'Employee WebApp', icon: Briefcase, features: ['HR Portal', 'Payroll', 'Benefits Information', 'Internal Memos'] },
+  staff: { title: 'Staff WebApp', icon: Briefcase, features: ['HR Portal', 'Payroll', 'Benefits Information', 'Internal Memos'] },
   vendor: { title: 'Vendor WebApp', icon: Building, features: ['Contract Management', 'Invoice Submission', 'Communication Hub', 'Service Status'] },
   admin: { title: 'Admin WebApp', icon: Settings, features: ['User Management', 'System Analytics', 'Content Management', 'Security Settings'] },
 };
 
 const WebApp = () => {
   const { userType } = useParams();
-  const details = userTypeDetails[userType] || { title: 'WebApp', icon: AlertTriangle, features: ['Feature not available for this user type.'] };
+  const { 
+    studentPortal, 
+    facultyPortal, 
+    staffPortal, 
+    alumniPortal, 
+    parentPortal,
+    isLoading, 
+    error, 
+    fetchAllData,
+    getPortalByType 
+  } = usePortalsStore();
+
+  useEffect(() => {
+    fetchAllData().catch(error => {
+      console.error('Failed to fetch portals data:', error);
+    });
+  }, [fetchAllData]);
+
+  // Get portal data from store or fall back to default
+  const portalData = getPortalByType(userType);
+  
+  // Determine which icon to use based on user type
+  const getIconForUserType = (type) => {
+    switch(type) {
+      case 'student': return UserCircle;
+      case 'parent': return UserCircle;
+      case 'alumni': return UserCog;
+      case 'faculty': return Briefcase;
+      case 'staff': return Briefcase;
+      case 'vendor': return Building;
+      case 'admin': return Settings;
+      default: return AlertTriangle;
+    }
+  };
+
+  // Combine API data with defaults
+  const details = portalData ? {
+    title: portalData.title || `${userType.charAt(0).toUpperCase() + userType.slice(1)} WebApp`,
+    icon: getIconForUserType(userType),
+    features: portalData.features || defaultUserTypeDetails[userType]?.features || ['Feature not available for this user type.']
+  } : defaultUserTypeDetails[userType] || { 
+    title: 'WebApp', 
+    icon: AlertTriangle, 
+    features: ['Feature not available for this user type.'] 
+  };
 
   const handleFeatureClick = (featureName) => {
     toast({
@@ -46,12 +92,24 @@ const WebApp = () => {
       </header>
 
       <main className="container mx-auto px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white p-8 rounded-xl shadow-2xl"
-        >
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+            <span className="ml-4 text-xl text-gray-700">Loading portal data...</span>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 bg-white p-8 rounded-xl shadow-2xl">
+            <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+            <p className="text-red-600 text-xl mb-4">Error loading portal data</p>
+            <Button onClick={() => fetchAllData()}>Retry</Button>
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white p-8 rounded-xl shadow-2xl"
+          >
           <div className="text-center mb-12">
             <h2 className="text-4xl font-semibold text-gray-800 mb-3">Welcome to the {details.title}!</h2>
             <p className="text-lg text-gray-600">
@@ -109,7 +167,8 @@ const WebApp = () => {
               Abraham University WebApp © 2025
             </p>
           </motion.div>
-        </motion.div>
+          </motion.div>
+        )}
       </main>
     </div>
   );

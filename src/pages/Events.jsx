@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { CalendarDays, MapPin, Search, Filter, ChevronRight, Ticket } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
-
-const API_ENDPOINT = 'https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/events';
+import { CalendarDays, MapPin, Search, Filter, ChevronRight, Ticket, Clock } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Switch } from '../components/ui/switch';
+import { toast } from '../components/ui/use-toast';
+import apiService from '../services/apiService';
 
 const Events = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,17 +14,16 @@ const Events = () => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPastEvents, setShowPastEvents] = useState(false);
 
   // Fetch events from API
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const response = await fetch(API_ENDPOINT);
-        if (!response.ok) {
-          throw new Error('Failed to fetch events');
-        }
-        const data = await response.json();
+        
+        // Use apiService with show_past parameter
+        const data = await apiService.getEventsData({ show_past: showPastEvents });
         
         setEvents(data.events || []);
         setFilteredEvents(data.events || []);
@@ -46,7 +45,7 @@ const Events = () => {
     };
 
     fetchEvents();
-  }, []);
+  }, [showPastEvents]); // Re-fetch when showPastEvents changes
 
   // Re-filter events when events data changes
   useEffect(() => {
@@ -165,6 +164,22 @@ const Events = () => {
                 ))}
               </select>
             </div>
+            <div className="flex items-center gap-2 ml-0 md:ml-4 mt-4 md:mt-0">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="show-past-events"
+                  checked={showPastEvents}
+                  onCheckedChange={setShowPastEvents}
+                />
+                <label
+                  htmlFor="show-past-events"
+                  className="text-sm font-medium flex items-center cursor-pointer"
+                >
+                  <Clock className="h-4 w-4 mr-1 text-gray-500" />
+                  Show Past Events
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -215,7 +230,12 @@ const Events = () => {
                   >
                     <div className="h-56 relative overflow-hidden">
                       <img
-                        src={event.featured_image || `https://source.unsplash.com/random/400x300/?${primaryCategory?.slug || 'university'}-event`} 
+                        src={event.featured_image || 
+                          (primaryCategory?.slug === 'academic' ? '/academic-event-placeholder.svg' :
+                           primaryCategory?.slug === 'social' ? '/social-event-placeholder.svg' :
+                           primaryCategory?.slug === 'workshop' ? '/workshop-event-placeholder.svg' :
+                           '/event-placeholder.svg')
+                        } 
                         alt={event.title} 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
                       />
