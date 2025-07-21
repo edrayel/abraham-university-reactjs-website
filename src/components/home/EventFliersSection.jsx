@@ -4,69 +4,53 @@ import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ImagePlaceholder from '@/components/ui/ImagePlaceholder';
+import useUniversityStore from '@/stores/homeStore';
 
-const flierData = [
-  {
-    id: 1,
-    title: 'Innovate & Inspire: Tech Summit 2025',
-    date: 'August 5-7, 2025',
-    location: 'Innovation Hub Auditorium',
-    description: 'Join leading tech visionaries, workshops, and networking opportunities. Discover the future of technology.',
-    imageQuery: 'tech-summit-conference-futuristic',
-    link: '/events#tech-summit',
-    bgColor: 'bg-victorian-dark',
-    textColor: 'text-white',
-    buttonColor: 'bg-victorian-gold text-white hover:bg-victorian-gold-bright',
-  },
-  {
-    id: 2,
-    title: 'Global Arts Festival: A World of Creativity',
-    date: 'September 12-15, 2025',
-    location: 'Campus Green & Performing Arts Center',
-    description: 'Experience diverse cultures through music, dance, visual arts, and culinary delights. A celebration for all!',
-    imageQuery: 'multicultural-arts-festival-vibrant',
-    link: '/events#arts-festival',
-    bgColor: 'bg-victorian-medium',
-    textColor: 'text-white',
-    buttonColor: 'bg-victorian-gold text-white hover:bg-victorian-gold-bright',
-  },
-  {
-    id: 3,
-    title: 'Sustainability Solutions Challenge',
-    date: 'October 22, 2025',
-    location: 'Environmental Science Building',
-    description: 'Students present innovative solutions for a greener future. Keynote by renowned environmentalists.',
-    imageQuery: 'sustainability-event-green-technology',
-    link: '/events#sustainability-challenge',
-    bgColor: 'bg-victorian-dark',
-    textColor: 'text-white',
-    buttonColor: 'bg-victorian-gold text-white hover:bg-victorian-gold-bright',
-  },
-  {
-    id: 4,
-    title: 'Alumni Homecoming Gala: Legacy & Future',
-    date: 'November 8, 2025',
-    location: 'Grand Ballroom, University Center',
-    description: 'Reconnect with fellow graduates, celebrate achievements, and support the next generation of leaders.',
-    imageQuery: 'elegant-gala-event-alumni',
-    link: '/alumni#homecoming-gala',
-    bgColor: 'bg-victorian-medium',
-    textColor: 'text-white',
-    buttonColor: 'bg-victorian-gold text-white hover:bg-victorian-gold-bright',
+// Helper function to format date range for display
+const formatEventDate = (startDate, endDate) => {
+  if (!startDate) return "";
+  
+  const start = new Date(startDate);
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  
+  if (endDate && endDate !== startDate) {
+    const end = new Date(endDate);
+    return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`;
   }
-];
+  
+  return start.toLocaleDateString('en-US', options);
+};
+
+// Helper function to alternate background colors for fliers
+const getBgColorByIndex = (index) => {
+  return index % 2 === 0 ? 'bg-victorian-dark' : 'bg-victorian-medium';
+};
 
 const EventFliersSection = () => {
+  const { upcomingEvents } = useUniversityStore();
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Filter to show only featured events in the flier section if there are more than 4 events
+  // Otherwise show all events
+  const eventsToShow = upcomingEvents.length > 4 
+    ? upcomingEvents.filter(event => event.featured_event).slice(0, 4)
+    : upcomingEvents.slice(0, 4);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % flierData.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+    if (eventsToShow.length > 0) {
+      const timer = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % eventsToShow.length);
+      }, 4000);
+      return () => clearInterval(timer);
+    }
+  }, [eventsToShow.length]);
 
-  const currentFlier = flierData[currentIndex];
+  // If no events, don't render anything
+  if (eventsToShow.length === 0) {
+    return null;
+  }
+  
+  const currentEvent = eventsToShow[currentIndex];
 
   const variants = {
     enter: (direction) => {
@@ -119,7 +103,7 @@ const EventFliersSection = () => {
                 x: { type: "spring", stiffness: 300, damping: 30 },
                 opacity: { duration: 0.2 }
               }}
-              className={`absolute w-full h-full ${currentFlier.bgColor} ${currentFlier.textColor} p-8 md:p-12 flex flex-col md:flex-row items-center justify-between`}
+              className={`absolute w-full h-full ${getBgColorByIndex(currentIndex)} text-white p-8 md:p-12 flex flex-col md:flex-row items-center justify-between`}
             >
               <div className="md:w-1/2 mb-6 md:mb-0 md:pr-8 order-2 md:order-1">
                 <motion.h3 
@@ -128,7 +112,7 @@ const EventFliersSection = () => {
                   transition={{ delay: 0.2 }}
                   className="text-3xl md:text-4xl font-bold mb-4 leading-tight font-libreBaskerville"
                 >
-                  {currentFlier.title}
+                  {currentEvent.title}
                 </motion.h3>
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
@@ -136,7 +120,7 @@ const EventFliersSection = () => {
                   transition={{ delay: 0.3 }}
                   className="flex items-center text-sm opacity-90 mb-2"
                 >
-                  <CalendarDays className="h-4 w-4 mr-2" /> {currentFlier.date}
+                  <CalendarDays className="h-4 w-4 mr-2" /> {formatEventDate(currentEvent.start_date, currentEvent.end_date)}
                 </motion.div>
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
@@ -144,7 +128,7 @@ const EventFliersSection = () => {
                   transition={{ delay: 0.4 }}
                   className="flex items-center text-sm opacity-90 mb-5"
                 >
-                  <MapPin className="h-4 w-4 mr-2" /> {currentFlier.location}
+                  <MapPin className="h-4 w-4 mr-2" /> {currentEvent.location || "Location TBA"}
                 </motion.div>
                 <motion.p 
                   initial={{ opacity: 0, y: 20 }}
@@ -152,15 +136,15 @@ const EventFliersSection = () => {
                   transition={{ delay: 0.5 }}
                   className="mb-6 text-sm md:text-base leading-relaxed opacity-95"
                 >
-                  {currentFlier.description}
+                  {currentEvent.short_description || currentEvent.excerpt || "Join us for this exciting event!"}
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
                 >
-                  <Button asChild size="lg" className={`${currentFlier.buttonColor} font-semibold px-6 py-3 rounded-md transition-all`}>
-                    <Link to={currentFlier.link}>
+                  <Button asChild size="lg" className="bg-victorian-gold text-white hover:bg-victorian-gold-bright font-semibold px-6 py-3 rounded-md transition-all">
+                    <Link to={currentEvent.permalink || `/events/${currentEvent.slug}`}>
                       Learn More <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
@@ -173,8 +157,8 @@ const EventFliersSection = () => {
                 className="md:w-1/2 h-48 md:h-48 md:h-full order-1 md:order-2 rounded-md overflow-hidden"
               >
                 <ImagePlaceholder 
-                  src={`https://placehold.co/600x600?text=${encodeURIComponent(currentFlier.imageQuery.replace(/-/g, '+'))}`} 
-                  alt={currentFlier.title} 
+                  src={currentEvent.featured_image} 
+                  alt={currentEvent.title} 
                   className="w-full h-full object-cover" 
                 />
               </motion.div>
@@ -182,7 +166,7 @@ const EventFliersSection = () => {
           </AnimatePresence>
           
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-            {flierData.map((_, index) => (
+            {eventsToShow.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
