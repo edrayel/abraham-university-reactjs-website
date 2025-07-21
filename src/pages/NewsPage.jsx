@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { Newspaper, Search, Filter, ChevronRight, CalendarDays, UserCircle } from 'lucide-react';
+import { Newspaper, Search, Filter, ChevronRight, CalendarDays, UserCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+import useNewsStore from '@/stores/useNewsStore';
 
-const initialNewsArticles = [
+// Fallback data in case API fails
+const fallbackNewsArticles = [
   {
     id: 'innovation-rank',
     title: 'Abraham University Ranks #1 in Innovation Nationally',
@@ -96,7 +98,8 @@ const initialNewsArticles = [
   }
 ];
 
-const newsCategories = [
+// Fallback categories in case API fails
+const fallbackCategories = [
   { id: 'all', name: 'All News' },
   { id: 'university_news', name: 'University News' },
   { id: 'academics', name: 'Academics' },
@@ -109,9 +112,37 @@ const newsCategories = [
 const NewsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [filteredArticles, setFilteredArticles] = useState(initialNewsArticles);
+  const [filteredArticles, setFilteredArticles] = useState([]);
   const location = useLocation();
+  
+  // Get news data from store
+  const { 
+    news, 
+    categories, 
+    isLoading, 
+    error, 
+    fetchNewsData,
+    fetchNewsByCategory,
+    searchNews,
+    refreshIfExpired
+  } = useNewsStore();
 
+  // Fetch news data on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await refreshIfExpired();
+      } catch (error) {
+        console.error('Failed to fetch news data:', error);
+        // If API fails, use fallback data
+        setFilteredArticles(fallbackNewsArticles);
+      }
+    };
+    
+    loadData();
+  }, [refreshIfExpired]);
+  
+  // Handle hash navigation
   useEffect(() => {
     const hash = location.hash.replace('#', '');
     if (hash) {
@@ -121,31 +152,81 @@ const NewsPage = () => {
       }
     }
   }, [location]);
+  
+  // Update filtered articles when news data changes
+  useEffect(() => {
+    if (news && news.length > 0) {
+      filterArticles(searchTerm, selectedCategory);
+    }
+  }, [news, searchTerm, selectedCategory]);
 
 
   const handleSearchChange = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    filterArticles(term, selectedCategory);
+    
+    // If term is long enough, consider making an API call for search
+    if (term.length >= 3) {
+      searchNews(term).catch(error => {
+        console.error('Search failed:', error);
+        // Fall back to client-side filtering
+        filterArticles(term, selectedCategory);
+      });
+    } else {
+      filterArticles(term, selectedCategory);
+    }
   };
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId);
-    filterArticles(searchTerm, categoryId);
+    
+    // If selecting a specific category, fetch from API
+    if (categoryId !== 'all') {
+      fetchNewsByCategory(categoryId).catch(error => {
+        console.error('Category fetch failed:', error);
+        // Fall back to client-side filtering
+        filterArticles(searchTerm, categoryId);
+      });
+    } else {
+      // For 'all' category, just fetch all news or use existing data
+      fetchNewsData().catch(error => {
+        console.error('News fetch failed:', error);
+        filterArticles(searchTerm, categoryId);
+      });
+    }
   };
 
   const filterArticles = (term, category) => {
-    let articles = initialNewsArticles;
+    // Use news from the store, or fallback if empty
+    let articles = news.length > 0 ? news : fallbackNewsArticles;
+    
     if (category !== 'all') {
-      articles = articles.filter(article => article.category === category);
+      articles = articles.filter(article => {
+        // Handle different category data structures
+        if (typeof article.category === 'string') {
+          return article.category === category;
+        } else if (article.categories && Array.isArray(article.categories)) {
+          return article.categories.some(cat => cat.slug === category || cat.id === category);
+        }
+        return false;
+      });
     }
+    
     if (term) {
       articles = articles.filter(article =>
         article.title.toLowerCase().includes(term) ||
         article.excerpt.toLowerCase().includes(term) ||
-        (article.tags && article.tags.some(tag => tag.toLowerCase().includes(term)))
+        (article.tags && Array.isArray(article.tags) && article.tags.some(tag => {
+          if (typeof tag === 'string') {
+            return tag.toLowerCase().includes(term);
+          } else if (tag.name) {
+            return tag.name.toLowerCase().includes(term);
+          }
+          return false;
+        }))
       );
     }
+    
     setFilteredArticles(articles);
   };
 
@@ -207,7 +288,7 @@ const NewsPage = () => {
                 onChange={(e) => handleCategoryChange(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg appearance-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white"
               >
-                {newsCategories.map(cat => (
+                {(categories.length > 0 ? categories : fallbackCategories).map(cat => (
                   <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
               </select>
@@ -219,71 +300,102 @@ const NewsPage = () => {
       {/* News Articles Grid/List */}
       <section className="section-padding">
         <div className="container mx-auto px-4">
-          {filteredArticles.length > 0 ? (
-            <div className="space-y-12">
-              {filteredArticles.map((article, index) => (
-                <motion.article
-                  id={article.id}
-                  key={article.id}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.1 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-xl overflow-hidden group"
-                >
-                  <div className="md:flex">
-                    <div className="md:w-1/3 xl:w-1/4">
-                      <img-replace src={`https://source.unsplash.com/random/600x400/?${article.category}`} alt={article.image} className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    </div>
-                    <div className="p-6 md:p-8 flex-1">
-                      <div className="text-sm text-blue-600 font-semibold mb-2 uppercase tracking-wider">
-                        {newsCategories.find(c => c.id === article.category)?.name || article.category}
-                      </div>
-                      <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-3 group-hover:text-gradient transition-colors">
-                        {article.title}
-                      </h2>
-                      <div className="flex items-center text-xs text-gray-500 mb-4 space-x-4">
-                        <span className="flex items-center"><CalendarDays className="h-4 w-4 mr-1.5" /> {formatDate(article.date)}</span>
-                        <span className="flex items-center"><UserCircle className="h-4 w-4 mr-1.5" /> By {article.author}</span>
-                      </div>
-                      <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3 md:line-clamp-none">{article.excerpt}</p>
-                      
-                      {/* Collapsible full content preview */}
-                      <details className="group/details mb-6">
-                        <summary className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer flex items-center">
-                          Read Full Story Preview <ChevronRight className="ml-1 h-4 w-4 group-hover/details:rotate-90 transition-transform" />
-                        </summary>
-                        <div className="prose prose-sm max-w-none mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: article.content || "<p>Full content coming soon.</p>" }} />
-                      </details>
-                      
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {article.tags.map(tag => (
-                          <span key={tag} className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">{tag}</span>
-                        ))}
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-gradient"
-                        onClick={() => handleReadMore(article.id)}
-                      >
-                        View Full Article
-                        <ChevronRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </motion.article>
-              ))}
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+              <p className="text-lg text-gray-600">Loading news articles...</p>
             </div>
           ) : (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <Newspaper className="h-24 w-24 mx-auto text-gray-300 mb-4" />
-              <h2 className="text-2xl font-semibold text-gray-700 mb-2">No News Articles Found</h2>
-              <p className="text-gray-500">Try adjusting your search or filter criteria, or check back later for new stories.</p>
-            </motion.div>
+            <>
+              {error && (
+                <div className="text-center py-12 mb-8">
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-2xl mx-auto">
+                    <h2 className="text-xl font-semibold text-red-700 mb-2">Error Loading News</h2>
+                    <p className="text-gray-700 mb-4">{error}</p>
+                    <p className="text-gray-600">Showing fallback content instead.</p>
+                  </div>
+                </div>
+              )}
+              
+              {filteredArticles.length > 0 ? (
+                <div className="space-y-12">
+                  {filteredArticles.map((article, index) => (
+                    <motion.article
+                      id={article.id}
+                      key={article.id}
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.1 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="bg-white rounded-xl shadow-xl overflow-hidden group"
+                    >
+                      <div className="md:flex">
+                        <div className="md:w-1/3 xl:w-1/4">
+                          <img src={`https://source.unsplash.com/random/600x400/?${article.category}`} alt={article.image} className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div className="p-6 md:p-8 flex-1">
+                          <div className="text-sm text-blue-600 font-semibold mb-2 uppercase tracking-wider">
+                            {(() => {
+                              // Handle different category data structures
+                              if (typeof article.category === 'string') {
+                                const categoryObj = (categories.length > 0 ? categories : fallbackCategories)
+                                  .find(c => c.id === article.category || c.slug === article.category);
+                                return categoryObj ? categoryObj.name : article.category;
+                              } else if (article.categories && article.categories.length > 0) {
+                                return article.categories[0].name || 'Uncategorized';
+                              }
+                              return 'Uncategorized';
+                            })()}
+                          </div>
+                          <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-3 group-hover:text-gradient transition-colors">
+                            {article.title}
+                          </h2>
+                          <div className="flex items-center text-xs text-gray-500 mb-4 space-x-4">
+                            <span className="flex items-center"><CalendarDays className="h-4 w-4 mr-1.5" /> {formatDate(article.date)}</span>
+                            <span className="flex items-center"><UserCircle className="h-4 w-4 mr-1.5" /> By {article.author}</span>
+                          </div>
+                          <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3 md:line-clamp-none">{article.excerpt}</p>
+                          
+                          {/* Collapsible full content preview */}
+                          <details className="group/details mb-6">
+                            <summary className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer flex items-center">
+                              Read Full Story Preview <ChevronRight className="ml-1 h-4 w-4 group-hover/details:rotate-90 transition-transform" />
+                            </summary>
+                            <div className="prose prose-sm max-w-none mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: article.content || "<p>Full content coming soon.</p>" }} />
+                          </details>
+                          
+                          <div className="flex flex-wrap gap-2 mb-6">
+                            {article.tags && Array.isArray(article.tags) && article.tags.map((tag, index) => (
+                              <span key={index} className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">
+                                {typeof tag === 'string' ? tag : tag.name || ''}
+                              </span>
+                            ))}
+                          </div>
+                          <Button 
+                            variant="outline" 
+                            className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-gradient"
+                            onClick={() => handleReadMore(article.id)}
+                          >
+                            View Full Article
+                            <ChevronRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </motion.article>
+                  ))}
+                </div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-12"
+                >
+                  <Newspaper className="h-24 w-24 mx-auto text-gray-300 mb-4" />
+                  <h2 className="text-2xl font-semibold text-gray-700 mb-2">No News Articles Found</h2>
+                  <p className="text-gray-500">Try adjusting your search or filter criteria, or check back later for new stories.</p>
+                </motion.div>
+              )}
+            </>
           )}
         </div>
       </section>
