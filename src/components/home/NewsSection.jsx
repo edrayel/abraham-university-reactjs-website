@@ -107,7 +107,7 @@ const NewsSection = () => {
                         {article.categories.slice(0, 2).map((category) => (
                           <span 
                             key={category.id} 
-                            className="text-xs bg-primary/20 text-primary-foreground px-2 py-1 rounded-full"
+                            className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
                           >
                             {category.name}
                           </span>
