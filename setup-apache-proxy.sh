@@ -87,9 +87,33 @@ install_nodejs() {
     
     log "Installing Node.js ${NODE_VERSION}..."
     
+    # Remove any existing conflicting Node.js packages
+    log "Removing any existing Node.js packages to avoid conflicts..."
+    dnf remove -y nodejs npm nodejs-full-i18n 2>/dev/null || true
+    
+    # Clean package cache
+    dnf clean all
+    
     # Install Node.js from NodeSource repository
     curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | bash -
-    dnf install -y nodejs
+    
+    # Try to install nodejs with --allowerasing to handle any remaining conflicts
+    if ! dnf install -y nodejs --allowerasing; then
+        log "Standard installation failed, trying alternative approach..."
+        
+        # Try with --nobest flag as fallback
+        if ! dnf install -y nodejs --nobest; then
+            log "Alternative installation also failed, trying to skip broken packages..."
+            
+            # Last resort: skip broken packages
+            if ! dnf install -y nodejs --skip-broken; then
+                log "ERROR: All Node.js installation methods failed. Please install Node.js manually."
+                log "You can try: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash"
+                log "Then: nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION}"
+                exit 1
+            fi
+        fi
+    fi
     
     # Install PM2 globally for process management
     npm install -g pm2
