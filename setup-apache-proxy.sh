@@ -69,20 +69,26 @@ install_apache() {
 
 # Install Node.js and npm
 install_nodejs() {
-    # Check if Node.js is already installed
+    # Check if Node.js is already installed and if it's the correct version
     if command -v node >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
-        node_version=$(node --version)
-        npm_version=$(npm --version)
-        log "Node.js ${node_version} and npm ${npm_version} already installed, skipping installation"
+        current_node_version=$(node --version | sed 's/v//')
+        major_version=$(echo $current_node_version | cut -d. -f1)
         
-        # Install PM2 globally for process management if not already installed
-        if ! command -v pm2 >/dev/null 2>&1; then
-            log "Installing PM2 globally..."
-            npm install -g pm2
+        if [ "$major_version" = "$NODE_VERSION" ]; then
+            npm_version=$(npm --version)
+            log "Node.js v${current_node_version} (correct version ${NODE_VERSION}) and npm ${npm_version} already installed"
+            
+            # Install PM2 globally for process management if not already installed
+            if ! command -v pm2 >/dev/null 2>&1; then
+                log "Installing PM2 globally..."
+                npm install -g pm2
+            else
+                log "PM2 already installed"
+            fi
+            return
         else
-            log "PM2 already installed"
+            warn "Found Node.js v${current_node_version} but need version ${NODE_VERSION}. Reinstalling..."
         fi
-        return
     fi
     
     log "Installing Node.js ${NODE_VERSION}..."
@@ -101,10 +107,17 @@ install_nodejs() {
     dnf module disable nodejs -y 2>/dev/null || true
     
     # Install Node.js from NodeSource repository
+    log "Setting up NodeSource repository for Node.js ${NODE_VERSION}..."
     curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | bash -
     
-    # Try to install nodejs with aggressive conflict resolution
-    if ! dnf install -y nodejs npm --allowerasing --best; then
+    # Verify the repository was set up correctly
+    if ! dnf repolist | grep -q nodesource; then
+        error "NodeSource repository setup failed"
+    fi
+    
+    # Try to install specific Node.js version with aggressive conflict resolution
+    log "Installing Node.js ${NODE_VERSION} from NodeSource repository..."
+    if ! dnf install -y nodejs-${NODE_VERSION}* npm --allowerasing --best 2>/dev/null && ! dnf install -y nodejs npm --allowerasing --best; then
         log "Standard installation failed, trying with --nobest..."
         
         # Try with --nobest and --allowerasing
@@ -133,10 +146,16 @@ install_nodejs() {
     # Install PM2 globally for process management
     npm install -g pm2
     
-    # Verify installation
-    node_version=$(node --version)
+    # Verify installation and check version
+    installed_node_version=$(node --version | sed 's/v//')
+    installed_major_version=$(echo $installed_node_version | cut -d. -f1)
     npm_version=$(npm --version)
-    log "Node.js ${node_version} and npm ${npm_version} installed successfully"
+    
+    if [ "$installed_major_version" = "$NODE_VERSION" ]; then
+        log "SUCCESS: Node.js v${installed_node_version} (version ${NODE_VERSION}) and npm ${npm_version} installed successfully"
+    else
+        error "FAILED: Expected Node.js version ${NODE_VERSION} but got v${installed_node_version}. Please check the installation."
+    fi
 }
 
 # Create application directory and user
