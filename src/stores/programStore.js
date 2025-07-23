@@ -1,7 +1,5 @@
 import { create } from "zustand";
-
-const PROGRAMS_ENDPOINT =
-  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/academics"; 
+import apiService from "../services/apiService"; 
 
 const useProgramsStore = create((set, get) => ({
   // State variables for JSON response objects
@@ -24,13 +22,7 @@ const useProgramsStore = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await fetch(PROGRAMS_ENDPOINT);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await apiService.getAcademicsData();
 
       set({
         programs: data.programs || [],

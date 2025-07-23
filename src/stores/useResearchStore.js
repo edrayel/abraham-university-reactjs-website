@@ -1,7 +1,7 @@
 import { create } from "zustand";
+import { API_ENDPOINTS, API_CONFIG } from "@/config/api";
 
-const RESEARCH_ENDPOINT =
-  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/research"; // Replace with actual endpoint
+const API_ENDPOINT = API_ENDPOINTS.RESEARCH;
 
 const useResearchStore = create((set, get) => ({
   // State variables for JSON response objects
@@ -23,7 +23,9 @@ const useResearchStore = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await fetch(RESEARCH_ENDPOINT);
+      const response = await fetch(API_ENDPOINT, {
+        headers: API_CONFIG.headers,
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

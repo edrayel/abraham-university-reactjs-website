@@ -1,7 +1,7 @@
 import { create } from "zustand";
+import { API_ENDPOINTS, API_CONFIG } from "@/config/api";
 
-const PORTALS_ENDPOINT =
-  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/portals"; // API endpoint for portals data
+const API_ENDPOINT = API_ENDPOINTS.PORTALS; // API endpoint for portals data
 
 const usePortalsStore = create((set, get) => ({
   // State variables for JSON response objects
@@ -19,7 +19,9 @@ const usePortalsStore = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await fetch(PORTALS_ENDPOINT);
+      const response = await fetch(API_ENDPOINT, {
+        headers: API_CONFIG.headers,
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

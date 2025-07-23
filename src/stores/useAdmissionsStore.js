@@ -10,6 +10,9 @@ const useAdmissionsStore = create((set, get) => ({
   tuitionFees: [],
   financialAid: [],
   exploreFinancialAidUrl: "",
+  applyNowUrl: "",
+  scheduleVisitUrl: "",
+  applicationProcess: [],
   isLoading: false,
   error: null,
 
@@ -38,6 +41,17 @@ const useAdmissionsStore = create((set, get) => ({
           typeof data.explore_financial_aid_url === "string"
             ? data.explore_financial_aid_url
             : "",
+        applyNowUrl:
+          typeof data.apply_now_url === "string"
+            ? data.apply_now_url
+            : "",
+        scheduleVisitUrl:
+          typeof data.schedule_visit_url === "string"
+            ? data.schedule_visit_url
+            : "",
+        applicationProcess: Array.isArray(data.application_process)
+          ? data.application_process
+          : [],
         isLoading: false,
         error: null,
       });
@@ -67,6 +81,12 @@ const useAdmissionsStore = create((set, get) => ({
     set({ financialAid: Array.isArray(aid) ? aid : [] }),
   setExploreFinancialAidUrl: (url) =>
     set({ exploreFinancialAidUrl: typeof url === "string" ? url : "" }),
+  setApplyNowUrl: (url) =>
+    set({ applyNowUrl: typeof url === "string" ? url : "" }),
+  setScheduleVisitUrl: (url) =>
+    set({ scheduleVisitUrl: typeof url === "string" ? url : "" }),
+  setApplicationProcess: (process) =>
+    set({ applicationProcess: Array.isArray(process) ? process : [] }),
 
   // Utility methods
   clearAllData: () => {
@@ -78,6 +98,9 @@ const useAdmissionsStore = create((set, get) => ({
       tuitionFees: [],
       financialAid: [],
       exploreFinancialAidUrl: "",
+      applyNowUrl: "",
+      scheduleVisitUrl: "",
+      applicationProcess: [],
       error: null,
     });
   },
