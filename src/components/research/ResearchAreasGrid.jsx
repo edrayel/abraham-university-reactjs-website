@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FlaskConical } from "lucide-react";
-import useResearchStore from "@/stores/useResearchStore ";
+import useResearchStore from "@/stores/useResearchStore";
 
 const ResearchAreasGrid = ({ onResearchClick }) => {
   const { researchAreas } = useResearchStore();
@@ -21,7 +21,7 @@ const ResearchAreasGrid = ({ onResearchClick }) => {
     title: area.name,
     description: area.description,
     icon: iconMap[area.icon.toLowerCase()] || FlaskConical, // Fallback to FlaskConical
-    image: "https://images.unsplash.com/photo-1633362967859-fde6c856274d", // Fallback image
+    image: "/research-placeholder.svg", // Fallback image
     funding: "N/A", // Placeholder, as JSON doesn't provide funding
     projects: "N/A", // Placeholder, as JSON doesn't provide projects
   }));
@@ -65,7 +65,7 @@ const ResearchAreasGrid = ({ onResearchClick }) => {
               className="bg-white rounded-xl shadow-lg overflow-hidden card-hover cursor-pointer"
               onClick={onResearchClick}
             >
-              <div className="h-48 bg-gradient-to-br from-blue-500 to-cyan-500 relative overflow-hidden">
+              <div className="h-48 bg-gradient-to-br from-yellow-500 to-yellow-600 relative overflow-hidden">
                 <img
                   className="w-full h-full object-cover"
                   alt={area.title}
@@ -82,13 +82,13 @@ const ResearchAreasGrid = ({ onResearchClick }) => {
                 <p className="text-gray-600 mb-4 text-sm">{area.description}</p>
                 <div className="flex justify-between text-sm">
                   <div>
-                    <div className="font-semibold text-blue-600">
+                    <div className="font-semibold text-yellow-600">
                       {area.funding}
                     </div>
                     <div className="text-gray-500">Funding</div>
                   </div>
                   <div>
-                    <div className="font-semibold text-blue-600">
+                    <div className="font-semibold text-yellow-600">
                       {area.projects}
                     </div>
                     <div className="text-gray-500">Projects</div>
