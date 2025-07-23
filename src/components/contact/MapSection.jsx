@@ -8,13 +8,13 @@ const MapSection = ({ onDirectionsClick, onScheduleVisit, onQuickActionToast }) 
       <div>
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Find Us</h2>
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="h-64 bg-gradient-to-br from-blue-500 to-cyan-500 relative">
+          <div className="h-64 bg-gradient-to-br from-yellow-500 to-yellow-600 relative">
             <img  className="w-full h-full object-cover" alt="Campus map" src="https://images.unsplash.com/photo-1658777690356-6bb89e959473" />
             <div className="absolute inset-0 bg-black/20"></div>
             <div className="absolute bottom-4 left-4 right-4">
               <Button
                 onClick={onDirectionsClick}
-                className="w-full bg-white/90 text-blue-600 hover:bg-white"
+                className="w-full bg-white/90 text-yellow-600 hover:bg-white"
               >
                 Get Directions
               </Button>

@@ -15,8 +15,8 @@ const ContactInfoGrid = ({ contactInfo }) => {
               transition={{ delay: index * 0.1 }}
               className="text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                <info.icon className="h-8 w-8 text-blue-600" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
+                <info.icon className="h-8 w-8 text-yellow-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">{info.title}</h3>
               <div className="space-y-1">
