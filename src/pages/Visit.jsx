@@ -13,7 +13,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import useVisitorStore from "@/stores/useVisitorStore"; // Adjust the import path as needed
+import useVisitorStore from "@/stores/useVisitorStore";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
+import LoadingState from "@/components/common/LoadingState";
 
 const Visit = () => {
   const {
@@ -97,107 +99,16 @@ const Visit = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero Section Skeleton */}
-        <section className="pt-60 pb-40 hero-gradient">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="h-16 w-16 bg-gray-200 rounded-full mx-auto mb-6"></div>
-              <div className="h-12 bg-gray-200 rounded mb-6"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto mb-8"></div>
-              <div className="h-10 w-48 bg-gray-200 rounded mx-auto"></div>
-            </div>
-          </div>
-        </section>
-        {/* Visit Options Skeleton */}
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
-                >
-                  <div className="h-64 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 rounded mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-10 bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        {/* Campus Highlights Skeleton */}
-        <section className="section-padding bg-gray-100">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
-                >
-                  <div className="h-56 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        {/* Plan Your Visit Skeleton */}
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto bg-blue-50 p-8 rounded-xl shadow-xl">
-              <div className="h-10 bg-gray-200 rounded mb-6 mx-auto"></div>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-6"></div>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="h-10 w-40 bg-gray-200 rounded"></div>
-                    <div className="h-10 w-40 bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-                <div className="h-64 bg-gray-200 rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Contact Section Skeleton */}
-        <section className="section-padding bg-blue-700">
-          <div className="container mx-auto px-4 text-center">
-            <div className="max-w-3xl mx-auto">
-              <div className="h-12 w-12 bg-gray-200 rounded-full mx-auto mb-6"></div>
-              <div className="h-10 bg-gray-200 rounded mb-4 mx-auto"></div>
-              <div className="h-6 bg-gray-200 rounded mb-8 max-w-3xl mx-auto"></div>
-              <div className="h-10 w-40 bg-gray-200 rounded mx-auto"></div>
-            </div>
-          </div>
-        </section>
-      </div>
-    );
+    return <LoadingState type="page" message="Loading visit information..." />;
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 text-center">
-        Error: {error}
-      </div>
+      <ErrorBoundary
+        error={error}
+        message="We're having trouble loading visit information right now. Please try again."
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 
@@ -246,7 +157,7 @@ const Visit = () => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Visit Abraham University
             </h1>
-            <p className="text-xl text-blue-100 leading-relaxed mb-8">
+            <p className="text-xl text-white/80 leading-relaxed mb-8">
               Experience our vibrant campus, meet our community, and discover
               why Abraham University is the perfect place for your academic
               journey.
@@ -260,7 +171,7 @@ const Visit = () => {
                     ?.booking_url
                 )
               }
-              className="bg-white text-gradient hover:bg-blue-50 text-lg px-10 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 text-lg px-10 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
               Schedule Your Visit
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -313,7 +224,7 @@ const Visit = () => {
                     {option.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    <CalendarDays className="inline h-4 w-4 mr-1 text-blue-600" />{" "}
+                    <CalendarDays className="inline h-4 w-4 mr-1 text-yellow-600" />{" "}
                     {option.duration}
                   </p>
                   <p className="text-gray-600 mb-4 flex-grow">
@@ -322,7 +233,7 @@ const Visit = () => {
                   <ul className="text-sm text-gray-500 space-y-1 mb-4">
                     {option.features.map((feature) => (
                       <li key={feature} className="flex items-center">
-                        <ArrowRight className="h-3 w-3 mr-2 text-blue-500 flex-shrink-0" />
+                        <ArrowRight className="h-3 w-3 mr-2 text-yellow-500 flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
@@ -331,7 +242,7 @@ const Visit = () => {
                     onClick={() =>
                       handleScheduleVisit(option.title, option.booking_url)
                     }
-                    className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+                    className="w-full mt-auto bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 rounded-md"
                     asChild={option.booking_url}
                   >
                     {option.booking_url ? (
@@ -412,7 +323,7 @@ const Visit = () => {
       {/* Plan Your Visit Section */}
       <section className="section-padding bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-blue-50 p-8 md:p-12 rounded-xl shadow-xl">
+          <div className="max-w-4xl mx-auto bg-yellow-50 p-8 md:p-12 rounded-xl shadow-xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -434,13 +345,13 @@ const Visit = () => {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button
                       onClick={handleDirectionsClick}
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900"
                     >
                       <MapPin className="mr-2 h-5 w-5" /> Get Directions
                     </Button>
                     <Button
                       variant="outline"
-                      className="border-blue-600 text-blue-600 hover:bg-blue-100"
+                      className="border-yellow-600 text-yellow-600 hover:bg-yellow-100"
                       onClick={() =>
                         handleScheduleVisit(
                           "Campus Tour",
@@ -469,7 +380,7 @@ const Visit = () => {
       </section>
 
       {/* Contact for Visits */}
-      <section className="section-padding bg-blue-700 text-white">
+      <section className="section-padding hero-gradient text-white">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -481,14 +392,14 @@ const Visit = () => {
             <h2 className="text-3xl font-bold mb-4">
               Questions About Visiting?
             </h2>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+            <p className="text-xl text-white/80 mb-8 leading-relaxed">
               Our admissions team is happy to assist you with planning your
               visit or answering any questions you may have.
             </p>
             <Button
               asChild
               size="lg"
-              className="bg-white text-gradient hover:bg-blue-50 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <a
                 href={`mailto:${contactEmail}`}

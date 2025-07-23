@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Image as ImageIcon, Search, Filter, Maximize, X } from 'lucide-react';
+import EmptyState from '../components/common/EmptyState';
 
 const initialImages = [
   { id: 1, srcQuery: 'university-campus-spring', alt: 'Vibrant university campus in spring', category: 'campus_life', tags: ['campus', 'spring', 'students', 'architecture'] },
@@ -78,7 +79,7 @@ const Gallery = () => {
           >
 
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University Gallery</h1>
-            <p className="text-xl text-blue-100 leading-relaxed">
+            <p className="text-xl text-white/80 leading-relaxed">
               Explore the vibrant life, stunning campus, and memorable moments at Abraham University through our visual gallery.
             </p>
           </motion.div>
@@ -140,15 +141,21 @@ const Gallery = () => {
               ))}
             </div>
           ) : (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <ImageIcon className="h-24 w-24 mx-auto text-gray-300 mb-4" />
-              <h2 className="text-2xl font-semibold text-gray-700 mb-2">No Images Found</h2>
-              <p className="text-gray-500">Try adjusting your search or filter criteria.</p>
-            </motion.div>
+            <EmptyState 
+              type="gallery"
+              onRetry={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+                setFilteredImages(initialImages);
+              }}
+              actionLabel="Reset Filters"
+              onAction={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+                setFilteredImages(initialImages);
+              }}
+              className="py-12"
+            />
           )}
         </div>
       </section>

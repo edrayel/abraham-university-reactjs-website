@@ -14,7 +14,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import useGivingStore from "@/stores/useGivingStore"; // Adjust the import path as needed
+import useGivingStore from "@/stores/useGivingStore";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
+import LoadingState from "@/components/common/LoadingState";
+import EmptyState from "@/components/common/EmptyState";
 
 const Giving = () => {
   const {
@@ -82,113 +85,28 @@ const Giving = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero Section Skeleton */}
-        <section className="section-padding hero-gradient">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="h-16 w-16 bg-gray-200 rounded-full mx-auto mb-6"></div>
-              <div className="h-12 bg-gray-200 rounded mb-6"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto mb-8"></div>
-              <div className="h-10 w-48 bg-gray-200 rounded mx-auto"></div>
-            </div>
-          </div>
-        </section>
-        {/* Impact Areas Skeleton */}
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
-                >
-                  <div className="h-56 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 rounded mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                    <div className="h-10 bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        {/* Ways to Give Skeleton */}
-        <section className="section-padding bg-gray-100">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white p-8 rounded-xl shadow-lg animate-pulse"
-                >
-                  <div className="flex items-start space-x-6">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                    <div>
-                      <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                      <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                      <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        {/* Donor Spotlight Skeleton */}
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-            </div>
-            <div className="max-w-3xl mx-auto bg-gray-50 p-8 rounded-xl shadow-xl animate-pulse">
-              <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-6"></div>
-              <div className="h-6 bg-gray-200 rounded mb-6"></div>
-              <div className="h-5 bg-gray-200 rounded mb-2 mx-auto w-1/2"></div>
-              <div className="h-4 bg-gray-200 rounded mx-auto w-1/3"></div>
-            </div>
-          </div>
-        </section>
-        {/* Call to Action Skeleton */}
-        <section className="section-padding bg-blue-700">
-          <div className="container mx-auto px-4 text-center">
-            <div className="max-w-3xl mx-auto">
-              <div className="h-10 bg-gray-200 rounded mb-6 mx-auto"></div>
-              <div className="h-6 bg-gray-200 rounded mb-8 max-w-3xl mx-auto"></div>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <div className="h-10 w-40 bg-gray-200 rounded"></div>
-                <div className="h-10 w-40 bg-gray-200 rounded"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    );
+    return <LoadingState type="page" message="Loading giving information..." />;
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 text-center">
-        Error: {error}
-      </div>
+      <ErrorBoundary
+        error={error}
+        message="We're having trouble loading giving information right now. Please try again."
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 
   if (!mappedImpactAreas.length && !mappedWaysToGive.length) {
     return (
-      <div className="min-h-screen bg-gray-50 text-center">
-        No giving data available.
-      </div>
+      <EmptyState
+        type="data"
+        title="No Giving Information Available"
+        message="We're currently updating our giving and donation information."
+        onRetry={() => fetchAllData()}
+        className="min-h-screen"
+      />
     );
   }
 
@@ -204,7 +122,7 @@ const Giving = () => {
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
           }
           .text-gradient {
-            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            background: linear-gradient(to right, #eab308, #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
           }
@@ -234,7 +152,7 @@ const Giving = () => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Support Abraham University
             </h1>
-            <p className="text-xl text-blue-100 leading-relaxed mb-8">
+            <p className="text-xl text-white/80 leading-relaxed mb-8">
               Your generosity fuels innovation, empowers students, and
               strengthens our community. Join us in shaping a brighter future
               through education and research.
@@ -242,7 +160,7 @@ const Giving = () => {
             <Button
               size="lg"
               onClick={() => handleDonateClick()}
-              className="bg-white text-gradient hover:bg-blue-50 text-lg px-10 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 text-lg px-10 py-4 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               asChild={donationPortalUrl}
             >
               {donationPortalUrl ? (
@@ -309,7 +227,7 @@ const Giving = () => {
                   </p>
                   <Button
                     onClick={() => handleDonateClick(area.title)}
-                    className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+                    className="w-full mt-auto bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 hover:from-yellow-600 hover:to-yellow-700 rounded-md"
                     asChild={donationPortalUrl}
                   >
                     {donationPortalUrl ? (
@@ -361,7 +279,7 @@ const Giving = () => {
                 className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex items-start space-x-6"
                 role="presentation"
               >
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center">
                   <way.icon className="h-6 w-6 text-gradient" />
                 </div>
                 <div>
@@ -372,7 +290,7 @@ const Giving = () => {
                   {way.link ? (
                     <a
                       href={way.link}
-                      className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                      className="text-victorian-dark hover:text-yellow-600 font-medium flex items-center"
                       onClick={(e) => e.stopPropagation()}
                       aria-label={`Learn more about ${way.title}`}
                     >
@@ -381,7 +299,7 @@ const Giving = () => {
                   ) : (
                     <Button
                       variant="link"
-                      className="text-blue-600 hover:text-blue-800 p-0"
+                      className="text-victorian-dark hover:text-yellow-600 p-0"
                       onClick={() => handleLearnMoreClick(way.title)}
                     >
                       Learn More <ArrowRight className="ml-1 h-4 w-4" />
@@ -413,7 +331,7 @@ const Giving = () => {
             viewport={{ once: true, amount: 0.3 }}
             className="max-w-3xl mx-auto bg-gray-50 p-8 md:p-12 rounded-xl shadow-xl relative"
           >
-            <div className="absolute -top-6 -left-6 w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg">
+            <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 rounded-full flex items-center justify-center shadow-lg">
               <Heart className="h-8 w-8" />
             </div>
             <img
@@ -438,7 +356,7 @@ const Giving = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="section-padding bg-blue-700">
+      <section className="section-padding hero-gradient">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -449,7 +367,7 @@ const Giving = () => {
             <h2 className="text-4xl font-bold mb-6">
               Partner With Us to Make a Difference
             </h2>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+            <p className="text-xl text-white/80 mb-8 leading-relaxed">
               Every gift, regardless of size, contributes to our mission of
               providing exceptional education and fostering impactful research.
               Contact our development office to learn more about how you can
@@ -459,7 +377,7 @@ const Giving = () => {
               <Button
                 size="lg"
                 onClick={() => handleDonateClick()}
-                className="bg-white text-gradient hover:bg-blue-50 text-lg px-8 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 text-lg px-8 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 asChild={donationPortalUrl}
               >
                 {donationPortalUrl ? (
@@ -474,7 +392,7 @@ const Giving = () => {
                 size="lg"
                 variant="outline"
                 asChild
-                className="border-white text-white hover:bg-white hover:text-gradient text-lg px-8 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                className="border-white text-white hover:bg-white hover:text-victorian-dark text-lg px-8 py-3 rounded-md font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <Link to="/contact">Contact Development Office</Link>
               </Button>

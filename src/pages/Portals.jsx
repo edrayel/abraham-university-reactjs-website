@@ -5,13 +5,15 @@ import { Users, Briefcase, UserCheck, UserCog, Building, LogIn, ArrowRight } fro
 import { Button } from '@/components/ui/button';
 import usePortalsStore from '@/stores/usePortalsStore';
 import { Loader2 } from 'lucide-react';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+import LoadingState from '@/components/common/LoadingState';
 
 // Define portal categories with their respective user types
 const getPortalCategories = (portalData) => [
   {
     title: 'Students & Family',
     icon: Users,
-    color: 'blue',
+    color: 'yellow',
     portals: [
       { 
         name: 'Student Portal', 
@@ -39,7 +41,7 @@ const getPortalCategories = (portalData) => [
   {
     title: 'Faculty & Staff',
     icon: Briefcase,
-    color: 'green',
+    color: 'blue',
     portals: [
       { 
         name: 'Faculty Portal', 
@@ -60,7 +62,7 @@ const getPortalCategories = (portalData) => [
   {
     title: 'Partners & Administration',
     icon: Building,
-    color: 'purple',
+    color: 'yellow',
     portals: [
       { name: 'Vendor Portal', userType: 'vendor', description: 'Manage contracts, invoices, and communications.' },
       { name: 'Admin Portal', userType: 'admin', description: 'Access administrative tools and system management.' },
@@ -110,7 +112,7 @@ const Portals = () => {
           
 
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University Portals</h1>
-            <p className="text-xl text-blue-100 leading-relaxed">
+            <p className="text-xl text-white/80 leading-relaxed">
               Access your dedicated portal to find resources, manage information, and connect with the Abraham University community.
             </p>
           </motion.div>
@@ -121,15 +123,13 @@ const Portals = () => {
       <section className="section-padding">
         <div className="container mx-auto px-4">
           {isLoading ? (
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-              <span className="ml-4 text-xl text-gray-700">Loading portal data...</span>
-            </div>
+            <LoadingState type="section" message="Loading portal data..." />
           ) : error ? (
-            <div className="text-center py-20">
-              <p className="text-red-600 text-xl mb-4">Error loading portal data</p>
-              <Button onClick={() => fetchAllData()}>Retry</Button>
-            </div>
+            <ErrorBoundary
+              error={error}
+              message="We're having trouble loading portal information right now. Please try again."
+              onRetry={() => fetchAllData()}
+            />
           ) : (
              <>
              {portalCategories.map((category, catIndex) => (
@@ -187,7 +187,7 @@ const Portals = () => {
                           <ul className="text-sm text-gray-600 space-y-1">
                             {portal.features.map((feature, index) => (
                               <li key={index} className="flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                                <span className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
                                 {feature}
                               </li>
                             ))}
@@ -223,7 +223,7 @@ const Portals = () => {
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
                     If you're having trouble accessing your portal or have any questions, please contact our support team.
                 </p>
-                <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600">
+                <Button asChild size="lg" className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900">
                     <Link to="/contact">Contact Support</Link>
                 </Button>
             </motion.div>

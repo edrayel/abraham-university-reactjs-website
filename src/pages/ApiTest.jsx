@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import apiService from '../services/apiService';
 import { API_ENDPOINTS } from '../config/api';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+import LoadingState from '@/components/common/LoadingState';
 
 /**
  * ApiTest Component
@@ -128,22 +130,22 @@ const ApiTest = () => {
         <button 
           onClick={handleRetryAll}
           disabled={isLoading}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 rounded disabled:opacity-50"
         >
           {isLoading ? 'Testing...' : 'Retry All'}
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-          <p>{error}</p>
-        </div>
+        <ErrorBoundary
+          error={error}
+          message="We're having trouble testing the API connections right now. Please try again."
+          onRetry={handleRetryAll}
+        />
       )}
 
       {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
+        <LoadingState type="section" message="Testing API connections..." />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Object.entries(testResults).map(([endpointName, result]) => (
@@ -166,7 +168,7 @@ const ApiTest = () => {
                     </p>
                     <div className="mt-2">
                       <details>
-                        <summary className="cursor-pointer text-sm text-blue-500 hover:text-blue-700">View Response Data</summary>
+                        <summary className="cursor-pointer text-sm text-yellow-600 hover:text-victorian-dark">View Response Data</summary>
                         <pre className="mt-2 text-xs bg-gray-50 p-2 rounded overflow-auto max-h-40">
                           {JSON.stringify(result.data, null, 2)}
                         </pre>

@@ -5,6 +5,9 @@ import { Newspaper, Search, Filter, ChevronRight, CalendarDays, UserCircle, Load
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import useNewsStore from '@/stores/useNewsStore';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+import LoadingState from '@/components/common/LoadingState';
+import EmptyState from '@/components/common/EmptyState';
 
 // Fallback data in case API fails
 const fallbackNewsArticles = [
@@ -260,7 +263,7 @@ const NewsPage = () => {
           
             <Newspaper className="h-16 w-16 mx-auto mb-6 text-sky-300" />
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University News</h1>
-            <p className="text-xl text-blue-100 leading-relaxed">
+            <p className="text-xl text-white/80 leading-relaxed">
               Stay informed about the latest achievements, research breakthroughs, campus events, and community stories from Abraham University.
             </p>
           </motion.div>
@@ -301,22 +304,22 @@ const NewsPage = () => {
       <section className="section-padding">
         <div className="container mx-auto px-4">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-              <p className="text-lg text-gray-600">Loading news articles...</p>
-            </div>
+            <LoadingState 
+              type="page" 
+              message="Loading latest news articles..." 
+            />
+          ) : error ? (
+            <ErrorBoundary 
+              error={error}
+              message="We're having trouble loading the latest news articles. Please try again or check back later."
+              onRetry={() => {
+                fetchNewsData().catch(() => {
+                  setFilteredArticles(fallbackNewsArticles);
+                });
+              }}
+            />
           ) : (
             <>
-              {error && (
-                <div className="text-center py-12 mb-8">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-2xl mx-auto">
-                    <h2 className="text-xl font-semibold text-red-700 mb-2">Error Loading News</h2>
-                    <p className="text-gray-700 mb-4">{error}</p>
-                    <p className="text-gray-600">Showing fallback content instead.</p>
-                  </div>
-                </div>
-              )}
-              
               {filteredArticles.length > 0 ? (
                 <div className="space-y-12">
                   {filteredArticles.map((article, index) => (
@@ -334,7 +337,7 @@ const NewsPage = () => {
                           <img src={`https://source.unsplash.com/random/600x400/?${article.category}`} alt={article.image} className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                         </div>
                         <div className="p-6 md:p-8 flex-1">
-                          <div className="text-sm text-blue-600 font-semibold mb-2 uppercase tracking-wider">
+                          <div className="text-sm text-yellow-600 font-semibold mb-2 uppercase tracking-wider">
                             {(() => {
                               // Handle different category data structures
                               if (typeof article.category === 'string') {
@@ -358,7 +361,7 @@ const NewsPage = () => {
                           
                           {/* Collapsible full content preview */}
                           <details className="group/details mb-6">
-                            <summary className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer flex items-center">
+                            <summary className="text-victorian-dark hover:text-yellow-600 font-medium cursor-pointer flex items-center">
                               Read Full Story Preview <ChevronRight className="ml-1 h-4 w-4 group-hover/details:rotate-90 transition-transform" />
                             </summary>
                             <div className="prose prose-sm max-w-none mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: article.content || "<p>Full content coming soon.</p>" }} />
@@ -373,7 +376,7 @@ const NewsPage = () => {
                           </div>
                           <Button 
                             variant="outline" 
-                            className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-gradient"
+                            className="border-yellow-600 text-yellow-600 hover:bg-yellow-50 hover:text-victorian-dark"
                             onClick={() => handleReadMore(article.id)}
                           >
                             View Full Article
@@ -385,15 +388,15 @@ const NewsPage = () => {
                   ))}
                 </div>
               ) : (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-12"
-                >
-                  <Newspaper className="h-24 w-24 mx-auto text-gray-300 mb-4" />
-                  <h2 className="text-2xl font-semibold text-gray-700 mb-2">No News Articles Found</h2>
-                  <p className="text-gray-500">Try adjusting your search or filter criteria, or check back later for new stories.</p>
-                </motion.div>
+                <EmptyState 
+                  type="news"
+                  onRetry={() => {
+                    fetchNewsData().catch(() => {
+                      setFilteredArticles(fallbackNewsArticles);
+                    });
+                  }}
+                  className="py-12"
+                />
               )}
             </>
           )}

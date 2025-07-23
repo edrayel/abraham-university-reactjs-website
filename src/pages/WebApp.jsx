@@ -5,6 +5,8 @@ import { ArrowLeft, AlertTriangle, Home, Settings, UserCircle, FileText, Calenda
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import usePortalsStore from '@/stores/usePortalsStore';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+import LoadingState from '@/components/common/LoadingState';
 
 // Default user type details as fallback
 const defaultUserTypeDetails = {
@@ -73,15 +75,15 @@ const WebApp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-yellow-100">
       <header className="bg-white shadow-md py-4">
         <div className="container mx-auto px-4 flex items-center justify-between">
-          <Link to="/portals" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+          <Link to="/portals" className="flex items-center text-victorian-dark hover:text-yellow-600 transition-colors">
             <ArrowLeft className="mr-2 h-5 w-5" />
             Back to Portals
           </Link>
           <div className="flex items-center">
-            <details.icon className="h-8 w-8 text-blue-600 mr-3" />
+            <details.icon className="h-8 w-8 text-yellow-600 mr-3" />
             <h1 className="text-3xl font-bold text-gray-800">{details.title}</h1>
           </div>
           <Button variant="outline" onClick={() => handleFeatureClick('Settings')}>
@@ -93,16 +95,13 @@ const WebApp = () => {
 
       <main className="container mx-auto px-4 py-12">
         {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-            <span className="ml-4 text-xl text-gray-700">Loading portal data...</span>
-          </div>
+          <LoadingState type="section" message="Loading portal data..." />
         ) : error ? (
-          <div className="text-center py-20 bg-white p-8 rounded-xl shadow-2xl">
-            <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600 text-xl mb-4">Error loading portal data</p>
-            <Button onClick={() => fetchAllData()}>Retry</Button>
-          </div>
+          <ErrorBoundary
+            error={error}
+            message="We're having trouble loading portal information right now. Please try again."
+            onRetry={() => fetchAllData()}
+          />
         ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -117,7 +116,7 @@ const WebApp = () => {
             </p>
           </div>
 
-          {userTypeDetails[userType] ? (
+          {defaultUserTypeDetails[userType] ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {details.features.map((feature, index) => (
                 <motion.div
@@ -131,7 +130,7 @@ const WebApp = () => {
                 >
                   <div className="flex items-center mb-3">
                     {/* Placeholder for feature-specific icons if needed */}
-                    {feature.toLowerCase().includes('grade') && <FileText className="h-6 w-6 text-blue-500 mr-3" />}
+                    {feature.toLowerCase().includes('grade') && <FileText className="h-6 w-6 text-yellow-500 mr-3" />}
                     {feature.toLowerCase().includes('course') && <Calendar className="h-6 w-6 text-green-500 mr-3" />}
                     {feature.toLowerCase().includes('payment') && <DollarSign className="h-6 w-6 text-yellow-500 mr-3" />}
                     {! (feature.toLowerCase().includes('grade') || feature.toLowerCase().includes('course') || feature.toLowerCase().includes('payment')) && <details.icon className="h-6 w-6 text-indigo-500 mr-3" />}
@@ -161,7 +160,7 @@ const WebApp = () => {
             className="mt-16 text-center border-t pt-8"
           >
             <p className="text-gray-600">
-              Having trouble? <Link to="/contact" className="text-blue-600 hover:underline">Contact Support</Link>.
+              Having trouble? <Link to="/contact" className="text-victorian-dark hover:underline">Contact Support</Link>.
             </p>
             <p className="text-sm text-gray-500 mt-2">
               Abraham University WebApp © 2025

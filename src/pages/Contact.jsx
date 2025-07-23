@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   MapPin,
@@ -17,14 +17,34 @@ import ContactInfoGrid from "@/components/contact/ContactInfoGrid";
 import ContactFormSection from "@/components/contact/ContactFormSection";
 import DepartmentContacts from "@/components/contact/DepartmentContacts";
 import FAQSection from "@/components/contact/FAQSection";
-import useContactStore from "@/stores/useContactStore"; // Adjust the import path as needed
+import useContactStore from "@/stores/useContactStore";
+import apiService from "@/services/apiService";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
+import LoadingState from "@/components/common/LoadingState";
 
 const Contact = () => {
   const { general, departments, faq, isLoading, error, fetchAllData } =
     useContactStore();
+  const [awardsData, setAwardsData] = useState(null);
+  const [awardsLoading, setAwardsLoading] = useState(true);
 
   useEffect(() => {
     fetchAllData();
+    
+    // Fetch awards data for Financial Aid contact info
+    const fetchAwardsData = async () => {
+      try {
+        setAwardsLoading(true);
+        const data = await apiService.getAwardsData();
+        setAwardsData(data);
+      } catch (err) {
+        console.error('Error fetching awards data:', err);
+      } finally {
+        setAwardsLoading(false);
+      }
+    };
+    
+    fetchAwardsData();
   }, [fetchAllData]);
 
   // Static icon mapping for departments to match original component
@@ -80,13 +100,28 @@ const Contact = () => {
   ];
 
   // Map JSON departments to departmentContactsData format
-  const departmentContactsData = departments.map((dept) => ({
-    name: dept.name,
-    phone: dept.phone,
-    email: dept.email,
-    hours: dept.hours,
-    icon: departmentIconMap[dept.name.toLowerCase()] || Users, // Fallback to Users
-  }));
+  const departmentContactsData = departments.map((dept) => {
+    // Use awards contact info for Financial Aid department if available
+    if (dept.name.toLowerCase() === 'financial aid' && awardsData?.contact_info) {
+      const awardsContact = awardsData.contact_info;
+      return {
+        name: dept.name,
+        phone: awardsContact.phone || dept.phone,
+        email: awardsContact.email || dept.email,
+        hours: awardsContact.office_hours || dept.hours,
+        icon: departmentIconMap[dept.name.toLowerCase()] || Users,
+      };
+    }
+    
+    // Use regular contact data for other departments
+    return {
+      name: dept.name,
+      phone: dept.phone,
+      email: dept.email,
+      hours: dept.hours,
+      icon: departmentIconMap[dept.name.toLowerCase()] || Users, // Fallback to Users
+    };
+  });
 
   // Map JSON faq to faqData format
   const faqData = faq.map((item) => ({
@@ -129,7 +164,24 @@ const Contact = () => {
     });
   };
 
-  if (isLoading) {
+  if (isLoading || awardsLoading) {
+    return <LoadingState type="page" message="Loading Contact Information" />;
+  }
+
+  if (error) {
+    return (
+      <ErrorBoundary 
+        error={error} 
+        onRetry={() => {
+          fetchAllData();
+        }}
+        customMessage="We're having trouble loading our contact information. This could be due to server maintenance or connectivity issues."
+      />
+    );
+  }
+
+  // Continue with existing loading skeleton if only awards is loading
+  if (awardsLoading && !isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section Skeleton */}
