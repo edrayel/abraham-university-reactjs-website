@@ -385,8 +385,8 @@ ExecStart=/usr/bin/npm start
 ExecReload=/bin/kill -HUP \$MAINPID
 Restart=always
 RestartSec=10
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=journal
+StandardError=journal
 SyslogIdentifier=${APP_NAME}
 
 # Security settings
