@@ -15,14 +15,14 @@ const CampusLifeCTA = ({ onJoinClick, onEventClick }) => {
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready to Experience Campus Life?
           </h2>
-          <p className="text-xl mb-8 text-blue-100">
+          <p className="text-xl mb-8 text-white/80">
             Join our vibrant community and discover all the opportunities waiting for you at Abraham University.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
               onClick={onJoinClick}
-              className="bg-white text-blue-600 hover:bg-blue-50 text-lg px-8 py-4 rounded-full font-semibold"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 text-lg px-8 py-4 rounded-full font-semibold"
             >
               Explore Organizations
             </Button>
@@ -30,7 +30,7 @@ const CampusLifeCTA = ({ onJoinClick, onEventClick }) => {
               size="lg"
               variant="outline"
               onClick={onEventClick}
-              className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4 rounded-full font-semibold"
+              className="border-white text-white hover:bg-white hover:text-victorian-dark text-lg px-8 py-4 rounded-full font-semibold"
             >
               View Campus Events
             </Button>

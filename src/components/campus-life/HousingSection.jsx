@@ -85,14 +85,14 @@ const HousingSection = ({ onHousingClick }) => {
               className="bg-white rounded-xl shadow-lg overflow-hidden card-hover cursor-pointer"
               onClick={onHousingClick}
             >
-              <div className="h-48 bg-gradient-to-br from-blue-500 to-cyan-500 relative overflow-hidden">
+              <div className="h-48 bg-gradient-to-br from-yellow-500 to-yellow-600 relative overflow-hidden">
                 <img
                   className="w-full h-full object-cover"
                   alt={option.name}
                   src={option.image}
                 />
                 <div className="absolute top-4 left-4">
-                  <span className="bg-white/90 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                  <span className="bg-white/90 text-yellow-600 px-3 py-1 rounded-full text-sm font-medium">
                     {option.type}
                   </span>
                 </div>
@@ -101,7 +101,7 @@ const HousingSection = ({ onHousingClick }) => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   {option.name}
                 </h3>
-                <p className="text-blue-600 font-medium mb-3">
+                <p className="text-yellow-600 font-medium mb-3">
                   {option.capacity}
                 </p>
                 <ul className="space-y-2">
@@ -110,7 +110,7 @@ const HousingSection = ({ onHousingClick }) => {
                       key={idx}
                       className="flex items-start text-sm text-gray-600"
                     >
-                      <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 mt-1.5"></div>
+                      <div className="w-2 h-2 bg-yellow-600 rounded-full mr-2 mt-1.5"></div>
                       {feature}
                     </li>
                   ))}
