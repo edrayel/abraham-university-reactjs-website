@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import { createLogger, defineConfig } from 'vite';
 
 const isDev = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT || 10000; 
+
 let inlineEditPlugin, editModeDevPlugin;
 
 if (isDev) {
@@ -197,6 +199,8 @@ export default defineConfig({
 		addTransformIndexHtml
 	],
 	server: {
+		host: '0.0.0.0',
+		port: port,
 		cors: true,
 		headers: {
 			'Cross-Origin-Embedder-Policy': 'credentialless',

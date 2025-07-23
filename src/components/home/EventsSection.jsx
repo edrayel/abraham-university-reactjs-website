@@ -1,37 +1,29 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
-const eventsData = [
-  {
-    title: 'Annual Research Symposium',
-    date: 'July 15, 2025',
-    location: 'University Grand Hall',
-    imageAlt: 'Students presenting research at a symposium',
-    imageQuery: 'research-symposium-event',
-    link: '/events#research-symposium',
-  },
-  {
-    title: 'Homecoming Weekend',
-    date: 'October 10-12, 2025',
-    location: 'Campus Wide',
-    imageAlt: 'Alumni and students at a homecoming football game',
-    imageQuery: 'homecoming-event',
-    link: '/events#homecoming-2025',
-  },
-  {
-    title: 'Distinguished Speaker Series: Dr. Jane Goodall',
-    date: 'November 5, 2025',
-    location: 'Performing Arts Center',
-    imageAlt: 'Dr. Jane Goodall speaking on stage',
-    imageQuery: 'speaker-series-event',
-    link: '/events#speaker-goodall',
-  },
-];
+import React from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import EmptyState from "@/components/common/EmptyState";
+import useUniversityStore from "@/stores/homeStore";
 
 const EventsSection = () => {
+  const { upcomingEvents } = useUniversityStore();
+  
+  // Format date for display
+  const formatEventDate = (startDate, endDate) => {
+    if (!startDate) return "";
+    
+    const start = new Date(startDate);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    
+    if (endDate && endDate !== startDate) {
+      const end = new Date(endDate);
+      return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`;
+    }
+    
+    return start.toLocaleDateString('en-US', options);
+  };
   return (
     <section className="section-padding bg-white">
       <div className="container mx-auto px-4">
@@ -41,42 +33,66 @@ const EventsSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            Upcoming <span className="text-blue-700">Events</span>
+          <h2 className="text-4xl font-bold text-gray-800 mb-4 font-libreBaskerville">
+            Upcoming <span className="text-gradient">Events</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Join us for exciting events and activities on campus and beyond.
           </p>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {eventsData.map((event, index) => (
-            <motion.div
-              key={event.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-xl shadow-lg overflow-hidden card-hover group"
-            >
-              <Link to={event.link} className="block">
-                <div className="h-56 relative overflow-hidden">
-                  <img-replace src={`https://source.unsplash.com/random/400x300/?${event.imageQuery}`} alt={event.imageAlt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                </div>
-                <div className="p-6">
-                  <div className="text-xs text-blue-600 font-semibold mb-1 uppercase tracking-wider">{event.date}</div>
-                  <div className="text-xs text-gray-500 mb-2">{event.location}</div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-blue-700 transition-colors">{event.title}</h3>
-                  <div className="flex items-center text-blue-600 font-medium group-hover:underline">
-                    Event Details
-                    <ChevronRight className="ml-1 h-4 w-4" />
+          {upcomingEvents && upcomingEvents.length > 0 ? (
+            upcomingEvents.map((event, index) => (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-md border border-gray-200 overflow-hidden card-hover group"
+              >
+                <Link to={event.permalink || `/events/${event.slug}`} className="block">
+                  <ImagePlaceholder
+                    src={event.featured_image}
+                    alt={event.title}
+                    className="w-full group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="p-6">
+                    <div className="text-xs text-primary font-semibold mb-1 uppercase tracking-wider">
+                      {formatEventDate(event.start_date, event.end_date)}
+                    </div>
+                    <div className="text-xs text-gray-500 mb-2">
+                      {event.location || "Location TBA"}
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors font-libreBaskerville">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center text-primary font-medium group-hover:underline text-sm">
+                      Event Details
+                      <ChevronRight className="ml-1 h-4 w-4 inline-block align-middle" />
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            ))
+          ) : (
+            <div className="col-span-full">
+              <EmptyState
+                type="events"
+                title="No upcoming events"
+                message="There are no upcoming events scheduled at this time."
+                suggestion="Check back soon for exciting events and activities!"
+              />
+            </div>
+          )}
         </div>
         <div className="text-center mt-12">
-          <Button asChild size="lg" variant="outline" className="border-blue-700 text-blue-700 hover:bg-blue-50 hover:text-blue-800 rounded-md px-8 py-3">
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="border-primary text-primary hover:bg-primary/10 hover:text-primary/90 rounded-md px-8 py-3"
+          >
             <Link to="/events">View All Events</Link>
           </Button>
         </div>

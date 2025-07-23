@@ -16,7 +16,7 @@ const AdmissionsCTA = ({ onApplyClick, onScheduleVisit }) => {
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready to Join Our Community?
           </h2>
-          <p className="text-xl mb-8 text-blue-100">
+          <p className="text-xl mb-8 text-white/80">
             Take the first step toward your future. Start your application today and become part 
             of the Abraham University family.
           </p>
@@ -24,7 +24,7 @@ const AdmissionsCTA = ({ onApplyClick, onScheduleVisit }) => {
             <Button
               size="lg"
               onClick={onApplyClick}
-              className="bg-white text-blue-600 hover:bg-blue-50 text-lg px-8 py-4 rounded-full font-semibold"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 text-lg px-8 py-4 rounded-full font-semibold"
             >
               Start Application
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -33,7 +33,7 @@ const AdmissionsCTA = ({ onApplyClick, onScheduleVisit }) => {
               size="lg"
               variant="outline"
               onClick={onScheduleVisit}
-              className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4 rounded-full font-semibold"
+              className="border-white text-white hover:bg-white hover:text-victorian-dark text-lg px-8 py-4 rounded-full font-semibold"
             >
               Schedule Campus Visit
             </Button>

@@ -35,13 +35,13 @@ const RecentPublications = ({ publications, onPublicationClick }) => {
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">{publication.title}</h3>
                   <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
-                    <span className="font-medium text-blue-600">{publication.journal}</span>
+                    <span className="font-medium text-yellow-600">{publication.journal}</span>
                     <span>{publication.date}</span>
                   </div>
                   <p className="text-gray-700">{publication.authors}</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-blue-600">{publication.citations}</div>
+                  <div className="text-2xl font-bold text-victorian-dark">{publication.citations}</div>
                   <div className="text-sm text-gray-500">Citations</div>
                 </div>
               </div>
@@ -53,7 +53,7 @@ const RecentPublications = ({ publications, onPublicationClick }) => {
           <Button
             size="lg"
             onClick={onPublicationClick}
-            className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
+            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900"
           >
             View All Publications
           </Button>

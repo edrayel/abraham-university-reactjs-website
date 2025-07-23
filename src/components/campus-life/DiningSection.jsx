@@ -31,12 +31,12 @@ const DiningSection = ({ diningOptions }) => {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-semibold text-gray-900">{option.name}</h3>
-                    <span className="text-sm text-blue-600 font-medium">{option.hours}</span>
+                    <span className="text-sm text-yellow-600 font-medium">{option.hours}</span>
                   </div>
                   <p className="text-gray-600 text-sm mb-2">{option.type}</p>
                   <div className="flex flex-wrap gap-2">
                     {option.features.map((feature, idx) => (
-                      <span key={idx} className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
+                      <span key={idx} className="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded">
                         {feature}
                       </span>
                     ))}
@@ -56,7 +56,7 @@ const DiningSection = ({ diningOptions }) => {
             </div>
             <div className="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-lg p-6 float-animation">
               <div className="flex items-center space-x-2">
-                <Utensils className="h-6 w-6 text-blue-600" />
+                <Utensils className="h-6 w-6 text-yellow-600" />
                 <div>
                   <div className="text-lg font-bold text-gray-900">15+</div>
                   <div className="text-sm text-gray-600">Dining Options</div>
