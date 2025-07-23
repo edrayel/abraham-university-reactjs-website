@@ -5,8 +5,11 @@
  * It provides a centralized place to manage all API URLs and related settings.
  */
 
-// Base URL for the WordPress API
-const API_BASE_URL = 'http://localhost:8000/wp-json';
+// WordPress base URL for content uploads
+const WORDPRESS_BASE_URL = import.meta.env.VITE_WORDPRESS_BASE_URL;
+
+// Base URL for the WordPress API (derived from WordPress base URL)
+const API_BASE_URL = `${WORDPRESS_BASE_URL}/index.php/wp-json`;
 
 // Abraham API namespace
 const API_NAMESPACE = 'abraham/v1';
@@ -47,11 +50,11 @@ const API_CONFIG = {
   // Default headers for API requests
   headers: {
     'Content-Type': 'application/json',
-    'X-API-Key': 'abraham-university-api-key',
+    'X-API-Key': import.meta.env.VITE_API_KEY,
   },
   
   // Default timeout for API requests (in milliseconds)
   timeout: 10000,
 };
 
-export { API_BASE_URL, API_NAMESPACE, ABRAHAM_API_BASE, API_ENDPOINTS, API_CONFIG };
+export { API_BASE_URL, API_NAMESPACE, ABRAHAM_API_BASE, API_ENDPOINTS, API_CONFIG, WORDPRESS_BASE_URL };
