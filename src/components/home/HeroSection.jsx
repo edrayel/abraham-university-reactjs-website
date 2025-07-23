@@ -37,7 +37,7 @@ const HeroSection = () => {
       toast({
         title: "🚧 Application Portal",
         description:
-          "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
+          "This feature isn't implemented yet—but don't worry! You can request it in your next prompt!!! 🚀",
       });
     }
   };
