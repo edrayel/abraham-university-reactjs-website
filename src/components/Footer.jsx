@@ -39,8 +39,29 @@ const Footer = () => {
 
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-4 py-16">
+    <footer className="relative bg-gray-900 text-gray-300 overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: 'url("/assets/img/abraham-pattern.svg")',
+            backgroundSize: '400px',
+          }}
+          animate={{
+            x: [0, -100],
+            y: [0, -100],
+          }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "reverse",
+            duration: 40,
+            ease: "linear"
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-900/90"></div>
+      </div>
+      <div className="container relative z-10 mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-12" >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -156,6 +177,17 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-700 mt-12 pt-8 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="mb-6 max-w-3xl mx-auto">
+            <h3 className="text-victorian-gold-bright text-sm font-semibold mb-2">NOTICE OF NONDISCRIMINATORY POLICY AS TO STUDENTS</h3>
+            <p className="text-gray-400 text-xs font-body leading-relaxed">
+              Abraham University admits students of any race, color, national and ethnic origin to all the rights, privileges, programs, and activities generally accorded or made available to students at the school. It does not discriminate on the basis of race, color, national and ethnic origin in administration of its educational policies, admissions policies, scholarship and loan programs, and athletic and other school-administered programs.
+            </p>
+          </motion.div>
           <p className="text-gray-400 text-sm font-body">
             © {new Date().getFullYear()} Abraham University. All rights reserved.
           </p>
