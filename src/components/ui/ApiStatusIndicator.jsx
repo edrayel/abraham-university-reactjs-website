@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
-import { API_ENDPOINTS } from '../../config/api';
+import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
 
 /**
  * ApiStatusIndicator Component
@@ -27,10 +27,7 @@ const ApiStatusIndicator = ({ endpoint = API_ENDPOINTS.HOME, interval = 60000 })
       
       const response = await fetch(endpoint, { 
         method: 'GET',
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-API-Key': 'abraham-university-api-key'
-        },
+        headers: API_CONFIG.headers,
         signal: controller.signal
       });
       
@@ -93,7 +90,7 @@ const ApiStatusIndicator = ({ endpoint = API_ENDPOINTS.HOME, interval = 60000 })
   return (
     <div className="fixed bottom-4 right-4 z-50 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-3 flex items-center space-x-2 text-sm border border-gray-200 dark:border-gray-700">
       {status === 'checking' && (
-        <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />
+        <RefreshCw className="h-4 w-4 text-yellow-500 animate-spin" />
       )}
       
       {status === 'connected' && (
@@ -106,7 +103,7 @@ const ApiStatusIndicator = ({ endpoint = API_ENDPOINTS.HOME, interval = 60000 })
       
       <div>
         <div className="font-medium">
-          {status === 'checking' && 'Checking API...'}
+          {status === 'checking' && 'Loading...'}
           {status === 'connected' && 'API Connected'}
           {status === 'error' && 'API Error'}
         </div>
