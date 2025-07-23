@@ -69,6 +69,22 @@ install_apache() {
 
 # Install Node.js and npm
 install_nodejs() {
+    # Check if Node.js is already installed
+    if command -v node >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
+        node_version=$(node --version)
+        npm_version=$(npm --version)
+        log "Node.js ${node_version} and npm ${npm_version} already installed, skipping installation"
+        
+        # Install PM2 globally for process management if not already installed
+        if ! command -v pm2 >/dev/null 2>&1; then
+            log "Installing PM2 globally..."
+            npm install -g pm2
+        else
+            log "PM2 already installed"
+        fi
+        return
+    fi
+    
     log "Installing Node.js ${NODE_VERSION}..."
     
     # Install Node.js from NodeSource repository
