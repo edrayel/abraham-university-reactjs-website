@@ -89,28 +89,43 @@ install_nodejs() {
     
     # Remove any existing conflicting Node.js packages
     log "Removing any existing Node.js packages to avoid conflicts..."
-    dnf remove -y nodejs npm nodejs-full-i18n 2>/dev/null || true
+    # First, try to remove all nodejs-related packages aggressively
+    dnf remove -y nodejs* npm* 2>/dev/null || true
+    # Also try to remove specific problematic packages
+    dnf remove -y nodejs-full-i18n nodejs-npm nodejs-docs 2>/dev/null || true
     
     # Clean package cache
     dnf clean all
     
+    # Disable any conflicting nodejs modules
+    dnf module disable nodejs -y 2>/dev/null || true
+    
     # Install Node.js from NodeSource repository
     curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | bash -
     
-    # Try to install nodejs with --allowerasing to handle any remaining conflicts
-    if ! dnf install -y nodejs --allowerasing; then
-        log "Standard installation failed, trying alternative approach..."
+    # Try to install nodejs with aggressive conflict resolution
+    if ! dnf install -y nodejs npm --allowerasing --best; then
+        log "Standard installation failed, trying with --nobest..."
         
-        # Try with --nobest flag as fallback
-        if ! dnf install -y nodejs --nobest; then
-            log "Alternative installation also failed, trying to skip broken packages..."
+        # Try with --nobest and --allowerasing
+        if ! dnf install -y nodejs npm --allowerasing --nobest; then
+            log "Alternative installation failed, trying to skip broken packages..."
             
-            # Last resort: skip broken packages
-            if ! dnf install -y nodejs --skip-broken; then
-                log "ERROR: All Node.js installation methods failed. Please install Node.js manually."
-                log "You can try: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash"
-                log "Then: nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION}"
-                exit 1
+            # Try with --skip-broken
+            if ! dnf install -y nodejs npm --allowerasing --skip-broken; then
+                log "All automated methods failed, trying manual cleanup..."
+                
+                # More aggressive cleanup
+                rpm -e --nodeps nodejs nodejs-full-i18n nodejs-npm 2>/dev/null || true
+                dnf clean all
+                
+                # Final attempt
+                if ! dnf install -y nodejs npm --allowerasing; then
+                    log "ERROR: All Node.js installation methods failed. Please install Node.js manually."
+                    log "You can try: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash"
+                    log "Then: nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION}"
+                    exit 1
+                fi
             fi
         fi
     fi
