@@ -1,7 +1,5 @@
 import { create } from "zustand";
-
-const ADMISSIONS_ENDPOINT =
-  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/admissions"; // Replace with actual endpoint
+import apiService from "../services/apiService";
 
 const useAdmissionsStore = create((set, get) => ({
   // State variables for JSON response objects
@@ -12,6 +10,9 @@ const useAdmissionsStore = create((set, get) => ({
   tuitionFees: [],
   financialAid: [],
   exploreFinancialAidUrl: "",
+  applyNowUrl: "",
+  scheduleVisitUrl: "",
+  applicationProcess: [],
   isLoading: false,
   error: null,
 
@@ -20,13 +21,7 @@ const useAdmissionsStore = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await fetch(ADMISSIONS_ENDPOINT);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await apiService.getAdmissionsData();
 
       set({
         requirements: Array.isArray(data.requirements) ? data.requirements : [],
@@ -46,6 +41,17 @@ const useAdmissionsStore = create((set, get) => ({
           typeof data.explore_financial_aid_url === "string"
             ? data.explore_financial_aid_url
             : "",
+        applyNowUrl:
+          typeof data.apply_now_url === "string"
+            ? data.apply_now_url
+            : "",
+        scheduleVisitUrl:
+          typeof data.schedule_visit_url === "string"
+            ? data.schedule_visit_url
+            : "",
+        applicationProcess: Array.isArray(data.application_process)
+          ? data.application_process
+          : [],
         isLoading: false,
         error: null,
       });
@@ -75,6 +81,12 @@ const useAdmissionsStore = create((set, get) => ({
     set({ financialAid: Array.isArray(aid) ? aid : [] }),
   setExploreFinancialAidUrl: (url) =>
     set({ exploreFinancialAidUrl: typeof url === "string" ? url : "" }),
+  setApplyNowUrl: (url) =>
+    set({ applyNowUrl: typeof url === "string" ? url : "" }),
+  setScheduleVisitUrl: (url) =>
+    set({ scheduleVisitUrl: typeof url === "string" ? url : "" }),
+  setApplicationProcess: (process) =>
+    set({ applicationProcess: Array.isArray(process) ? process : [] }),
 
   // Utility methods
   clearAllData: () => {
@@ -86,6 +98,9 @@ const useAdmissionsStore = create((set, get) => ({
       tuitionFees: [],
       financialAid: [],
       exploreFinancialAidUrl: "",
+      applyNowUrl: "",
+      scheduleVisitUrl: "",
+      applicationProcess: [],
       error: null,
     });
   },

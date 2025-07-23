@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { CalendarDays, MapPin, Search, Filter, ChevronRight, Ticket } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
-
-const API_ENDPOINT = 'https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/events';
+import { CalendarDays, MapPin, Search, Filter, ChevronRight, Ticket, Clock } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Switch } from '../components/ui/switch';
+import { toast } from '../components/ui/use-toast';
+import apiService from '../services/apiService';
+import ErrorBoundary from '../components/common/ErrorBoundary';
+import LoadingState from '../components/common/LoadingState';
+import EmptyState from '../components/common/EmptyState';
 
 const Events = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,17 +17,16 @@ const Events = () => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPastEvents, setShowPastEvents] = useState(false);
 
   // Fetch events from API
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const response = await fetch(API_ENDPOINT);
-        if (!response.ok) {
-          throw new Error('Failed to fetch events');
-        }
-        const data = await response.json();
+        
+        // Use apiService with show_past parameter
+        const data = await apiService.getEventsData({ show_past: showPastEvents });
         
         setEvents(data.events || []);
         setFilteredEvents(data.events || []);
@@ -46,7 +48,7 @@ const Events = () => {
     };
 
     fetchEvents();
-  }, []);
+  }, [showPastEvents]); // Re-fetch when showPastEvents changes
 
   // Re-filter events when events data changes
   useEffect(() => {
@@ -132,7 +134,7 @@ const Events = () => {
           
 
             <h1 className="text-5xl md:text-6xl font-bold mb-6">University Events</h1>
-            <p className="text-xl text-blue-100 leading-relaxed">
+            <p className="text-xl text-white/80 leading-relaxed">
               Discover upcoming events, workshops, performances, and community gatherings at Abraham University.
             </p>
           </motion.div>
@@ -165,6 +167,22 @@ const Events = () => {
                 ))}
               </select>
             </div>
+            <div className="flex items-center gap-2 ml-0 md:ml-4 mt-4 md:mt-0">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="show-past-events"
+                  checked={showPastEvents}
+                  onCheckedChange={setShowPastEvents}
+                />
+                <label
+                  htmlFor="show-past-events"
+                  className="text-sm font-medium flex items-center cursor-pointer"
+                >
+                  <Clock className="h-4 w-4 mr-1 text-gray-500" />
+                  Show Past Events
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -173,31 +191,21 @@ const Events = () => {
       <section className="section-padding">
         <div className="container mx-auto px-4">
           {loading ? (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <CalendarDays className="h-24 w-24 mx-auto text-gray-300 mb-4 animate-pulse" />
-              <h2 className="text-2xl font-semibold text-gray-700 mb-2">Loading Events...</h2>
-              <p className="text-gray-500">Please wait while we fetch the latest events.</p>
-            </motion.div>
+            <LoadingState type="section" message="Loading Events" />
           ) : error ? (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <CalendarDays className="h-24 w-24 mx-auto text-red-300 mb-4" />
-              <h2 className="text-2xl font-semibold text-red-700 mb-2">Error Loading Events</h2>
-              <p className="text-red-500 mb-4">{error}</p>
-              <Button 
-                onClick={() => window.location.reload()} 
-                className="bg-red-600 hover:bg-red-700"
-              >
-                Try Again
-              </Button>
-            </motion.div>
+            <div className="py-12">
+              <ErrorBoundary 
+                error={{ message: error }} 
+                onRetry={() => {
+                  setError(null);
+                  setLoading(true);
+                  // Re-trigger the useEffect
+                  window.location.reload();
+                }}
+                showHomeButton={false}
+                customMessage="We're having trouble loading upcoming events. This could be due to server maintenance or connectivity issues."
+              />
+            </div>
           ) : filteredEvents.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredEvents.map((event, index) => {
@@ -215,12 +223,17 @@ const Events = () => {
                   >
                     <div className="h-56 relative overflow-hidden">
                       <img
-                        src={event.featured_image || `https://source.unsplash.com/random/400x300/?${primaryCategory?.slug || 'university'}-event`} 
+                        src={event.featured_image || 
+                          (primaryCategory?.slug === 'academic' ? '/academic-event-placeholder.svg' :
+                           primaryCategory?.slug === 'social' ? '/social-event-placeholder.svg' :
+                           primaryCategory?.slug === 'workshop' ? '/workshop-event-placeholder.svg' :
+                           '/event-placeholder.svg')
+                        } 
                         alt={event.title} 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
                       />
                       {primaryCategory && (
-                        <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                        <div className="absolute top-2 right-2 bg-yellow-600 text-gray-900 text-xs font-semibold px-2 py-1 rounded">
                           {primaryCategory.name}
                         </div>
                       )}
@@ -233,12 +246,12 @@ const Events = () => {
                     <div className="p-6 flex flex-col flex-grow">
                       <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-gradient transition-colors">{event.title}</h3>
                       <div className="text-sm text-gray-500 mb-1 flex items-center">
-                        <CalendarDays className="h-4 w-4 mr-2 text-blue-600" />
+                        <CalendarDays className="h-4 w-4 mr-2 text-yellow-600" />
                         {formatDate(event.start_date, event.end_date)} {eventTime && `· ${eventTime}`}
                       </div>
                       {event.location && (
                         <div className="text-sm text-gray-500 mb-3 flex items-center">
-                          <MapPin className="h-4 w-4 mr-2 text-blue-600" />
+                          <MapPin className="h-4 w-4 mr-2 text-yellow-600" />
                           {event.location}
                         </div>
                       )}
@@ -249,7 +262,7 @@ const Events = () => {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-50" 
+                          className="flex-1 border-yellow-600 text-yellow-600 hover:bg-yellow-50" 
                           onClick={() => handleEventClick(event.title)}
                         >
                           View Details <ChevronRight className="ml-1 h-4 w-4" />
@@ -257,7 +270,7 @@ const Events = () => {
                         {event.registration_url ? (
                           <Button 
                             size="sm" 
-                            className="flex-1 bg-blue-600 hover:bg-blue-700" 
+                            className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900" 
                             onClick={() => window.open(event.registration_url, '_blank')}
                           >
                             <Ticket className="mr-2 h-4 w-4" /> Register
@@ -265,7 +278,7 @@ const Events = () => {
                         ) : (
                           <Button 
                             size="sm" 
-                            className="flex-1 bg-blue-600 hover:bg-blue-700" 
+                            className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900" 
                             onClick={() => handleRegisterClick(event.title)}
                           >
                             <Ticket className="mr-2 h-4 w-4" /> Register
@@ -278,15 +291,15 @@ const Events = () => {
               })}
             </div>
           ) : (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <CalendarDays className="h-24 w-24 mx-auto text-gray-300 mb-4" />
-              <h2 className="text-2xl font-semibold text-gray-700 mb-2">No Events Found</h2>
-              <p className="text-gray-500">Try adjusting your search or filter criteria, or check back later for new events.</p>
-            </motion.div>
+            <EmptyState 
+              type="events"
+              onRetry={() => {
+                setError(null);
+                setLoading(true);
+                window.location.reload();
+              }}
+              className="py-12"
+            />
           )}
         </div>
       </section>

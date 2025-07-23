@@ -37,7 +37,7 @@ const AboutSection = () => {
               ))}
             </ul>
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-3">
-              <Link to="/about">Learn More About Us</Link>
+              <Link to="/about">Learn More About Us!!</Link>
             </Button>
           </motion.div>
           <motion.div
@@ -47,7 +47,7 @@ const AboutSection = () => {
             className="relative order-1 lg:order-2"
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-w-4 aspect-h-3">
-              <img-replace src="https://images.unsplash.com/photo-1562774053-676d19c1504a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" alt="Beautiful university campus with historic building" className="w-full h-full object-cover" />
+              <img src="/campus-placeholder.svg" alt="Beautiful university campus with historic building" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
             </div>
             <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-6 float-animation hidden md:block">

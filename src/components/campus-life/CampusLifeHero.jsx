@@ -11,7 +11,7 @@ const CampusLifeHero = () => {
           className="text-center text-white max-w-4xl mx-auto"
         >
           <h1 className="text-5xl md:text-6xl font-bold mb-6">Campus Life</h1>
-          <p className="text-xl text-blue-100 leading-relaxed">
+          <p className="text-xl text-white/80 leading-relaxed">
             Experience a vibrant campus community where learning extends beyond the classroom. 
             Discover opportunities to grow, connect, and create lasting memories.
           </p>

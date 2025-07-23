@@ -40,3 +40,46 @@ dist-ssr
 
 # Vite
 .vite/
+
+# Deployment
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# SSL Certificates
+ssl/
+certs/
+
+# Deployment logs
+deployment.log
+setup.log
+apache-setup.log
+validation.log
+
+# PM2
+.pm2/
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Backup files
+*.backup
+*.bak
+*.orig
+
+# Temporary deployment files
+.deploy/
+.deployment/
+tmp/
+temp/
+
+# Server configuration backups
+*.conf.backup
+*.conf.bak
+vhost.conf.backup

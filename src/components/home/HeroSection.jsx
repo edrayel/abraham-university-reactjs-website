@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import useUniversityStore from "@/stores/homeStore";
+import { useState, useRef } from "react";
 
 // Temporary mock data - replace with actual store when files are created
 // const mockHero = {
@@ -24,6 +25,10 @@ const HeroSection = () => {
   // const isLoading = false;
   // const error = null;
 
+  // Mouse tracking state for gradient effect
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const titleRef = useRef(null);
+
   const handleApplyClick = () => {
     // Use CTA link from hero data if available, otherwise show toast
     if (hero?.cta_link) {
@@ -34,6 +39,16 @@ const HeroSection = () => {
         description:
           "This feature isn't implemented yet—but don't worry! You can request it in your next prompt!!! 🚀",
       });
+    }
+  };
+
+  // Handle mouse movement for gradient effect
+  const handleMouseMove = (e) => {
+    if (titleRef.current) {
+      const rect = titleRef.current.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      setMousePosition({ x, y });
     }
   };
 
@@ -71,7 +86,7 @@ const HeroSection = () => {
   const ctaLink = hero?.cta_link || "";
   const backgroundImage =
     hero?.background_image ||
-    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
+    "/campus-hero-placeholder.svg";
 
   return (
     <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-black via-black to-black text-white pt-[80px]">
@@ -81,9 +96,8 @@ const HeroSection = () => {
           alt="University campus aerial view"
           className="w-full h-full object-cover"
           onError={(e) => {
-            // Fallback to default image if background_image fails to load
-            e.target.src =
-              "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
+            // Fallback to local placeholder if background_image fails to load
+            e.target.src = "/campus-hero-placeholder.svg";
           }}
         />
       </div>
@@ -94,9 +108,30 @@ const HeroSection = () => {
           transition={{ duration: 0.8 }}
           className="text-center max-w-4xl mx-auto"
         >
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight font-libreBaskerville">
+          <h1 
+            ref={titleRef}
+            onMouseMove={handleMouseMove}
+            className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight font-libreBaskerville cursor-pointer"
+          >
             {heroTitle}
-            <span className="block text-gradient">{heroSubtitle}</span>
+            <span 
+              className="block animated-gradient-text"
+              style={{
+                backgroundImage: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
+                  #ffef94 0%, 
+                  #ffd700 25%, 
+                  #daa520 50%, 
+                  #b8860b 100%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                color: 'transparent',
+                transition: 'background-image 0.3s ease',
+                filter: `drop-shadow(0 0 8px rgba(255, 215, 0, ${Math.max(0.3, 1 - Math.sqrt((mousePosition.x - 50) ** 2 + (mousePosition.y - 50) ** 2) / 100)}))`
+              }}
+            >
+              {heroSubtitle}
+            </span>
           </h1>
           <p className="text-lg md:text-xl mb-10 text-primary-foreground/90 leading-relaxed font-light">
             {heroDescription}

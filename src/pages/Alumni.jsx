@@ -14,7 +14,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import useAlumniStore from "@/stores/useAlumniStore"; // Adjust the import path as needed
+import useAlumniStore from "@/stores/useAlumniStore";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
+import LoadingState from "@/components/common/LoadingState";
+import EmptyState from "@/components/common/EmptyState";
 
 const Alumni = () => {
   const {
@@ -85,89 +88,20 @@ const Alumni = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <section className="section-padding hero-gradient">
-          <div className="container mx-auto px-4">
-            <div className="text-center text-white max-w-4xl mx-auto">
-              <div className="h-16 w-16 bg-gray-200 rounded-full mx-auto mb-6"></div>
-              <div className="h-12 bg-gray-200 rounded mb-6"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto"></div>
-            </div>
-          </div>
-        </section>
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="text-center p-4 bg-gray-50 rounded-lg shadow-sm animate-pulse"
-                >
-                  <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
-                  <div className="h-8 bg-gray-200 rounded mb-1"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        <section className="section-padding bg-gray-100">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
-                >
-                  <div className="h-64 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 rounded mb-1"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-1"></div>
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(3)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 p-8 rounded-xl shadow-lg animate-pulse"
-                >
-                  <div className="flex items-start space-x-6">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                    <div>
-                      <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                      <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                      <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
+      <LoadingState 
+        type="page" 
+        message="Loading alumni information..." 
+      />
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 text-center">
-        Error: {error}
-      </div>
+      <ErrorBoundary 
+        error={error}
+        message="We're having trouble loading alumni information. Please try again or check back later."
+        onRetry={() => fetchAllData()}
+      />
     );
   }
 
@@ -177,9 +111,13 @@ const Alumni = () => {
     !mappedServices.length
   ) {
     return (
-      <div className="min-h-screen bg-gray-50 text-center">
-        No alumni data available.
-      </div>
+      <EmptyState
+        type="generic"
+        title="No Alumni Information Available"
+        description="We're currently updating our alumni database or experiencing temporary data issues."
+        onRetry={() => fetchAllData()}
+        retryText="Reload Alumni Data"
+      />
     );
   }
 
@@ -195,7 +133,7 @@ const Alumni = () => {
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
           }
           .text-gradient {
-            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            background: linear-gradient(to right, #eab308, #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
           }
@@ -225,7 +163,7 @@ const Alumni = () => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Our Proud Alumni
             </h1>
-            <p className="text-xl text-blue-100 leading-relaxed">
+            <p className="text-xl text-white/80 leading-relaxed">
               Welcome to the Abraham University Alumni Association – a global
               network of graduates making an impact worldwide.
             </p>
@@ -246,7 +184,7 @@ const Alumni = () => {
                 className="text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                 role="presentation"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full mb-4">
                   <stat.icon className="h-8 w-8 text-gradient" />
                 </div>
                 <div className="text-3xl font-bold text-gray-800 mb-1">
@@ -298,7 +236,7 @@ const Alumni = () => {
                   <h3 className="text-xl font-semibold text-gray-800 mb-1 group-hover:text-gradient">
                     {alumnus.name}
                   </h3>
-                  <p className="text-sm text-blue-600 font-medium mb-1">
+                  <p className="text-sm text-victorian-dark font-medium mb-1">
                     {alumnus.field} ({alumnus.year})
                   </p>
                   <p className="text-gray-600 text-xs">{alumnus.achievement}</p>
@@ -336,7 +274,7 @@ const Alumni = () => {
                 className="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex items-start space-x-6"
                 role="presentation"
               >
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center">
                   <service.icon className="h-6 w-6 text-gradient" />
                 </div>
                 <div>
@@ -347,7 +285,7 @@ const Alumni = () => {
                   {service.link ? (
                     <a
                       href={service.link}
-                      className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                      className="text-victorian-dark hover:text-yellow-600 font-medium flex items-center"
                       onClick={(e) => e.stopPropagation()}
                       aria-label={`Learn more about ${service.title}`}
                     >
@@ -356,7 +294,7 @@ const Alumni = () => {
                   ) : (
                     <Button
                       variant="link"
-                      className="text-blue-600 hover:text-blue-800 p-0"
+                      className="text-victorian-dark hover:text-yellow-600 p-0"
                       onClick={() => handleAlumniAction(service.title)}
                     >
                       Learn More <ArrowRight className="ml-1 h-4 w-4" />
@@ -369,7 +307,7 @@ const Alumni = () => {
         </div>
       </section>
 
-      <section className="section-padding bg-blue-700 text-white">
+      <section className="section-padding hero-gradient text-white">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -377,9 +315,9 @@ const Alumni = () => {
             viewport={{ once: true, amount: 0.3 }}
             className="max-w-3xl mx-auto"
           >
-            <Network className="h-12 w-12 mx-auto mb-6 text-sky-300" />
+            <Network className="h-12 w-12 mx-auto mb-6 text-yellow-300" />
             <h2 className="text-3xl font-bold mb-4">Get Involved!</h2>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+            <p className="text-xl text-white/80 mb-8 leading-relaxed">
               Stay connected, volunteer your time, mentor students, or attend an
               event. There are many ways to be an active part of the Abraham
               University alumni community.
@@ -388,7 +326,7 @@ const Alumni = () => {
               <Button
                 size="lg"
                 onClick={() => handleAlumniAction("Update Your Info")}
-                className="bg-white text-gradient hover:bg-blue-50 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Update Your Info
               </Button>
@@ -396,7 +334,7 @@ const Alumni = () => {
                 size="lg"
                 variant="outline"
                 onClick={() => handleAlumniAction("Find an Event")}
-                className="border-white text-white hover:bg-white hover:text-gradient font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
+                className="border-white text-white hover:bg-white hover:text-victorian-dark font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Find an Event
               </Button>

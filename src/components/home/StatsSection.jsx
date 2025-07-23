@@ -88,8 +88,8 @@ export default StatsSection;
 //               transition={{ delay: index * 0.1 }}
 //               className="text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow"
 //             >
-//               <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-//                 <stat.icon className="h-8 w-8 text-gradient" />
+//               <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
+//                 <stat.icon className="h-8 w-8 text-yellow-600" />
 //               </div>
 //               <div className="text-3xl font-bold text-gray-800 mb-1">{stat.number}</div>
 //               <div className="text-gray-600 text-sm">{stat.label}</div>

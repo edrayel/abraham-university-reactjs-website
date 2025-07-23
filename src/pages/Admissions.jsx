@@ -18,7 +18,10 @@ import DeadlinesSection from "@/components/admissions/DeadlinesSection";
 import ApplicationProcess from "@/components/admissions/ApplicationProcess";
 import FinancialAidSection from "@/components/admissions/FinancialAidSection";
 import AdmissionsCTA from "@/components/admissions/AdmissionsCTA";
-import useAdmissionsStore from "@/stores/useAdmissionsStore"; // Adjust the import path as needed
+import useAdmissionsStore from "@/stores/useAdmissionsStore";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
+import LoadingState from "@/components/common/LoadingState";
+import EmptyState from "@/components/common/EmptyState";
 
 // const programTypesData = [
 //   { id: 'undergraduate', name: 'Undergraduate', icon: Users },
@@ -130,6 +133,9 @@ const Admissions = () => {
     tuitionFees,
     financialAid,
     exploreFinancialAidUrl,
+    applyNowUrl,
+    scheduleVisitUrl,
+    applicationProcess,
     isLoading,
     error,
     fetchAllData,
@@ -150,12 +156,22 @@ const Admissions = () => {
   // Map JSON requirements to requirementsData format
   const requirementsData = {
     undergraduate: requirements
-      .filter((req) => req.program_category.toLowerCase() === "undergraduate")
+      .filter((req) => req.program_category && req.program_category.toLowerCase() === "undergraduate")
       .map((req) => req.title),
     graduate: requirements
-      .filter((req) => req.program_category.toLowerCase() === "graduate")
+      .filter((req) => req.program_category && req.program_category.toLowerCase() === "graduate")
       .map((req) => req.title),
-    doctoral: [
+    doctoral: requirements
+      .filter((req) => req.program_category && req.program_category.toLowerCase() === "doctoral")
+      .map((req) => req.title),
+    international: requirements
+      .filter((req) => req.program_category && req.program_category.toLowerCase() === "international")
+      .map((req) => req.title),
+  };
+
+  // Add fallback requirements if no data from API
+  if (requirementsData.doctoral.length === 0) {
+    requirementsData.doctoral = [
       "Master's degree (preferred)",
       "GRE scores",
       "Official transcripts",
@@ -163,69 +179,88 @@ const Admissions = () => {
       "Research proposal",
       "Writing sample",
       "Application fee ($125)",
-    ], // Static fallback
-    international: [
+    ];
+  }
+  if (requirementsData.international.length === 0) {
+    requirementsData.international = [
       "TOEFL or IELTS scores",
       "Credential evaluation",
       "Financial documentation",
       "Passport copy",
       "All standard requirements for program level",
-    ], // Static fallback
-  };
+    ];
+  }
 
   // Map JSON deadlines to deadlinesData format
   const deadlinesData = deadlines.map((deadline) => {
     const deadlineDate = new Date(deadline.deadline_date);
-    const currentDate = new Date("2025-06-28"); // Current date as per context
+    const currentDate = new Date(); // Use current date
     let status;
     if (deadlineDate < currentDate) {
       status = "closed";
-    } else if (
-      deadlineDate >= currentDate &&
-      deadlineDate <= new Date("2025-09-08")
-    ) {
-      status = "open";
     } else {
-      status = "upcoming";
+      // Check if deadline is within next 30 days to mark as "open"
+      const thirtyDaysFromNow = new Date();
+      thirtyDaysFromNow.setDate(currentDate.getDate() + 30);
+      if (deadlineDate <= thirtyDaysFromNow) {
+        status = "open";
+      } else {
+        status = "upcoming";
+      }
     }
     return {
-      term: `Fall 2025 (${deadline.program})`,
+      term: `${deadline.program} - ${deadline.application_type ? deadline.application_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Application'}`,
       deadline: deadline.deadline_date,
       status,
       description: deadline.note, // Optional, for sub-components
     };
   });
 
-  // Use static applicationStepsData as process_steps is empty
-  const applicationStepsData = [
-    {
-      number: 1,
-      title: "Submit Application",
-      description:
-        "Complete your online application with all required documents.",
-      icon: FileText,
-    },
-    {
-      number: 2,
-      title: "Application Review",
-      description:
-        "Our admissions committee reviews your application thoroughly.",
-      icon: Clock,
-    },
-    {
-      number: 3,
-      title: "Interview (if required)",
-      description:
-        "Some programs may require an interview or portfolio review.",
-      icon: Users,
-    },
-    {
-      number: 4,
-      title: "Decision Notification",
-      description: "Receive your admission decision and next steps.",
-      icon: CheckCircle,
-    },
-  ];
+  // Use applicationProcess from API if available, otherwise use static data
+  const applicationStepsData = applicationProcess.length > 0 
+    ? applicationProcess.map(step => ({
+        number: step.step_number || step.number,
+        title: step.title,
+        description: step.description,
+        icon: step.icon === 'document' ? FileText : 
+              step.icon === 'clock' ? Clock :
+              step.icon === 'users' ? Users :
+              step.icon === 'check-circle' ? CheckCircle :
+              step.icon === 'FileText' ? FileText :
+              step.icon === 'Clock' ? Clock :
+              step.icon === 'Users' ? Users :
+              step.icon === 'CheckCircle' ? CheckCircle :
+              FileText // default icon
+      }))
+    : [
+        {
+          number: 1,
+          title: "Submit Application",
+          description:
+            "Complete your online application with all required documents.",
+          icon: FileText,
+        },
+        {
+          number: 2,
+          title: "Application Review",
+          description:
+            "Our admissions committee reviews your application thoroughly.",
+          icon: Clock,
+        },
+        {
+          number: 3,
+          title: "Interview (if required)",
+          description:
+            "Some programs may require an interview or portfolio review.",
+          icon: Users,
+        },
+        {
+          number: 4,
+          title: "Decision Notification",
+          description: "Receive your admission decision and next steps.",
+          icon: CheckCircle,
+        },
+      ];
 
   // Map JSON financial_aid to financialAidData format
   const financialAidData = financialAid.map((aid) => ({
@@ -235,19 +270,27 @@ const Admissions = () => {
   }));
 
   const handleApplyClick = () => {
-    toast({
-      title: "🚧 Application Portal",
-      description:
-        "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
-    });
+    if (applyNowUrl) {
+      window.open(applyNowUrl, '_blank');
+    } else {
+      toast({
+        title: "🚧 Application Portal",
+        description:
+          "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
+      });
+    }
   };
 
   const handleScheduleVisit = () => {
-    toast({
-      title: "🚧 Campus Visit Scheduler",
-      description:
-        "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
-    });
+    if (scheduleVisitUrl) {
+      window.open(scheduleVisitUrl, '_blank');
+    } else {
+      toast({
+        title: "🚧 Campus Visit Scheduler",
+        description:
+          "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
+      });
+    }
   };
 
   const handleFinancialAidClick = () => {
@@ -263,141 +306,29 @@ const Admissions = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero Section Skeleton */}
-        <section className="section-padding hero-gradient">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="h-12 bg-gray-200 rounded mb-6"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto mb-8"></div>
-              <div className="h-10 w-48 bg-gray-200 rounded mx-auto"></div>
-            </div>
-          </div>
-        </section>
-        {/* Program Types Tabs Skeleton */}
-        <section className="py-12 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {[...Array(4)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="p-6 bg-gray-200 rounded-xl animate-pulse"
-                  >
-                    <div className="h-8 w-8 bg-gray-300 rounded-full mx-auto mb-3"></div>
-                    <div className="h-6 bg-gray-300 rounded mx-auto"></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Requirements and Deadlines Skeleton */}
-        <section className="section-padding bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div>
-                <div className="h-10 bg-gray-200 rounded mb-6"></div>
-                <div className="bg-white rounded-xl shadow-lg p-6 animate-pulse">
-                  {[...Array(6)].map((_, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start space-x-3 mb-4"
-                    >
-                      <div className="h-5 w-5 bg-gray-200 rounded-full mt-0.5"></div>
-                      <div className="h-4 bg-gray-200 rounded w-full"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="h-10 bg-gray-200 rounded mb-6"></div>
-                <div className="space-y-4">
-                  {[...Array(4)].map((_, index) => (
-                    <div
-                      key={index}
-                      className="bg-white rounded-xl shadow-lg p-6 animate-pulse"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                          <div className="h-4 bg-gray-200 rounded"></div>
-                        </div>
-                        <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Application Process Skeleton */}
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            <div className="h-10 bg-gray-200 rounded mb-6 max-w-md mx-auto"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 rounded-lg shadow-sm p-6 animate-pulse"
-                >
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        {/* Financial Aid Skeleton */}
-        <section className="section-padding bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="h-10 bg-gray-200 rounded mb-6 max-w-md mx-auto"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg p-6 animate-pulse"
-                >
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        {/* CTA Skeleton */}
-        <section className="section-padding bg-blue-700">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-3xl mx-auto">
-              <div className="h-12 w-12 bg-gray-200 rounded-full mx-auto mb-6"></div>
-              <div className="h-10 bg-gray-200 rounded mb-4"></div>
-              <div className="h-6 bg-gray-200 rounded mb-8 max-w-3xl mx-auto"></div>
-              <div className="h-10 w-40 bg-gray-200 rounded mx-auto"></div>
-            </div>
-          </div>
-        </section>
-      </div>
-    );
+    return <LoadingState type="page" message="Loading admissions information..." />;
   }
-
-  
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 text-center">
-        Error: {error}
-      </div>
+      <ErrorBoundary
+        error={error}
+        message="We're having trouble loading admissions information right now. Please try again."
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 
-  if (!requirements.length && !deadlines.length && !financialAid.length) {
+  // Show empty state only if all critical data is missing
+  if (!requirements.length && !deadlines.length && !financialAid.length && !applicationProcess.length) {
     return (
-      <div className="min-h-screen bg-gray-50 text-center">
-        No admissions data available.
-      </div>
+      <EmptyState
+        type="data"
+        title="No Admissions Information Available"
+        message="We're currently updating our admissions information. Please check back soon for application requirements and deadlines!"
+        onRetry={() => window.location.reload()}
+        className="min-h-screen"
+      />
     );
   }
 

@@ -1,15 +1,26 @@
-// import React, { useEffect } from "react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
+  MapPin,
   Users,
   Calendar,
-  Home,
+  Coffee,
   Utensils,
-  Dumbbell,
-  Music,
-  Camera,
+  Home,
   Heart,
+  BookOpen,
+  Music,
+  Palette,
+  Trophy,
+  Gamepad2,
+  Camera,
+  Mic,
+  Dumbbell,
+  Stethoscope,
+  Leaf,
+  Shield,
+  Clock,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -21,6 +32,9 @@ import WellnessSupport from "@/components/campus-life/WellnessSupport";
 import CampusGallery from "@/components/campus-life/CampusGallery";
 import CampusLifeCTA from "@/components/campus-life/CampusLifeCTA";
 import useCampusStore from "@/stores/useCampusStore";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
+import LoadingState from "@/components/common/LoadingState";
+import EmptyState from "@/components/common/EmptyState";
 
 const activitiesData = [
   {
@@ -239,7 +253,7 @@ const CampusLife = () => {
     });
   };
 
-  const handleHousingClick = () => {
+  const handleApplyClick = () => {
     toast({
       title: "🚧 Housing Application",
       description:
@@ -256,52 +270,28 @@ const CampusLife = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen">
-        <section className="section-padding hero-gradient">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="h-12 bg-gray-200 rounded mb-6"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto mb-8"></div>
-              <div className="h-10 w-48 bg-gray-200 rounded mx-auto"></div>
-            </div>
-          </div>
-        </section>
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            {/* <div className="container mx-auto px-4">
-              <div className="text-center max-w-4xl mx-auto">
-                <div className="h-12 bg-gray-200 rounded mb-6"></div>
-                <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto mb-8"></div>
-                <div className="h-10 w-48 bg-gray-200 rounded mx-auto"></div>
-              </div>
-            </div> */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
-                >
-                  <div className="h-48 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 rounded mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    );
+    return <LoadingState type="page" message="Loading campus life information..." />;
   }
 
   if (error) {
     return (
-      <section className="section-padding bg-gray-50">
-        <div className="container mx-auto px-4 text-center">Error: {error}</div>
-      </section>
+      <ErrorBoundary
+        error={error}
+        message="We're having trouble loading campus life information right now. Please try again."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
+
+  if (!housingOptions.length && !isLoading) {
+    return (
+      <EmptyState
+        type="generic"
+        title="No Campus Life Information Available"
+        description="We're currently updating our campus life database or experiencing temporary data issues."
+        onRetry={() => fetchAllData()}
+        retryText="Reload Campus Data"
+      />
     );
   }
 
@@ -314,18 +304,12 @@ const CampusLife = () => {
       />
       <HousingSection
         housingOptions={housingData}
-        onHousingClick={handleHousingClick}
+        onApplyClick={handleApplyClick}
       />
       <DiningSection diningOptions={diningData} />
       <WellnessSupport wellnessServices={wellnessData} />
-      <CampusGallery
-        images={galleryImagesData}
-        onEventClick={handleEventClick}
-      />
-      <CampusLifeCTA
-        onJoinClick={handleJoinClick}
-        onEventClick={handleEventClick}
-      />
+        <CampusGallery images={galleryImagesData} />
+        <CampusLifeCTA />
     </div>
   );
 };

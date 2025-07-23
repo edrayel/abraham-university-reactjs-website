@@ -32,11 +32,11 @@ const FinancialAidSection = ({ financialAidItems, onExploreClick }) => {
               transition={{ delay: index * 0.1 }}
               className="bg-white rounded-xl shadow-lg p-6 text-center card-hover"
             >
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="h-8 w-8 text-blue-600" />
+              <div className="w-16 h-16 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <DollarSign className="h-8 w-8 text-yellow-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">{aid.type}</h3>
-              <div className="text-2xl font-bold text-blue-600 mb-3">{aid.amount}</div>
+              <div className="text-2xl font-bold text-yellow-600 mb-3">{aid.amount}</div>
               <p className="text-gray-600">{aid.description}</p>
             </motion.div>
           ))}
@@ -46,7 +46,7 @@ const FinancialAidSection = ({ financialAidItems, onExploreClick }) => {
           <Button
             size="lg"
             onClick={onExploreClick}
-            className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
+            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900"
           >
             Explore Financial Aid Options
           </Button>

@@ -1,7 +1,7 @@
 import { create } from "zustand";
+import { API_ENDPOINTS, API_CONFIG } from "@/config/api";
 
-const GIVING_ENDPOINT =
-  "https://abrahamuniversity-v1.edwardrajah.com/wp-json/abraham/v1/giving"; // Replace with actual endpoint
+const API_ENDPOINT = API_ENDPOINTS.GIVING;
 
 const useGivingStore = create((set, get) => ({
   // State variables for JSON response objects
@@ -16,7 +16,9 @@ const useGivingStore = create((set, get) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await fetch(GIVING_ENDPOINT);
+      const response = await fetch(API_ENDPOINT, {
+        headers: API_CONFIG.headers,
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

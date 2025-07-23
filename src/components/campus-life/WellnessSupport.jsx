@@ -30,8 +30,8 @@ const WellnessSupport = ({ wellnessServices }) => {
               transition={{ delay: index * 0.1 }}
               className="bg-white rounded-xl shadow-lg p-6 text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                <service.icon className="h-8 w-8 text-blue-600" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
+                <service.icon className="h-8 w-8 text-yellow-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
                 {service.title}
@@ -43,7 +43,7 @@ const WellnessSupport = ({ wellnessServices }) => {
                     key={idx}
                     className="flex items-center justify-center text-sm text-gray-600"
                   >
-                    <div className="w-1 h-1 bg-blue-600 rounded-full mr-2"></div>
+                    <div className="w-1 h-1 bg-yellow-600 rounded-full mr-2"></div>
                     {item}
                   </li>
                 ))}

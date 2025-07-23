@@ -40,7 +40,7 @@
   --victorian-gold: 42 71% 50%;
   ---gold-brvictorianight: 42 100% 50%; /* Bright Gold */
 
-  --radius: 0.25rem; /* Sharper corners for minimalist */
+  --radius: 0.125rem; /* Subtle, elegant corners */
 }
 
 /* Dark mode can be adjusted later if needed, for now focusing on light mode */
@@ -91,6 +91,89 @@ body {
   background-clip: text;
   display: inline-block; /* Ensure gradient applies correctly to block-level elements */
   padding-bottom: 8px; /* Increased padding to prevent clipping of descenders */
+}
+
+/* Animated gold gradient text effect that follows mouse cursor */
+.animated-gradient-text {
+  display: inline-block;
+  padding-bottom: 8px;
+  background-size: 300% 300%;
+  animation: gold-shimmer 6s ease-in-out infinite;
+  font-weight: 700;
+}
+
+/* Custom subtle rounded styles for elegant UI */
+.elegant-rounded-full {
+  border-radius: 9999px; /* Maintain circular shape */
+}
+
+.elegant-rounded-xl {
+  border-radius: calc(var(--radius) + 2px);
+}
+
+.elegant-rounded-lg {
+  border-radius: var(--radius);
+}
+
+.elegant-rounded-md {
+  border-radius: calc(var(--radius) - 1px);
+}
+
+.elegant-rounded-sm {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.animated-gradient-text {
+  letter-spacing: -0.02em;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.animated-gradient-text:hover {
+  animation-play-state: paused;
+}
+
+/* Animated gold gradient button background effect */
+.animated-gradient-button {
+  background: linear-gradient(45deg, #f4e4bc, #e6c200, #c9a96e, #8b7355);
+  background-size: 300% 300%;
+  animation: gold-shimmer 3s ease-in-out infinite;
+  color: #000 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.animated-gradient-button:hover {
+  animation-play-state: paused;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+@keyframes gold-shimmer {
+  0% {
+    background-position: 0% 50%;
+    filter: brightness(1) saturate(1);
+  }
+  25% {
+    background-position: 50% 0%;
+    filter: brightness(1.2) saturate(1.1);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.3) saturate(1.2);
+  }
+  75% {
+    background-position: 50% 100%;
+    filter: brightness(1.2) saturate(1.1);
+  }
+  100% {
+    background-position: 0% 50%;
+    filter: brightness(1) saturate(1);
+  }
 }
 
 .card-hover {

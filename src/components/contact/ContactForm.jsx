@@ -139,7 +139,7 @@ const ContactForm = ({ onSubmit }) => {
       <Button
         type="submit"
         size="lg"
-        className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
+        className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900"
       >
         Send Message
         <Send className="ml-2 h-5 w-5" />

@@ -27,6 +27,7 @@ const Header = () => {
     { name: 'Admissions', path: '/admissions' },
     { name: 'Awards & Application', path: '/awards-application', icon: Award },
     { name: 'Campus Life', path: '/campus-life' },
+    { name: 'Faculty', path: '/faculty', icon: Users },
     { name: 'Research', path: '/research' },
   ];
 
@@ -91,21 +92,15 @@ const Header = () => {
                     key={item.name}
                     to={item.path}
                     onClick={closeMobileMenu}
-                    className={`relative font-heading font-semibold transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright flex items-center ${location.pathname === item.path ? 'text-victorian-gold-bright' : ''}`}   
+                    className={`relative font-heading font-semibold transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright flex items-center text-sm ${location.pathname === item.path ? 'text-victorian-gold-bright' : ''}`}   
                   >
-                    {item.icon && <item.icon className="mr-1.5 h-4 w-4" />}
                     {item.name}
-                    {location.pathname === item.path && (
-                      <motion.div
-                        layoutId="activeMainTab"
-                        className="absolute -bottom-2 left-0 right-0 h-1 bg-victorian-gold-bright rounded-full"
-                      />
-                    )}
                   </Link>
                 ))}
-                <Button 
+                <Button style={{ fontSize: '0.88rem !important' }}   
                   onClick={handleApplyNowClick}
-                  className="bg-victorian-gold-bright text-black hover:bg-victorian-gold-bright/90 rounded-md"
+                  className="animated-gradient-button rounded-md text-sm py-1 h-auto"
+                  size="sm"
                 >
                   Apply Now
                 </Button>
@@ -128,27 +123,43 @@ const Header = () => {
             exit={{ opacity: 0, y: -20 }}
             className="lg:hidden mt-4 py-4 bg-primary/60 backdrop-blur-sm rounded-lg shadow-xl border border-minimalist-lightGray/20"
           >
-            {[...mainNavItems, ...topNavItems].map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                onClick={closeMobileMenu}
-                className={`flex items-center px-4 py-3 font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright hover:bg-minimalist-lightGray/20 ${location.pathname === item.path ? 'text-victorian-gold-bright bg-minimalist-lightGray/20' : ''}`}  
-              >
-                {item.icon && <item.icon className="mr-2 h-5 w-5" />}
-                {item.name}
-              </Link>
-            ))}
+            {[...mainNavItems, ...topNavItems].map((item) => {
+              // Assign default icons for items without icons
+              let ItemIcon = item.icon;
+              if (!ItemIcon) {
+                switch(item.name) {
+                  case 'About': ItemIcon = Users; break;
+                  case 'Academics': ItemIcon = GraduationCap; break;
+                  case 'Admissions': ItemIcon = LogIn; break;
+                  case 'Campus Life': ItemIcon = Map; break;
+                  case 'Research': ItemIcon = Award; break;
+                  default: ItemIcon = GraduationCap;
+                }
+              }
+              
+              return (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  onClick={closeMobileMenu}
+                  className={`flex items-center px-4 py-3 font-body font-medium transition-colors text-minimalist-white/80 hover:text-victorian-gold-bright focus:text-victorian-gold-bright hover:bg-minimalist-lightGray/20 ${location.pathname === item.path ? 'text-victorian-gold-bright bg-minimalist-lightGray/20' : ''}`}  
+                >
+                  <ItemIcon className="mr-2 h-5 w-5" />
+                  {item.name}
+                </Link>
+              );
+            })}
             <div className="px-4 py-3 mt-2">
               <Button 
-                onClick={() => {
-                  handleApplyNowClick();
-                  closeMobileMenu();
-                }}
-                className="w-full bg-victorian-gold-bright text-black hover:bg-victorian-gold-bright/90 rounded-md"
-              >
-                Apply Now
-              </Button>
+                  onClick={() => {
+                    handleApplyNowClick();
+                    closeMobileMenu();
+                  }}
+                  className="w-full animated-gradient-button rounded-md text-sm py-1 h-auto"
+                  size="sm"
+                >
+                  Apply Now
+                </Button>
             </div>
           </motion.div>
         )}
