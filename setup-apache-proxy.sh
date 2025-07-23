@@ -411,8 +411,19 @@ deploy_application() {
         
         # Install dependencies and build
         cd ${APP_DIR}
-        sudo -u ${APP_NAME} npm ci --production
+        log "Installing dependencies..."
+        sudo -u ${APP_NAME} npm ci
+        
+        log "Building application..."
         sudo -u ${APP_NAME} npm run build
+        
+        # Verify build was successful
+        if [[ -d "${APP_DIR}/dist" ]]; then
+            log "Application built successfully - dist directory created"
+        else
+            error "Build failed - dist directory not found"
+            exit 1
+        fi
         
         log "Application deployed and built successfully"
     else
@@ -433,8 +444,24 @@ start_services() {
     
     # Start the React app service
     if [[ -f "${APP_DIR}/package.json" ]]; then
+        # Ensure the app is built before starting
+        if [[ ! -d "${APP_DIR}/dist" ]]; then
+            log "Building application before starting service..."
+            cd ${APP_DIR}
+            sudo -u ${APP_NAME} npm run build
+        fi
+        
+        log "Starting ${APP_NAME} service..."
         systemctl start ${APP_NAME}
+        sleep 3
         systemctl status ${APP_NAME} --no-pager
+        
+        # Check if service is running
+        if systemctl is-active --quiet ${APP_NAME}; then
+            log "${APP_NAME} service started successfully"
+        else
+            error "${APP_NAME} service failed to start. Check logs with: journalctl -u ${APP_NAME} -n 50"
+        fi
     fi
     
     log "Services started successfully"
