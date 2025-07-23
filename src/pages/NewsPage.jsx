@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
-import { Newspaper, Search, Filter, ChevronRight, CalendarDays, UserCircle, Loader2 } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { Newspaper, Search, Filter, ChevronRight, CalendarDays, UserCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import useNewsStore from '@/stores/useNewsStore';
@@ -136,7 +136,7 @@ const NewsPage = () => {
       try {
         await refreshIfExpired();
       } catch (error) {
-        console.error('Failed to fetch news data:', error);
+        // console.error('Failed to fetch news data:', error);
         // If API fails, use fallback data
         setFilteredArticles(fallbackNewsArticles);
       }
@@ -161,7 +161,7 @@ const NewsPage = () => {
     if (news && news.length > 0) {
       filterArticles(searchTerm, selectedCategory);
     }
-  }, [news, searchTerm, selectedCategory]);
+  }, [news, searchTerm, selectedCategory, filterArticles]);
 
 
   const handleSearchChange = (e) => {
@@ -170,8 +170,8 @@ const NewsPage = () => {
     
     // If term is long enough, consider making an API call for search
     if (term.length >= 3) {
-      searchNews(term).catch(error => {
-        console.error('Search failed:', error);
+      searchNews(term).catch(_error => {
+        // console.error('Search failed:', error);
         // Fall back to client-side filtering
         filterArticles(term, selectedCategory);
       });
@@ -185,21 +185,21 @@ const NewsPage = () => {
     
     // If selecting a specific category, fetch from API
     if (categoryId !== 'all') {
-      fetchNewsByCategory(categoryId).catch(error => {
-        console.error('Category fetch failed:', error);
+      fetchNewsByCategory(categoryId).catch(_error => {
+        // console.error('Category fetch failed:', error);
         // Fall back to client-side filtering
         filterArticles(searchTerm, categoryId);
       });
     } else {
       // For 'all' category, just fetch all news or use existing data
-      fetchNewsData().catch(error => {
-        console.error('News fetch failed:', error);
+      fetchNewsData().catch(_error => {
+        // console.error('News fetch failed:', error);
         filterArticles(searchTerm, categoryId);
       });
     }
   };
 
-  const filterArticles = (term, category) => {
+  const filterArticles = useCallback((term, category) => {
     // Use news from the store, or fallback if empty
     let articles = news.length > 0 ? news : fallbackNewsArticles;
     
@@ -231,7 +231,7 @@ const NewsPage = () => {
     }
     
     setFilteredArticles(articles);
-  };
+  }, [news]);
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };

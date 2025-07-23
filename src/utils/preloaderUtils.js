@@ -10,7 +10,10 @@
  */
 export const clearVisitStatus = () => {
   localStorage.removeItem('abraham-university-visited');
-  console.log('Visit status cleared. Refresh the page to see the preloader again.');
+  // Development logging
+  if (import.meta.env.DEV) {
+    // console.log('Visit status cleared. Refresh the page to see the preloader again.');
+  }
 };
 
 /**
@@ -40,8 +43,8 @@ if (typeof window !== 'undefined' && import.meta.env.DEV) {
   };
   
   window.checkVisitStatus = () => {
-    console.log('Has visited:', hasUserVisited());
+    // console.log('Has visited:', hasUserVisited());
   };
   
-  console.log('Preloader utils loaded. Use window.testPreloader() to test the preloader or window.checkVisitStatus() to check visit status.');
+  // console.log('Preloader utils loaded. Use window.testPreloader() to test the preloader or window.checkVisitStatus() to check visit status.');
 }

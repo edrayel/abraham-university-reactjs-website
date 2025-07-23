@@ -24,7 +24,7 @@ const Home = () => {
   useEffect(() => {
     // Fetch all data from single endpoint
     fetchAllData();
-  }, []);
+  }, [fetchAllData]);
 
   if (isLoading) {
     return <LoadingState type="page" message="Loading University Information" />;

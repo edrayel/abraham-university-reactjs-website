@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, AlertTriangle, Home, Settings, UserCircle, FileText, Calendar, DollarSign, Briefcase, Building, UserCog, Loader2 } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, Home, Settings, UserCircle, FileText, Calendar, DollarSign, Briefcase, Building, UserCog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import usePortalsStore from '@/stores/usePortalsStore';
@@ -22,11 +22,6 @@ const defaultUserTypeDetails = {
 const WebApp = () => {
   const { userType } = useParams();
   const { 
-    studentPortal, 
-    facultyPortal, 
-    staffPortal, 
-    alumniPortal, 
-    parentPortal,
     isLoading, 
     error, 
     fetchAllData,
@@ -34,8 +29,11 @@ const WebApp = () => {
   } = usePortalsStore();
 
   useEffect(() => {
-    fetchAllData().catch(error => {
-      console.error('Failed to fetch portals data:', error);
+    fetchAllData().catch(_error => {
+      // Development logging
+      if (import.meta.env.DEV) {
+        // console.error('Failed to fetch portals data:', _error);
+      }
     });
   }, [fetchAllData]);
 

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import {
   MapPin,
   CalendarDays,
@@ -26,9 +25,7 @@ const Visit = () => {
     error,
     fetchAllData,
   } = useVisitorStore();
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  // Removed unused selectedDate state
 
   useEffect(() => {
     fetchAllData();

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Users, Briefcase, UserCheck, UserCog, Building, LogIn, ArrowRight } from 'lucide-react';
+import { Users, Briefcase, UserCheck, UserCog, Building, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import usePortalsStore from '@/stores/usePortalsStore';
-import { Loader2 } from 'lucide-react';
+
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import LoadingState from '@/components/common/LoadingState';
 
@@ -84,8 +84,8 @@ const Portals = () => {
   } = usePortalsStore();
 
   useEffect(() => {
-    fetchAllData().catch(error => {
-      console.error('Failed to fetch portals data:', error);
+    fetchAllData().catch(_error => {
+      // console.error('Failed to fetch portals data:', error);
     });
   }, [fetchAllData]);
 
