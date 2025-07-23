@@ -3,6 +3,13 @@
 # Abraham University ReactJS App - Apache Reverse Proxy Setup Script
 # For AlmaLinux 9
 # This script configures Apache to act as a reverse proxy for the React app
+#
+# SMART INSTALLATION FEATURES:
+# - Checks if components are already installed before attempting installation
+# - Skips unnecessary operations to save time and avoid conflicts
+# - Supports force flags: --force-update, --force-deploy
+# - Validates existing configurations before overwriting
+# - Only restarts services when necessary
 
 set -e  # Exit on any error
 
@@ -45,26 +52,78 @@ check_root() {
 
 # Update system packages
 update_system() {
-    log "Updating system packages..."
-    dnf update -y
-    dnf install -y epel-release
+    log "Checking system packages..."
+    
+    # Check if epel-release is already installed
+    if ! rpm -q epel-release >/dev/null 2>&1; then
+        log "Installing epel-release..."
+        dnf install -y epel-release
+    else
+        log "epel-release already installed"
+    fi
+    
+    # Check for force update flag
+    FORCE_UPDATE_LOCAL=false
+    if [[ "$1" == "--force-update" ]]; then
+        FORCE_UPDATE_LOCAL=true
+        log "Force update flag detected, will update packages regardless of last update time"
+    fi
+    
+    # Only update if explicitly requested or if it's been a while
+    if [[ "$FORCE_UPDATE_LOCAL" == true ]] || [[ ! -f /var/cache/dnf/last_update ]] || [[ $(find /var/cache/dnf/last_update -mtime +7) ]]; then
+        log "Updating system packages..."
+        dnf update -y
+        touch /var/cache/dnf/last_update
+    else
+        log "System packages recently updated, skipping update"
+    fi
 }
 
 # Install Apache HTTP Server
 install_apache() {
-    log "Installing Apache HTTP Server..."
-    dnf install -y httpd httpd-tools
+    # Check if Apache is already installed
+    if rpm -q httpd >/dev/null 2>&1; then
+        log "Apache HTTP Server already installed"
+        
+        # Check if it's enabled and running
+        if ! systemctl is-enabled httpd >/dev/null 2>&1; then
+            log "Enabling Apache service..."
+            systemctl enable httpd
+        fi
+        
+        if ! systemctl is-active httpd >/dev/null 2>&1; then
+            log "Starting Apache service..."
+            systemctl start httpd
+        else
+            log "Apache service already running"
+        fi
+    else
+        log "Installing Apache HTTP Server..."
+        dnf install -y httpd httpd-tools
+        
+        # Enable and start Apache
+        systemctl enable httpd
+        systemctl start httpd
+        
+        log "Apache installed and started"
+    fi
     
-    # Enable and start Apache
-    systemctl enable httpd
-    systemctl start httpd
+    # Configure firewall (check if rules already exist)
+    if ! firewall-cmd --list-services | grep -q "http "; then
+        log "Configuring firewall for HTTP..."
+        firewall-cmd --permanent --add-service=http
+        firewall-cmd --reload
+    else
+        log "HTTP firewall rule already configured"
+    fi
     
-    # Configure firewall
-    firewall-cmd --permanent --add-service=http
-    firewall-cmd --permanent --add-service=https
-    firewall-cmd --reload
-    
-    log "Apache installed and configured"
+    if ! firewall-cmd --list-services | grep -q "https"; then
+        log "Configuring firewall for HTTPS..."
+        firewall-cmd --permanent --add-service=https
+        firewall-cmd --reload
+    else
+        log "HTTPS firewall rule already configured"
+    fi
 }
 
 # Install Node.js and npm
@@ -162,13 +221,21 @@ install_nodejs() {
 setup_app_directory() {
     log "Setting up application directory..."
     
-    # Create application directory
-    mkdir -p ${APP_DIR}
+    # Create application directory if it doesn't exist
+    if [[ ! -d "${APP_DIR}" ]]; then
+        log "Creating application directory: ${APP_DIR}"
+        mkdir -p ${APP_DIR}
+    else
+        log "Application directory already exists: ${APP_DIR}"
+    fi
     
     # Create a dedicated user for the application
     if ! id "${APP_NAME}" &>/dev/null; then
+        log "Creating user: ${APP_NAME}"
         useradd -r -s /bin/false -d ${APP_DIR} ${APP_NAME}
         log "Created user: ${APP_NAME}"
+    else
+        log "User ${APP_NAME} already exists"
     fi
     
     # Set proper ownership
@@ -180,8 +247,11 @@ setup_app_directory() {
 configure_apache_vhost() {
     log "Configuring Apache virtual host..."
     
-    # Enable required Apache modules
-    cat > /etc/httpd/conf.modules.d/00-proxy.conf << 'EOF'
+    # Check if proxy modules configuration already exists
+    if [[ ! -f "/etc/httpd/conf.modules.d/00-proxy.conf" ]] || ! grep -q "LoadModule proxy_module" /etc/httpd/conf.modules.d/00-proxy.conf; then
+        log "Creating Apache proxy modules configuration..."
+        # Enable required Apache modules
+        cat > /etc/httpd/conf.modules.d/00-proxy.conf << 'EOF'
 # Proxy modules
 LoadModule proxy_module modules/mod_proxy.so
 LoadModule proxy_http_module modules/mod_proxy_http.so
@@ -190,9 +260,15 @@ LoadModule lbmethod_byrequests_module modules/mod_lbmethod_byrequests.so
 LoadModule headers_module modules/mod_headers.so
 LoadModule rewrite_module modules/mod_rewrite.so
 EOF
+    else
+        log "Apache proxy modules already configured"
+    fi
 
-    # Create virtual host configuration
-    cat > /etc/httpd/conf.d/${APP_NAME}.conf << EOF
+    # Check if virtual host configuration already exists
+    if [[ ! -f "/etc/httpd/conf.d/${APP_NAME}.conf" ]] || ! grep -q "ServerName ${DOMAIN}" /etc/httpd/conf.d/${APP_NAME}.conf; then
+        log "Creating Apache virtual host configuration..."
+        # Create virtual host configuration
+        cat > /etc/httpd/conf.d/${APP_NAME}.conf << EOF
 <VirtualHost *:80>
     ServerName ${DOMAIN}
     ServerAlias www.${DOMAIN}
@@ -279,15 +355,19 @@ EOF
 #     ProxyPassReverse / http://localhost:${APP_PORT}/
 # </VirtualHost>
 EOF
-
-    log "Apache virtual host configured"
+        log "Apache virtual host configuration created"
+    else
+        log "Apache virtual host already configured"
+    fi
 }
 
 # Create systemd service for the React app
 create_systemd_service() {
-    log "Creating systemd service for React app..."
-    
-    cat > /etc/systemd/system/${APP_NAME}.service << EOF
+    # Check if systemd service already exists
+    if [[ ! -f "/etc/systemd/system/${APP_NAME}.service" ]] || ! grep -q "ExecStart=/usr/bin/npm start" /etc/systemd/system/${APP_NAME}.service; then
+        log "Creating systemd service for React app..."
+        
+        cat > /etc/systemd/system/${APP_NAME}.service << EOF
 [Unit]
 Description=Abraham University ReactJS Application
 After=network.target
@@ -319,19 +399,33 @@ ReadWritePaths=${APP_DIR}
 [Install]
 WantedBy=multi-user.target
 EOF
-
-    # Reload systemd and enable the service
-    systemctl daemon-reload
-    systemctl enable ${APP_NAME}
-    
-    log "Systemd service created and enabled"
+        
+        # Reload systemd and enable the service
+        systemctl daemon-reload
+        systemctl enable ${APP_NAME}
+        
+        log "Systemd service created and enabled"
+    else
+        log "Systemd service already exists"
+        
+        # Still reload daemon in case of changes
+        systemctl daemon-reload
+        
+        # Ensure it's enabled
+        if ! systemctl is-enabled ${APP_NAME} >/dev/null 2>&1; then
+            log "Enabling ${APP_NAME} service..."
+            systemctl enable ${APP_NAME}
+        fi
+    fi
 }
 
 # Create PM2 ecosystem file for production
 create_pm2_config() {
-    log "Creating PM2 configuration..."
-    
-    cat > ${APP_DIR}/ecosystem.config.js << EOF
+    # Check if PM2 config already exists
+    if [[ ! -f "${APP_DIR}/ecosystem.config.js" ]] || ! grep -q "name: '${APP_NAME}'" ${APP_DIR}/ecosystem.config.js; then
+        log "Creating PM2 configuration..."
+        
+        cat > ${APP_DIR}/ecosystem.config.js << EOF
 module.exports = {
   apps: [{
     name: '${APP_NAME}',
@@ -354,19 +448,30 @@ module.exports = {
   }]
 };
 EOF
-
-    # Create log directory
-    mkdir -p /var/log/${APP_NAME}
-    chown ${APP_NAME}:${APP_NAME} /var/log/${APP_NAME}
+        
+        chown ${APP_NAME}:${APP_NAME} ${APP_DIR}/ecosystem.config.js
+        log "PM2 configuration created"
+    else
+        log "PM2 configuration already exists"
+    fi
     
-    chown ${APP_NAME}:${APP_NAME} ${APP_DIR}/ecosystem.config.js
+    # Create log directory if it doesn't exist
+    if [[ ! -d "/var/log/${APP_NAME}" ]]; then
+        log "Creating log directory..."
+        mkdir -p /var/log/${APP_NAME}
+        chown ${APP_NAME}:${APP_NAME} /var/log/${APP_NAME}
+    else
+        log "Log directory already exists"
+    fi
 }
 
 # Setup log rotation
 setup_log_rotation() {
-    log "Setting up log rotation..."
-    
-    cat > /etc/logrotate.d/${APP_NAME} << EOF
+    # Check if log rotation is already configured
+    if [[ ! -f "/etc/logrotate.d/${APP_NAME}" ]] || ! grep -q "/var/log/${APP_NAME}/\*.log" /etc/logrotate.d/${APP_NAME}; then
+        log "Setting up log rotation..."
+        
+        cat > /etc/logrotate.d/${APP_NAME} << EOF
 /var/log/${APP_NAME}/*.log {
     daily
     missingok
@@ -393,14 +498,38 @@ setup_log_rotation() {
     endscript
 }
 EOF
+        log "Log rotation configured"
+    else
+        log "Log rotation already configured"
+    fi
 }
 
 # Deploy application (if source code is available)
 deploy_application() {
     log "Deploying React application..."
     
+    # Check for force deploy flag
+    FORCE_DEPLOY_LOCAL=false
+    if [[ "$1" == "--force-deploy" ]]; then
+        FORCE_DEPLOY_LOCAL=true
+        log "Force deploy flag detected, will redeploy regardless of current state"
+    fi
+    
     # Check if we're in the React app directory
     if [[ -f "package.json" && -f "vite.config.js" ]]; then
+        # Check if application is already deployed
+        if [[ -f "${APP_DIR}/package.json" ]] && [[ -d "${APP_DIR}/dist" ]] && [[ -d "${APP_DIR}/node_modules" ]]; then
+            log "Application already deployed and built in ${APP_DIR}"
+            
+            # Check if source has been updated (compare modification times)
+            if [[ "package.json" -nt "${APP_DIR}/package.json" ]] || [[ "src" -nt "${APP_DIR}/dist" ]] || [[ "$FORCE_DEPLOY_LOCAL" == true ]]; then
+                log "Source files have been updated, redeploying..."
+            else
+                log "Application is up to date, skipping deployment"
+                return
+            fi
+        fi
+        
         log "Found React app in current directory, copying files..."
         
         # Copy application files
@@ -411,18 +540,29 @@ deploy_application() {
         
         # Install dependencies and build
         cd ${APP_DIR}
-        log "Installing dependencies..."
-        sudo -u ${APP_NAME} npm ci
         
-        log "Building application..."
-        sudo -u ${APP_NAME} npm run build
-        
-        # Verify build was successful
-        if [[ -d "${APP_DIR}/dist" ]]; then
-            log "Application built successfully - dist directory created"
+        # Check if node_modules exists and package.json hasn't changed (skip if force deploy)
+        if [[ ! -d "node_modules" ]] || [[ "package.json" -nt "node_modules" ]] || [[ "$FORCE_DEPLOY_LOCAL" == true ]]; then
+            log "Installing dependencies..."
+            sudo -u ${APP_NAME} npm ci
         else
-            error "Build failed - dist directory not found"
-            exit 1
+            log "Dependencies already installed and up to date"
+        fi
+        
+        # Check if build is needed (skip if force deploy)
+        if [[ ! -d "dist" ]] || [[ "src" -nt "dist" ]] || [[ "package.json" -nt "dist" ]] || [[ "$FORCE_DEPLOY_LOCAL" == true ]]; then
+            log "Building application..."
+            sudo -u ${APP_NAME} npm run build
+            
+            # Verify build was successful
+            if [[ -d "${APP_DIR}/dist" ]]; then
+                log "Application built successfully - dist directory created"
+            else
+                error "Build failed - dist directory not found"
+                exit 1
+            fi
+        else
+            log "Application already built and up to date"
         fi
         
         log "Application deployed and built successfully"
@@ -437,10 +577,19 @@ start_services() {
     log "Starting services..."
     
     # Test Apache configuration
-    httpd -t
+    if ! httpd -t; then
+        error "Apache configuration test failed. Please check the configuration."
+        exit 1
+    fi
     
-    # Restart Apache
-    systemctl restart httpd
+    # Check if Apache is running, restart only if needed
+    if systemctl is-active httpd >/dev/null 2>&1; then
+        log "Apache is running, reloading configuration..."
+        systemctl reload httpd
+    else
+        log "Starting Apache..."
+        systemctl start httpd
+    fi
     
     # Start the React app service
     if [[ -f "${APP_DIR}/package.json" ]]; then
@@ -451,8 +600,15 @@ start_services() {
             sudo -u ${APP_NAME} npm run build
         fi
         
-        log "Starting ${APP_NAME} service..."
-        systemctl start ${APP_NAME}
+        # Check if service is already running
+        if systemctl is-active ${APP_NAME} >/dev/null 2>&1; then
+            log "${APP_NAME} service is already running, restarting..."
+            systemctl restart ${APP_NAME}
+        else
+            log "Starting ${APP_NAME} service..."
+            systemctl start ${APP_NAME}
+        fi
+        
         sleep 3
         systemctl status ${APP_NAME} --no-pager
         
@@ -462,6 +618,8 @@ start_services() {
         else
             error "${APP_NAME} service failed to start. Check logs with: journalctl -u ${APP_NAME} -n 50"
         fi
+    else
+        warn "No application found in ${APP_DIR}, skipping service start"
     fi
     
     log "Services started successfully"
@@ -501,8 +659,40 @@ show_completion_info() {
 main() {
     log "Starting Abraham University ReactJS App setup..."
     
+    # Parse command line arguments
+    FORCE_UPDATE=false
+    FORCE_DEPLOY=false
+    
+    for arg in "$@"; do
+        case $arg in
+            --force-update)
+                FORCE_UPDATE=true
+                shift
+                ;;
+            --force-deploy)
+                FORCE_DEPLOY=true
+                shift
+                ;;
+            --help|-h)
+                echo "Usage: $0 [OPTIONS]"
+                echo "Options:"
+                echo "  --force-update    Force system package updates even if recently updated"
+                echo "  --force-deploy    Force application redeployment even if up to date"
+                echo "  --help, -h        Show this help message"
+                exit 0
+                ;;
+        esac
+    done
+    
     check_root
-    update_system
+    
+    # Pass force flags to functions that support them
+    if [ "$FORCE_UPDATE" = true ]; then
+        update_system --force-update
+    else
+        update_system
+    fi
+    
     install_apache
     install_nodejs
     setup_app_directory
@@ -510,7 +700,13 @@ main() {
     create_systemd_service
     create_pm2_config
     setup_log_rotation
-    deploy_application
+    
+    if [ "$FORCE_DEPLOY" = true ]; then
+        deploy_application --force-deploy
+    else
+        deploy_application
+    fi
+    
     start_services
     show_completion_info
 }
