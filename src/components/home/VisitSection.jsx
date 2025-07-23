@@ -1,9 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { MapPin as VisitIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import { WORDPRESS_BASE_URL } from "@/config/api";
 
 const VisitSection = () => {
   return (
@@ -17,7 +17,7 @@ const VisitSection = () => {
           >
             <div className="rounded-lg overflow-hidden shadow-md aspect-w-16 aspect-h-9">
               <ImagePlaceholder
-                src="https://abrahamuniversity-v1.edwardrajah.com/photo-by-%e7%82%ab%e9%93%ad/"
+                src={`${WORDPRESS_BASE_URL}/photo-by-%e7%82%ab%e9%93%ad/`}
                 alt="Students walking on a beautiful university campus"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />

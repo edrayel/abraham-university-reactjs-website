@@ -91,6 +91,18 @@ const NewsSection = () => {
                       }}
                     />
                     <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    {article.categories && article.categories.length > 0 && (
+                      <div className="absolute top-4 left-4 flex flex-wrap gap-1">
+                        {article.categories.slice(0, 2).map((category) => (
+                          <span 
+                            key={category.id} 
+                            className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full"
+                          >
+                            {category.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div className="p-6">
                     <div className="text-xs text-primary-foreground font-semibold mb-2 uppercase tracking-wider">
@@ -102,18 +114,6 @@ const NewsSection = () => {
                     <p className="text-primary-foreground/90 text-sm mb-4 line-clamp-3">
                       {excerpt}
                     </p>
-                    {article.categories && article.categories.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {article.categories.slice(0, 2).map((category) => (
-                          <span 
-                            key={category.id} 
-                            className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
-                          >
-                            {category.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
                     <div className="flex items-center text-primary-foreground font-medium group-hover:underline text-sm">
                       Read More
                       <ChevronRight className="ml-1 h-4 w-4 inline-block align-middle" />

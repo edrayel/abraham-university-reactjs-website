@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import EmptyState from "@/components/common/EmptyState";
 import useUniversityStore from "@/stores/homeStore";
 
 const EventsSection = () => {
@@ -66,11 +67,6 @@ const EventsSection = () => {
                     <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors font-libreBaskerville">
                       {event.title}
                     </h3>
-                    {event.featured_event && (
-                      <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full inline-block mb-2">
-                        Featured Event
-                      </div>
-                    )}
                     <div className="flex items-center text-primary font-medium group-hover:underline text-sm">
                       Event Details
                       <ChevronRight className="ml-1 h-4 w-4 inline-block align-middle" />
@@ -80,9 +76,13 @@ const EventsSection = () => {
               </motion.div>
             ))
           ) : (
-            <div className="col-span-full text-center py-12">
-              <p className="text-gray-500 text-lg">No upcoming events at this time.</p>
-              <p className="text-gray-400 text-sm mt-2">Check back soon for exciting events and activities!</p>
+            <div className="col-span-full">
+              <EmptyState
+                type="events"
+                title="No upcoming events"
+                message="There are no upcoming events scheduled at this time."
+                suggestion="Check back soon for exciting events and activities!"
+              />
             </div>
           )}
         </div>

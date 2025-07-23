@@ -5,6 +5,7 @@ import { ChevronRight, BookOpen, Users, Award, GraduationCap } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
 import useUniversityStore from "@/stores/homeStore";
+import { WORDPRESS_BASE_URL } from '@/config/api';
 
 // Icon mapping for program icons
 const iconMap = {
@@ -120,7 +121,7 @@ const ProgramsSection = () => {
                   rel={program.learn_more_url?.startsWith('http') ? 'noopener noreferrer' : undefined}
                 >
                   {/* Program Image or Icon */}
-                  <div className="h-48 bg-gradient-to-br from-blue-500 to-cyan-500 relative overflow-hidden">
+                  <div className="h-48 bg-gradient-to-br from-yellow-500 to-yellow-600 relative overflow-hidden">
                     {program.image_url ? (
                       <ImagePlaceholder
                         src={program.image_url}
@@ -129,27 +130,22 @@ const ProgramsSection = () => {
                       />
                     ) : program.image_id ? (
                       <ImagePlaceholder
-                        src={`http://localhost:8000/wp-content/uploads/${program.image_id}`}
+                        src={`${WORDPRESS_BASE_URL}/wp-content/uploads/${program.image_id}`}
                         alt={`${program.name} program`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <IconComponent className="w-16 h-16 text-white" />
+                        <IconComponent className="w-16 h-16 text-yellow-600" />
                       </div>
                     )}
                   </div>
                   
                   <div className="p-6">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="mb-2">
                       <h3 className="text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors font-libreBaskerville">
                         {program.name}
                       </h3>
-                      {program.featured && (
-                        <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
-                          Featured
-                        </span>
-                      )}
                     </div>
                     
                     <div className="text-sm text-gray-500 mb-2">
@@ -160,7 +156,7 @@ const ProgramsSection = () => {
                     </div>
                     
                     {program.school && (
-                      <div className="text-sm text-blue-600 mb-2">
+                      <div className="text-sm text-yellow-600 mb-2">
                         {program.school}
                       </div>
                     )}
@@ -188,19 +184,20 @@ const ProgramsSection = () => {
                       
                       {program.apply_url && (
                         <Button
-                          asChild
                           size="sm"
                           variant="outline"
                           className="text-xs"
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            if (program.apply_url?.startsWith('http')) {
+                              window.open(program.apply_url, '_blank', 'noopener,noreferrer');
+                            } else {
+                              window.location.href = program.apply_url;
+                            }
+                          }}
                         >
-                          <Link 
-                            to={program.apply_url}
-                            target={program.apply_url?.startsWith('http') ? '_blank' : '_self'}
-                            rel={program.apply_url?.startsWith('http') ? 'noopener noreferrer' : undefined}
-                          >
-                            Apply
-                          </Link>
+                          Apply
                         </Button>
                       )}
                     </div>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ImagePlaceholder from '@/components/ui/ImagePlaceholder';
+import EmptyState from '@/components/common/EmptyState';
 import useUniversityStore from '@/stores/homeStore';
 
 // Helper function to format date range for display
@@ -45,9 +46,20 @@ const EventFliersSection = () => {
     }
   }, [eventsToShow.length]);
 
-  // If no events, don't render anything
+  // If no events, show EmptyState
   if (eventsToShow.length === 0) {
-    return null;
+    return (
+      <section className="section-padding bg-gray-100">
+        <div className="container mx-auto px-4">
+          <EmptyState
+            type="events"
+            title="No upcoming events"
+            message="There are no upcoming events to display in the carousel."
+            suggestion="Check back soon for exciting events and activities!"
+          />
+        </div>
+      </section>
+    );
   }
   
   const currentEvent = eventsToShow[currentIndex];
