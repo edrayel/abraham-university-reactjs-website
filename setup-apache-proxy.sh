@@ -521,6 +521,10 @@ WorkingDirectory=${APP_DIR}
 Environment=NODE_ENV=development
 Environment=PORT=${APP_PORT}
 Environment=HOST=0.0.0.0
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+Environment=HOME=/home/${APP_NAME}
+ExecStartPre=/bin/chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}
+ExecStartPre=/bin/chmod -R 755 ${APP_DIR}
 ExecStart=/usr/bin/npm run dev
 ExecReload=/bin/kill -HUP \$MAINPID
 Restart=always
@@ -528,12 +532,15 @@ RestartSec=10
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=${APP_NAME}
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
 
-# Security settings
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=strict
-ProtectHome=true
+# Security settings (relaxed for development)
+NoNewPrivileges=false
+PrivateTmp=false
+ProtectSystem=false
+ProtectHome=false
 ReadWritePaths=${APP_DIR}
 
 [Install]
@@ -696,6 +703,38 @@ deploy_application() {
     fi
 }
 
+# Fix common service issues
+fix_service_issues() {
+    log "Checking and fixing common service issues..."
+    
+    # Ensure proper ownership of application directory
+    if [[ -d "${APP_DIR}" ]]; then
+        chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}
+        chmod -R 755 ${APP_DIR}
+    fi
+    
+    # Ensure user home directory exists
+    if [[ ! -d "/home/${APP_NAME}" ]]; then
+        log "Creating home directory for ${APP_NAME}..."
+        mkdir -p /home/${APP_NAME}
+        chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}
+        chmod 755 /home/${APP_NAME}
+    fi
+    
+    # Kill any existing processes on the port
+    if lsof -ti:${APP_PORT} >/dev/null 2>&1; then
+        log "Killing existing processes on port ${APP_PORT}..."
+        lsof -ti:${APP_PORT} | xargs kill -9 2>/dev/null || true
+        sleep 2
+    fi
+    
+    # Clear any npm cache issues
+    if [[ -d "${APP_DIR}" ]]; then
+        cd ${APP_DIR}
+        sudo -u ${APP_NAME} npm cache clean --force 2>/dev/null || true
+    fi
+}
+
 # Start services
 start_services() {
     log "Starting services..."
@@ -717,23 +756,44 @@ start_services() {
     
     # Start the React app service
     if [[ -f "${APP_DIR}/package.json" ]]; then
-        # Check if service is already running
+        # Fix common issues before starting
+        fix_service_issues
+        
+        # Stop service if running
         if systemctl is-active ${APP_NAME} >/dev/null 2>&1; then
-            log "${APP_NAME} service is already running, restarting..."
-            systemctl restart ${APP_NAME}
-        else
-            log "Starting ${APP_NAME} development service..."
-            systemctl start ${APP_NAME}
+            log "Stopping ${APP_NAME} service..."
+            systemctl stop ${APP_NAME}
+            sleep 2
         fi
         
-        sleep 3
-        systemctl status ${APP_NAME} --no-pager
+        # Reload systemd daemon
+        systemctl daemon-reload
+        
+        log "Starting ${APP_NAME} development service..."
+        systemctl start ${APP_NAME}
+        
+        # Wait a bit longer for Vite to start
+        sleep 5
         
         # Check if service is running
         if systemctl is-active --quiet ${APP_NAME}; then
             log "${APP_NAME} service started successfully"
+            
+            # Show service status
+            systemctl status ${APP_NAME} --no-pager --lines=10
+            
+            # Check if port is listening
+            sleep 2
+            if lsof -ti:${APP_PORT} >/dev/null 2>&1; then
+                log "Development server is listening on port ${APP_PORT}"
+            else
+                warn "Service is running but port ${APP_PORT} is not listening yet. This may be normal for Vite startup."
+            fi
         else
-            error "${APP_NAME} service failed to start. Check logs with: journalctl -u ${APP_NAME} -n 50"
+            error "${APP_NAME} service failed to start."
+            log "Service logs:"
+            journalctl -u ${APP_NAME} -n 20 --no-pager
+            log "You can check detailed logs with: journalctl -u ${APP_NAME} -f"
         fi
     else
         warn "No application found in ${APP_DIR}, skipping service start"
@@ -773,6 +833,13 @@ show_completion_info() {
     echo "  2. Configure SSL certificates for HTTPS"
     echo "  3. Deploy your React application to ${APP_DIR}"
     echo "  4. Test the setup by visiting http://${DOMAIN}"
+    echo ""
+    echo "Troubleshooting:"
+    echo "  - If service fails to start: journalctl -u ${APP_NAME} -f"
+    echo "  - If port conflicts occur: lsof -ti:${APP_PORT} | xargs kill -9"
+    echo "  - Manual start (for testing): cd ${APP_DIR} && sudo -u ${APP_NAME} npm run dev"
+    echo "  - Reset permissions: chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}"
+    echo "  - Clear npm cache: sudo -u ${APP_NAME} npm cache clean --force"
     echo "==========================================="
     echo -e "${NC}"
 }
