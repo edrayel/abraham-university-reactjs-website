@@ -7,8 +7,7 @@ set -e
 
 # Configuration
 APP_NAME="abraham-university"
-APP_DIR="/opt/abraham-university"
-APP_USER="abraham-university"
+APP_DIR="/var/www/abraham-university"
 APP_PORT="10000"
 
 # Logging function
@@ -52,8 +51,8 @@ Wants=network.target
 
 [Service]
 Type=simple
-User=${APP_USER}
-Group=${APP_USER}
+User=${APP_NAME}
+Group=${APP_NAME}
 WorkingDirectory=${APP_DIR}
 Environment=NODE_ENV=production
 Environment=PORT=${APP_PORT}
@@ -87,7 +86,7 @@ if [[ -d "${APP_DIR}" ]]; then
     # Check if dist directory exists
     if [[ ! -d "dist" ]]; then
         log "Building application (dist directory missing)..."
-        sudo -u "${APP_USER}" npm run build
+        sudo -u "${APP_NAME}" npm run build
     else
         log "Application already built (dist directory exists)"
     fi
