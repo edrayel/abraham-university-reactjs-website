@@ -380,7 +380,7 @@ Group=${APP_NAME}
 WorkingDirectory=${APP_DIR}
 Environment=NODE_ENV=production
 Environment=PORT=${APP_PORT}
-Environment=HOST=localhost
+Environment=HOST=0.0.0.0
 ExecStart=/usr/bin/npm start
 ExecReload=/bin/kill -HUP \$MAINPID
 Restart=always
@@ -437,7 +437,7 @@ module.exports = {
     env: {
       NODE_ENV: 'production',
       PORT: ${APP_PORT},
-      HOST: 'localhost'
+      HOST: '0.0.0.0'
     },
     error_file: '/var/log/${APP_NAME}/error.log',
     out_file: '/var/log/${APP_NAME}/out.log',
