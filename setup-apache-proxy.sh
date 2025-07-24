@@ -395,27 +395,32 @@ After=network.target
 Wants=network.target
 
 [Service]
-Type=simple
+Type=exec
 User=${APP_NAME}
 Group=${APP_NAME}
 WorkingDirectory=${APP_DIR}
 Environment=NODE_ENV=development
 Environment=PORT=${APP_PORT}
 Environment=HOST=0.0.0.0
-Environment=PATH=/usr/local/bin:/usr/bin:/bin
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/home/${APP_NAME}/.local/bin
 Environment=HOME=/home/${APP_NAME}
-ExecStartPre=/bin/chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}
-ExecStartPre=/bin/chmod -R 755 ${APP_DIR}
-ExecStart=/usr/bin/npm run dev
+Environment=npm_config_cache=/home/${APP_NAME}/.npm
+Environment=FORCE_COLOR=0
+Environment=CI=true
+ExecStartPre=/bin/bash -c 'chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}'
+ExecStartPre=/bin/bash -c 'chmod -R 755 ${APP_DIR}'
+ExecStartPre=/bin/bash -c 'mkdir -p /home/${APP_NAME}/.npm && chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.npm'
+ExecStart=/bin/bash -c 'cd ${APP_DIR} && exec /usr/bin/npm run dev -- --host 0.0.0.0 --port ${APP_PORT}'
 ExecReload=/bin/kill -HUP \$MAINPID
 Restart=always
-RestartSec=10
+RestartSec=15
+TimeoutStartSec=60
+TimeoutStopSec=30
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=${APP_NAME}
 KillMode=mixed
 KillSignal=SIGTERM
-TimeoutStopSec=30
 
 # Security settings (relaxed for development)
 NoNewPrivileges=false
@@ -423,6 +428,7 @@ PrivateTmp=false
 ProtectSystem=false
 ProtectHome=false
 ReadWritePaths=${APP_DIR}
+ReadWritePaths=/home/${APP_NAME}
 
 [Install]
 WantedBy=multi-user.target
@@ -653,34 +659,191 @@ start_services() {
         log "Starting ${APP_NAME} development service..."
         systemctl start ${APP_NAME}
         
-        # Wait a bit longer for Vite to start
-        sleep 5
+        # Wait for service to initialize
+        sleep 3
         
-        # Check if service is running
-        if systemctl is-active --quiet ${APP_NAME}; then
-            log "${APP_NAME} service started successfully"
-            
-            # Show service status
-            systemctl status ${APP_NAME} --no-pager --lines=10
-            
-            # Check if port is listening
-            sleep 2
-            if lsof -ti:${APP_PORT} >/dev/null 2>&1; then
-                log "Development server is listening on port ${APP_PORT}"
+        # Check service status with retries
+        local retry_count=0
+        local max_retries=10
+        local service_started=false
+        
+        while [[ $retry_count -lt $max_retries ]]; do
+            if systemctl is-active --quiet ${APP_NAME}; then
+                # Service is active, now check if port is listening
+                sleep 2
+                if lsof -ti:${APP_PORT} >/dev/null 2>&1; then
+                    log "${APP_NAME} service started successfully and is listening on port ${APP_PORT}"
+                    service_started=true
+                    break
+                else
+                    log "Service is active but port ${APP_PORT} not ready yet, waiting... (attempt $((retry_count + 1))/${max_retries})"
+                fi
             else
-                warn "Service is running but port ${APP_PORT} is not listening yet. This may be normal for Vite startup."
+                log "Service not active yet, waiting... (attempt $((retry_count + 1))/${max_retries})"
             fi
+            
+            sleep 3
+            ((retry_count++))
+        done
+        
+        if [[ "$service_started" == true ]]; then
+            # Show service status
+            systemctl status ${APP_NAME} --no-pager --lines=5
         else
-            error "${APP_NAME} service failed to start."
-            log "Service logs:"
-            journalctl -u ${APP_NAME} -n 20 --no-pager
-            log "You can check detailed logs with: journalctl -u ${APP_NAME} -f"
+            error "${APP_NAME} service failed to start properly after ${max_retries} attempts."
+            log "Service status:"
+            systemctl status ${APP_NAME} --no-pager --lines=10
+            log "Recent service logs:"
+            journalctl -u ${APP_NAME} -n 30 --no-pager
+            log ""
+            log "Troubleshooting steps:"
+            log "1. Check logs: journalctl -u ${APP_NAME} -f"
+            log "2. Try manual start: cd ${APP_DIR} && sudo -u ${APP_NAME} npm run dev"
+            log "3. Check permissions: ls -la ${APP_DIR}"
+            log "4. Verify Node.js: sudo -u ${APP_NAME} node --version"
+            log "5. Check npm: sudo -u ${APP_NAME} npm --version"
         fi
     else
         warn "No application found in ${APP_DIR}, skipping service start"
     fi
     
     log "Services started successfully"
+}
+
+# Quick fix for common service issues
+quick_fix_service() {
+    log "Applying quick fixes for common service issues..."
+    
+    # Stop the service first
+    if systemctl is-active --quiet ${APP_NAME}; then
+        log "Stopping ${APP_NAME} service..."
+        systemctl stop ${APP_NAME}
+        sleep 2
+    fi
+    
+    # Kill any processes on the port
+    if lsof -ti:${APP_PORT} >/dev/null 2>&1; then
+        log "Killing processes on port ${APP_PORT}..."
+        lsof -ti:${APP_PORT} | xargs kill -9 2>/dev/null || true
+        sleep 2
+    fi
+    
+    # Fix ownership and permissions
+    if [[ -d "${APP_DIR}" ]]; then
+        log "Fixing ownership and permissions..."
+        chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}
+        chmod -R 755 ${APP_DIR}
+    fi
+    
+    # Ensure home directory exists
+    if [[ ! -d "/home/${APP_NAME}" ]]; then
+        log "Creating home directory..."
+        mkdir -p /home/${APP_NAME}
+        chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}
+        chmod 755 /home/${APP_NAME}
+    fi
+    
+    # Create npm cache directory
+    if [[ ! -d "/home/${APP_NAME}/.npm" ]]; then
+        log "Creating npm cache directory..."
+        mkdir -p /home/${APP_NAME}/.npm
+        chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.npm
+    fi
+    
+    # Clear npm cache
+    if [[ -d "${APP_DIR}" ]]; then
+        log "Clearing npm cache..."
+        cd ${APP_DIR}
+        sudo -u ${APP_NAME} npm cache clean --force 2>/dev/null || true
+    fi
+    
+    # Reinstall dependencies if needed
+    if [[ -f "${APP_DIR}/package.json" && ! -d "${APP_DIR}/node_modules" ]]; then
+        log "Installing dependencies..."
+        cd ${APP_DIR}
+        sudo -u ${APP_NAME} npm ci
+    fi
+    
+    # Reload systemd and restart service
+    log "Reloading systemd and starting service..."
+    systemctl daemon-reload
+    systemctl start ${APP_NAME}
+    
+    # Wait and check
+    sleep 5
+    if systemctl is-active --quiet ${APP_NAME} && lsof -ti:${APP_PORT} >/dev/null 2>&1; then
+        log "Service started successfully!"
+        systemctl status ${APP_NAME} --no-pager --lines=5
+    else
+        error "Service still not working. Run troubleshoot for more details."
+        return 1
+    fi
+}
+
+# Troubleshoot service issues
+troubleshoot_service() {
+    log "Diagnosing service issues..."
+    
+    # Check if service exists
+    if ! systemctl list-unit-files | grep -q "${APP_NAME}.service"; then
+        error "Service ${APP_NAME} does not exist. Run the setup script first."
+        return 1
+    fi
+    
+    # Check service status
+    log "Service status:"
+    systemctl status ${APP_NAME} --no-pager --lines=10
+    
+    # Check if port is in use
+    if lsof -ti:${APP_PORT} >/dev/null 2>&1; then
+        log "Port ${APP_PORT} is in use by:"
+        lsof -i:${APP_PORT}
+    else
+        warn "Port ${APP_PORT} is not in use"
+    fi
+    
+    # Check application directory
+    if [[ -d "${APP_DIR}" ]]; then
+        log "Application directory exists: ${APP_DIR}"
+        log "Directory permissions:"
+        ls -la ${APP_DIR} | head -10
+        
+        # Check if package.json exists
+        if [[ -f "${APP_DIR}/package.json" ]]; then
+            log "package.json found"
+        else
+            error "package.json not found in ${APP_DIR}"
+        fi
+        
+        # Check node_modules
+        if [[ -d "${APP_DIR}/node_modules" ]]; then
+            log "node_modules directory exists"
+        else
+            warn "node_modules directory missing - run: cd ${APP_DIR} && sudo -u ${APP_NAME} npm ci"
+        fi
+    else
+        error "Application directory does not exist: ${APP_DIR}"
+    fi
+    
+    # Check user
+    if id "${APP_NAME}" >/dev/null 2>&1; then
+        log "User ${APP_NAME} exists"
+        log "User home directory: $(getent passwd ${APP_NAME} | cut -d: -f6)"
+    else
+        error "User ${APP_NAME} does not exist"
+    fi
+    
+    # Test manual start
+    log "Testing manual start..."
+    if [[ -d "${APP_DIR}" && -f "${APP_DIR}/package.json" ]]; then
+        log "You can test manual start with:"
+        log "  cd ${APP_DIR}"
+        log "  sudo -u ${APP_NAME} npm run dev -- --host 0.0.0.0 --port ${APP_PORT}"
+    fi
+    
+    # Show recent logs
+    log "Recent service logs (last 20 lines):"
+    journalctl -u ${APP_NAME} -n 20 --no-pager
 }
 
 # Display final information
@@ -725,6 +888,8 @@ show_completion_info() {
     echo "  - Reset permissions: chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}"
     echo "  - Clear npm cache: sudo -u ${APP_NAME} npm cache clean --force"
     echo "  - Restart Apache: sudo systemctl restart httpd"
+    echo "  - Run diagnostics: bash $0 --troubleshoot"
+    echo "  - Quick fix service: bash $0 --fix"
     echo "==========================================="
     echo -e "${NC}"
 }
@@ -747,11 +912,23 @@ main() {
                 FORCE_DEPLOY=true
                 shift
                 ;;
+            --troubleshoot)
+                check_root
+                troubleshoot_service
+                exit 0
+                ;;
+            --fix)
+                check_root
+                quick_fix_service
+                exit 0
+                ;;
             --help|-h)
                 echo "Usage: $0 [OPTIONS]"
                 echo "Options:"
                 echo "  --force-update    Force system package updates even if recently updated"
                 echo "  --force-deploy    Force application redeployment even if up to date"
+                echo "  --troubleshoot    Run service diagnostics and troubleshooting"
+                echo "  --fix             Apply quick fixes for common service issues"
                 echo "  --help, -h        Show this help message"
                 exit 0
                 ;;
