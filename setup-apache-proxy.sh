@@ -255,6 +255,7 @@ configure_apache_vhost() {
 # Proxy modules
 LoadModule proxy_module modules/mod_proxy.so
 LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
 LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
 LoadModule lbmethod_byrequests_module modules/mod_lbmethod_byrequests.so
 LoadModule headers_module modules/mod_headers.so
@@ -286,21 +287,9 @@ EOF
     ServerName ${DOMAIN}
     ServerAlias www.${DOMAIN}
     
-    # Document root (for static files if needed)
-    DocumentRoot ${APP_DIR}/src
-    
     # Logging
     ErrorLog /var/log/httpd/${APP_NAME}_error.log
     CustomLog /var/log/httpd/${APP_NAME}_access.log combined
-    
-    # MIME type definitions (fallback)
-    AddType text/css .css
-    AddType application/javascript .js .mjs
-    AddType application/json .json
-    AddType image/svg+xml .svg
-    AddType font/woff2 .woff .woff2
-    AddType font/ttf .ttf
-    AddType application/vnd.ms-fontobject .eot
     
     # Security headers
     Header always set X-Content-Type-Options nosniff
@@ -309,73 +298,21 @@ EOF
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # Proxy configuration for React app
+    # Proxy all requests to Vite development server
     ProxyPreserveHost On
     ProxyRequests Off
     
-    # Proxy API requests to React dev server
+    # Proxy API requests
     ProxyPass /api/ http://localhost:${APP_PORT}/api/
     ProxyPassReverse /api/ http://localhost:${APP_PORT}/api/
     
-    # Proxy WebSocket connections (for HMR in development)
+    # Proxy WebSocket connections for Vite HMR
     ProxyPass /ws ws://localhost:${APP_PORT}/ws
     ProxyPassReverse /ws ws://localhost:${APP_PORT}/ws
     
-    # Proxy all other requests to React app
+    # Proxy all other requests (including static assets)
     ProxyPass / http://localhost:${APP_PORT}/
     ProxyPassReverse / http://localhost:${APP_PORT}/
-    
-    # MIME type configuration for static assets
-    <Directory "${APP_DIR}/src">
-        Options -Indexes
-        AllowOverride None
-        Require all granted
-        
-        # Explicit MIME types for common web assets
-        <FilesMatch "\.(css)$">
-            Header set Content-Type "text/css"
-        </FilesMatch>
-        
-        <FilesMatch "\.(js|jsx|mjs)$">
-            Header set Content-Type "application/javascript"
-        </FilesMatch>
-        
-        <FilesMatch "\.(json)$">
-            Header set Content-Type "application/json"
-        </FilesMatch>
-        
-        <FilesMatch "\.(svg)$">
-            Header set Content-Type "image/svg+xml"
-        </FilesMatch>
-        
-        <FilesMatch "\.(woff|woff2)$">
-            Header set Content-Type "font/woff2"
-        </FilesMatch>
-        
-        <FilesMatch "\.(ttf)$">
-            Header set Content-Type "font/ttf"
-        </FilesMatch>
-        
-        <FilesMatch "\.(eot)$">
-            Header set Content-Type "application/vnd.ms-fontobject"
-        </FilesMatch>
-    </Directory>
-    
-    # Handle static files directly (serve from src folder)
-    <LocationMatch "\.(js|jsx|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
-        # Try to serve static files directly from src folder
-        RewriteEngine On
-        RewriteCond ${APP_DIR}/src%{REQUEST_URI} -f
-        RewriteRule ^(.*)$ ${APP_DIR}/src\$1 [L]
-        
-        # If file doesn't exist, proxy to React app
-        ProxyPass http://localhost:${APP_PORT}/
-        ProxyPassReverse http://localhost:${APP_PORT}/
-        
-        # Cache static assets
-        ExpiresActive On
-        ExpiresDefault "access plus 1 day"
-    </LocationMatch>
     
     # Gzip compression
     <Location />
@@ -402,17 +339,6 @@ EOF
     ServerName abrahamuniversity.us
     ServerAlias www.abrahamuniversity.us
     
-    DocumentRoot /var/www/abraham-university/src
-    
-    # MIME type definitions (fallback)
-    AddType text/css .css
-    AddType application/javascript .js .mjs
-    AddType application/json .json
-    AddType image/svg+xml .svg
-    AddType font/woff2 .woff .woff2
-    AddType font/ttf .ttf
-    AddType application/vnd.ms-fontobject .eot
-    
     # SSL Configuration (Let's Encrypt paths)
     SSLEngine on
     SSLCertificateFile /etc/letsencrypt/live/abrahamuniversity.us/fullchain.pem
@@ -425,66 +351,21 @@ EOF
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # Same proxy configuration as HTTP
+    # Proxy all requests to Vite development server
     ProxyPreserveHost On
     ProxyRequests Off
     
-    ProxyPass /api/ http://localhost:10000/api/
-    ProxyPassReverse /api/ http://localhost:10000/api/
+    # Proxy API requests
+    ProxyPass /api/ http://localhost:${APP_PORT}/api/
+    ProxyPassReverse /api/ http://localhost:${APP_PORT}/api/
     
-    ProxyPass /ws ws://localhost:10000/ws
-    ProxyPassReverse /ws ws://localhost:10000/ws
+    # Proxy WebSocket connections for Vite HMR
+    ProxyPass /ws ws://localhost:${APP_PORT}/ws
+    ProxyPassReverse /ws ws://localhost:${APP_PORT}/ws
     
-    ProxyPass / http://localhost:10000/
-    ProxyPassReverse / http://localhost:10000/
-    
-    # MIME type configuration for static assets
-    <Directory "/var/www/abraham-university/src">
-        Options -Indexes
-        AllowOverride None
-        Require all granted
-        
-        <FilesMatch "\.(css)$">
-            Header set Content-Type "text/css"
-        </FilesMatch>
-        
-        <FilesMatch "\.(js|jsx|mjs)$">
-            Header set Content-Type "application/javascript"
-        </FilesMatch>
-        
-        <FilesMatch "\.(json)$">
-            Header set Content-Type "application/json"
-        </FilesMatch>
-        
-        <FilesMatch "\.(svg)$">
-            Header set Content-Type "image/svg+xml"
-        </FilesMatch>
-        
-        <FilesMatch "\.(woff|woff2)$">
-            Header set Content-Type "font/woff2"
-        </FilesMatch>
-        
-        <FilesMatch "\.(ttf)$">
-            Header set Content-Type "font/ttf"
-        </FilesMatch>
-        
-        <FilesMatch "\.(eot)$">
-            Header set Content-Type "application/vnd.ms-fontobject"
-        </FilesMatch>
-    </Directory>
-    
-    # Handle static files directly (serve from src folder)
-    <LocationMatch "\.(js|jsx|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
-        RewriteEngine On
-        RewriteCond /var/www/abraham-university/src%{REQUEST_URI} -f
-        RewriteRule ^(.*)$ /var/www/abraham-university/src\$1 [L]
-        
-        ProxyPass http://localhost:10000/
-        ProxyPassReverse http://localhost:10000/
-        
-        ExpiresActive On
-        ExpiresDefault "access plus 1 day"
-    </LocationMatch>
+    # Proxy all other requests (including static assets)
+    ProxyPass / http://localhost:${APP_PORT}/
+    ProxyPassReverse / http://localhost:${APP_PORT}/
     
     # Gzip compression
     <Location />
@@ -824,9 +705,11 @@ show_completion_info() {
     echo "  - Restart Apache: systemctl restart httpd"
     echo ""
     echo "Configuration:"
-    echo "  - Mode: Development (serving source files directly)"
+    echo "  - Mode: Development (all requests proxied to Vite)"
     echo "  - Build: Skipped (using Vite dev server)"
     echo "  - Hot Reload: Enabled"
+    echo "  - MIME Types: Handled by Vite (no Apache MIME configuration)"
+    echo "  - WebSocket Support: Enabled for HMR"
     echo ""
     echo "Next Steps:"
     echo "  1. Update DNS to point ${DOMAIN} to this server"
@@ -837,9 +720,11 @@ show_completion_info() {
     echo "Troubleshooting:"
     echo "  - If service fails to start: journalctl -u ${APP_NAME} -f"
     echo "  - If port conflicts occur: lsof -ti:${APP_PORT} | xargs kill -9"
+    echo "  - Test Vite server directly: curl -I http://localhost:${APP_PORT}"
     echo "  - Manual start (for testing): cd ${APP_DIR} && sudo -u ${APP_NAME} npm run dev"
     echo "  - Reset permissions: chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}"
     echo "  - Clear npm cache: sudo -u ${APP_NAME} npm cache clean --force"
+    echo "  - Restart Apache: sudo systemctl restart httpd"
     echo "==========================================="
     echo -e "${NC}"
 }
