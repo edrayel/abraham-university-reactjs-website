@@ -215,13 +215,23 @@ export default defineConfig({
 		},
 	},
 	build: {
+		outDir: 'dist',
+		assetsDir: 'assets',
+		sourcemap: false,
 		rollupOptions: {
-			external: [
-				'@babel/parser',
-				'@babel/traverse',
-				'@babel/generator',
-				'@babel/types'
-			]
-		}
+			output: {
+				manualChunks: {
+					vendor: ['react', 'react-dom'],
+				},
+			},
+		},
+	},
+	preview: {
+		host: '0.0.0.0',
+		port: port,
+		cors: true,
+		headers: {
+			'Cross-Origin-Embedder-Policy': 'credentialless',
+		},
 	}
 });
