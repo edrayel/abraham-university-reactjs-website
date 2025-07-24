@@ -398,103 +398,103 @@ EOF
         cat >> /etc/httpd/conf.d/${APP_NAME}.conf << 'EOF'
 
 # HTTPS Virtual Host (uncomment and configure SSL certificates)
-# <VirtualHost *:443>
-#     ServerName abrahamuniversity.us
-#     ServerAlias www.abrahamuniversity.us
-#     
-#     DocumentRoot /var/www/abraham-university/src
-#     
-#     # MIME type definitions (fallback)
-#     AddType text/css .css
-#     AddType application/javascript .js .mjs
-#     AddType application/json .json
-#     AddType image/svg+xml .svg
-#     AddType font/woff2 .woff .woff2
-#     AddType font/ttf .ttf
-#     AddType application/vnd.ms-fontobject .eot
-#     
-#     # SSL Configuration (Let's Encrypt paths)
-#     SSLEngine on
-#     SSLCertificateFile /etc/letsencrypt/live/abrahamuniversity.us/fullchain.pem
-#     SSLCertificateKeyFile /etc/letsencrypt/live/abrahamuniversity.us/privkey.pem
-#     
-#     # Security headers
-#     Header always set X-Content-Type-Options nosniff
-#     Header always set X-Frame-Options DENY
-#     Header always set X-XSS-Protection "1; mode=block"
-#     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-#     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-#     
-#     # Same proxy configuration as HTTP
-#     ProxyPreserveHost On
-#     ProxyRequests Off
-#     
-#     ProxyPass /api/ http://localhost:10000/api/
-#     ProxyPassReverse /api/ http://localhost:10000/api/
-#     
-#     ProxyPass /ws ws://localhost:10000/ws
-#     ProxyPassReverse /ws ws://localhost:10000/ws
-#     
-#     ProxyPass / http://localhost:10000/
-#     ProxyPassReverse / http://localhost:10000/
-#     
-#     # MIME type configuration for static assets
-#     <Directory "/var/www/abraham-university/src">
-#         Options -Indexes
-#         AllowOverride None
-#         Require all granted
-#         
-#         <FilesMatch "\.(css)$">
-#             Header set Content-Type "text/css"
-#         </FilesMatch>
-#         
-#         <FilesMatch "\.(js|jsx|mjs)$">
-#             Header set Content-Type "application/javascript"
-#         </FilesMatch>
-#         
-#         <FilesMatch "\.(json)$">
-#             Header set Content-Type "application/json"
-#         </FilesMatch>
-#         
-#         <FilesMatch "\.(svg)$">
-#             Header set Content-Type "image/svg+xml"
-#         </FilesMatch>
-#         
-#         <FilesMatch "\.(woff|woff2)$">
-#             Header set Content-Type "font/woff2"
-#         </FilesMatch>
-#         
-#         <FilesMatch "\.(ttf)$">
-#             Header set Content-Type "font/ttf"
-#         </FilesMatch>
-#         
-#         <FilesMatch "\.(eot)$">
-#             Header set Content-Type "application/vnd.ms-fontobject"
-#         </FilesMatch>
-#     </Directory>
-#     
-#     # Handle static files directly (serve from src folder)
-#     <LocationMatch "\.(js|jsx|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
-#         RewriteEngine On
-#         RewriteCond /var/www/abraham-university/src%{REQUEST_URI} -f
-#         RewriteRule ^(.*)$ /var/www/abraham-university/src\$1 [L]
-#         
-#         ProxyPass http://localhost:10000/
-#         ProxyPassReverse http://localhost:10000/
-#         
-#         ExpiresActive On
-#         ExpiresDefault "access plus 1 day"
-#     </LocationMatch>
-#     
-#     # Gzip compression
-#     <Location />
-#         SetOutputFilter DEFLATE
-#         SetEnvIfNoCase Request_URI \\
-#             \.(?:gif|jpe?g|png|ico)$ no-gzip dont-vary
-#         SetEnvIfNoCase Request_URI \\
-#             \.(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
-#     </Location>
-# </VirtualHost>
+<VirtualHost *:443>
+    ServerName abrahamuniversity.us
+    ServerAlias www.abrahamuniversity.us
+    
+    DocumentRoot /var/www/abraham-university/src
+    
+    # MIME type definitions (fallback)
+    AddType text/css .css
+    AddType application/javascript .js .mjs
+    AddType application/json .json
+    AddType image/svg+xml .svg
+    AddType font/woff2 .woff .woff2
+    AddType font/ttf .ttf
+    AddType application/vnd.ms-fontobject .eot
+    
+    # SSL Configuration (Let's Encrypt paths)
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/abrahamuniversity.us/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/abrahamuniversity.us/privkey.pem
+    
+    # Security headers
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Same proxy configuration as HTTP
+    ProxyPreserveHost On
+    ProxyRequests Off
+    
+    ProxyPass /api/ http://localhost:10000/api/
+    ProxyPassReverse /api/ http://localhost:10000/api/
+    
+    ProxyPass /ws ws://localhost:10000/ws
+    ProxyPassReverse /ws ws://localhost:10000/ws
+    
+    ProxyPass / http://localhost:10000/
+    ProxyPassReverse / http://localhost:10000/
+    
+    # MIME type configuration for static assets
+    <Directory "/var/www/abraham-university/src">
+        Options -Indexes
+        AllowOverride None
+        Require all granted
+        
+        <FilesMatch "\.(css)$">
+            Header set Content-Type "text/css"
+        </FilesMatch>
+        
+        <FilesMatch "\.(js|jsx|mjs)$">
+            Header set Content-Type "application/javascript"
+        </FilesMatch>
+        
+        <FilesMatch "\.(json)$">
+            Header set Content-Type "application/json"
+        </FilesMatch>
+        
+        <FilesMatch "\.(svg)$">
+            Header set Content-Type "image/svg+xml"
+        </FilesMatch>
+        
+        <FilesMatch "\.(woff|woff2)$">
+            Header set Content-Type "font/woff2"
+        </FilesMatch>
+        
+        <FilesMatch "\.(ttf)$">
+            Header set Content-Type "font/ttf"
+        </FilesMatch>
+        
+        <FilesMatch "\.(eot)$">
+            Header set Content-Type "application/vnd.ms-fontobject"
+        </FilesMatch>
+    </Directory>
+    
+    # Handle static files directly (serve from src folder)
+    <LocationMatch "\.(js|jsx|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
+        RewriteEngine On
+        RewriteCond /var/www/abraham-university/src%{REQUEST_URI} -f
+        RewriteRule ^(.*)$ /var/www/abraham-university/src\$1 [L]
+        
+        ProxyPass http://localhost:10000/
+        ProxyPassReverse http://localhost:10000/
+        
+        ExpiresActive On
+        ExpiresDefault "access plus 1 day"
+    </LocationMatch>
+    
+    # Gzip compression
+    <Location />
+        SetOutputFilter DEFLATE
+        SetEnvIfNoCase Request_URI \\
+            \.(?:gif|jpe?g|png|ico)$ no-gzip dont-vary
+        SetEnvIfNoCase Request_URI \\
+            \.(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
+    </Location>
+</VirtualHost>
 EOF
     fi
     
