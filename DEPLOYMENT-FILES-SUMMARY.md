@@ -15,10 +15,18 @@ This document provides an overview of all deployment-related files created for t
   - Security vulnerability scanning
   - Lighthouse performance testing
 
-### 2. Apache Setup Script
+### 2. Apache Setup Script (Enhanced v2.0.0)
 **File:** `setup-apache-proxy.sh`
-- **Purpose:** Comprehensive setup script for configuring Apache as a reverse proxy on AlmaLinux 9
-- **Features:**
+- **Purpose:** Comprehensive multi-app deployment script with advanced management capabilities
+- **Enhanced Features:**
+  - Systematic verification of existing server configuration
+  - Rollback/update capabilities for wrong configurations
+  - Configuration conflict resolution
+  - Separate app management (ReactJS with NodeJS, WordPress with PHP built-in server)
+  - Crash recovery and auto-restart mechanisms
+  - WebSocket support (optional)
+  - Comprehensive validation and troubleshooting
+  - Smart installation with conflict detection
   - System package updates and Apache installation
   - Node.js and PM2 installation
   - Application user and directory setup
@@ -29,17 +37,18 @@ This document provides an overview of all deployment-related files created for t
   - Firewall configuration
   - Security headers and compression
 
-### 3. Deployment Validation Script
-**File:** `validate-deployment.sh`
-- **Purpose:** Comprehensive validation script to test deployment setup
+### 3. Deployment Validation
+**Integration:** Built into `setup-apache-proxy.sh`
+- **Purpose:** Comprehensive validation capabilities integrated into main script
 - **Features:**
-  - System requirements verification
-  - Apache configuration testing
-  - Application setup validation
-  - Service status checking
+  - System requirements verification with `--verify`
+  - Apache configuration testing and diagnostics
+  - Application setup validation and troubleshooting
+  - Service status checking with `--troubleshoot`
   - Network connectivity testing
   - Firewall and SSL configuration verification
   - Performance optimization checks
+  - Configuration rollback capabilities with `--rollback`
 
 ### 4. Production Environment Configuration
 **File:** `.env.production`
@@ -83,14 +92,14 @@ This document provides an overview of all deployment-related files created for t
 
 ### For Server Setup (AlmaLinux 9)
 ```bash
-# Make scripts executable
-chmod +x setup-apache-proxy.sh validate-deployment.sh
+# Make script executable
+chmod +x setup-apache-proxy.sh
 
 # Run the setup (as root)
 sudo ./setup-apache-proxy.sh
 
 # Validate the deployment
-sudo ./validate-deployment.sh
+sudo ./setup-apache-proxy.sh --verify
 ```
 
 ### For GitHub Actions
@@ -106,7 +115,7 @@ sudo ./validate-deployment.sh
 ## Architecture Overview
 
 ```
-[Internet] → [Apache :80/443] → [React App :10000]
+[Internet] → [Apache :80/443] → [React App :3000]
      ↓              ↓                    ↓
 [Firewall]    [Reverse Proxy]      [Node.js/Vite]
      ↓              ↓                    ↓
@@ -141,7 +150,9 @@ sudo systemctl status httpd
 ## Configuration Files
 
 - **Apache Virtual Host:** `/etc/httpd/conf.d/abraham-university.conf`
-- **Systemd Service:** `/etc/systemd/system/abraham-university.service`
+- **Systemd Services:** 
+  - `/etc/systemd/system/abraham-university-react.service` (ReactJS app)
+  - `/etc/systemd/system/abraham-university-wordpress.service` (WordPress app)
 - **PM2 Config:** `/var/www/abraham-university/ecosystem.config.js`
 - **Log Rotation:** `/etc/logrotate.d/abraham-university`
 

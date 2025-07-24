@@ -4,7 +4,7 @@ import { createLogger, defineConfig } from 'vite';
 
 const isDev = process.env.NODE_ENV !== 'production';
 const isHeadless = process.env.HEADLESS === 'true';
-const port = process.env.PORT || 10000; 
+const port = process.env.PORT || 3000; 
 
 let inlineEditPlugin, editModeDevPlugin;
 
@@ -208,6 +208,9 @@ export default defineConfig({
 			'Cross-Origin-Embedder-Policy': 'credentialless',
 		},
 		allowedHosts: true,
+  hmr: {
+    clientPort: 80
+  },
 	},
 	resolve: {
 		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json'],

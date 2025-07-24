@@ -5,7 +5,7 @@ This guide covers the deployment setup for the Abraham University ReactJS websit
 ## Overview
 
 The deployment architecture consists of:
-- **React Application**: Runs on port 10000 (configurable)
+- **React Application**: Runs on port 3000 (configurable)
 - **Apache HTTP Server**: Acts as reverse proxy on ports 80/443
 - **GitHub Actions**: Automated CI/CD pipeline
 - **AlmaLinux 9**: Target server operating system
@@ -45,14 +45,15 @@ sudo ./setup-apache-proxy.sh
 
 The setup script configures Apache to:
 - Listen on port 80 (HTTP) and optionally 443 (HTTPS)
-- Forward requests to the React app running on port 10000
+- Forward requests to the React app running on port 3000
 - Handle static file serving for optimal performance
 - Include security headers and compression
 - Support WebSocket connections for development
 
 #### Key Configuration Files:
 - `/etc/httpd/conf.d/abraham-university.conf` - Virtual host configuration
-- `/etc/systemd/system/abraham-university.service` - Systemd service
+- `/etc/systemd/system/abraham-university-react.service` - ReactJS systemd service
+- `/etc/systemd/system/abraham-university-wordpress.service` - WordPress systemd service
 - `/var/www/abraham-university/ecosystem.config.js` - PM2 configuration
 
 ### GitHub Actions Workflow
@@ -112,7 +113,7 @@ Create or modify `.env.production` for production settings:
 
 ```env
 NODE_ENV=production
-PORT=10000
+PORT=3000
 VITE_API_BASE_URL=https://abrahamuniversity.us/wp-json/wp/v2
 VITE_WP_SITE_URL=https://abrahamuniversity.us
 ```
@@ -127,7 +128,9 @@ Edit `/etc/httpd/conf.d/abraham-university.conf` to:
 
 ### Systemd Service Configuration
 
-The application runs as a systemd service. Configuration file: `/etc/systemd/system/abraham-university.service`
+The applications run as separate systemd services:
+- ReactJS: `/etc/systemd/system/abraham-university-react.service`
+- WordPress: `/etc/systemd/system/abraham-university-wordpress.service`
 
 ```bash
 # Service management commands
@@ -188,7 +191,7 @@ sudo tail -f /var/log/httpd/abraham-university_error.log
 sudo systemctl status abraham-university httpd
 
 # Check port usage
-sudo netstat -tlnp | grep -E ':(80|443|10000)'
+sudo netstat -tlnp | grep -E ':(80|443|3000)'
 
 # Check disk usage
 df -h /var/www/abraham-university
@@ -199,16 +202,45 @@ df -h /var/www/abraham-university
 ### Common Issues
 
 #### 1. **Service Won't Start**
-```bash
-# Check service logs
-sudo journalctl -u abraham-university --no-pager
 
-# Check if port is available
-sudo netstat -tlnp | grep :10000
+1. Use the enhanced troubleshooting tools:
+   ```bash
+   sudo ./setup-apache-proxy.sh --troubleshoot
+   ```
 
-# Verify file permissions
-ls -la /var/www/abraham-university
-```
+2. Apply automatic fixes:
+   ```bash
+   sudo ./setup-apache-proxy.sh --fix
+   ```
+
+3. Check service status:
+   ```bash
+   sudo systemctl status abraham-university-react
+   sudo systemctl status abraham-university-wordpress
+   ```
+
+4. Check logs:
+   ```bash
+   sudo journalctl -u abraham-university-react -f
+   sudo journalctl -u abraham-university-wordpress -f
+   ```
+
+5. Check if ports are in use:
+   ```bash
+   sudo netstat -tlnp | grep :3000
+   sudo netstat -tlnp | grep :8000
+   ```
+
+6. Manual restart with recovery:
+   ```bash
+   sudo systemctl restart abraham-university-react
+   sudo systemctl restart abraham-university-wordpress
+   ```
+
+7. Verify file permissions:
+   ```bash
+   ls -la /var/www/abraham-university
+   ```
 
 #### 2. **Apache Proxy Errors**
 ```bash

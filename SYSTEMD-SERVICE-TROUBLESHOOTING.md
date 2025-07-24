@@ -2,7 +2,7 @@
 
 ## Issue Description
 
-The `abraham-university.service` is experiencing the following problems:
+The application services may be experiencing the following problems:
 
 1. **Exit-code failures**: The service fails with `exit-code` but then restarts successfully
 2. **Obsolete syslog warnings**: SystemD warns about deprecated `StandardOutput=syslog` and `StandardError=syslog` settings
@@ -43,7 +43,7 @@ Run the automated fix script on your server:
 
 ```bash
 # Upload and run the fix script
-sudo ./fix-systemd-service.sh
+sudo ./setup-apache-proxy.sh --fix
 ```
 
 This script will:
@@ -63,7 +63,7 @@ sudo systemctl stop abraham-university
 ```
 
 #### Step 2: Update Service File
-Edit `/etc/systemd/system/abraham-university.service` and change:
+Edit the appropriate service file (`/etc/systemd/system/abraham-university-react.service` or `/etc/systemd/system/abraham-university-wordpress.service`) and change:
 ```ini
 # OLD (deprecated)
 StandardOutput=syslog
