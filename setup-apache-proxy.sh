@@ -298,6 +298,9 @@ EOF
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
+    # Enable rewrite engine
+    RewriteEngine On
+
     # Proxy all requests to Vite development server
     ProxyPreserveHost On
     ProxyRequests Off
@@ -307,8 +310,9 @@ EOF
     ProxyPassReverse /api/ http://localhost:${APP_PORT}/api/
     
     # Proxy WebSocket connections for Vite HMR
-    ProxyPass /ws ws://localhost:${APP_PORT}/ws
-    ProxyPassReverse /ws ws://localhost:${APP_PORT}/ws
+    RewriteCond %{HTTP:Upgrade} ^WebSocket$ [NC]
+    RewriteCond %{HTTP:Connection} ^Upgrade$ [NC]
+    RewriteRule .* "ws://localhost:${APP_PORT}%{REQUEST_URI}" [P,L]
     
     # Proxy all other requests (including static assets)
     ProxyPass / http://localhost:${APP_PORT}/
@@ -360,8 +364,9 @@ EOF
     ProxyPassReverse /api/ http://localhost:${APP_PORT}/api/
     
     # Proxy WebSocket connections for Vite HMR
-    ProxyPass /ws ws://localhost:${APP_PORT}/ws
-    ProxyPassReverse /ws ws://localhost:${APP_PORT}/ws
+    RewriteCond %{HTTP:Upgrade} ^WebSocket$ [NC]
+    RewriteCond %{HTTP:Connection} ^Upgrade$ [NC]
+    RewriteRule .* "ws://localhost:${APP_PORT}%{REQUEST_URI}" [P,L]
     
     # Proxy all other requests (including static assets)
     ProxyPass / http://localhost:${APP_PORT}/
@@ -395,7 +400,7 @@ After=network.target
 Wants=network.target
 
 [Service]
-Type=exec
+Type=simple
 User=${APP_NAME}
 Group=${APP_NAME}
 WorkingDirectory=${APP_DIR}
@@ -407,6 +412,7 @@ Environment=HOME=/home/${APP_NAME}
 Environment=npm_config_cache=/home/${APP_NAME}/.npm
 Environment=FORCE_COLOR=0
 Environment=CI=true
+Environment=HEADLESS=true
 ExecStartPre=/bin/bash -c 'chown -R ${APP_NAME}:${APP_NAME} ${APP_DIR}'
 ExecStartPre=/bin/bash -c 'chmod -R 755 ${APP_DIR}'
 ExecStartPre=/bin/bash -c 'mkdir -p /home/${APP_NAME}/.npm && chown ${APP_NAME}:${APP_NAME} /home/${APP_NAME}/.npm'

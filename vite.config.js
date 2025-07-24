@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import { createLogger, defineConfig } from 'vite';
 
 const isDev = process.env.NODE_ENV !== 'production';
+const isHeadless = process.env.HEADLESS === 'true';
 const port = process.env.PORT || 10000; 
 
 let inlineEditPlugin, editModeDevPlugin;
@@ -195,9 +196,9 @@ logger.error = (msg, options) => {
 export default defineConfig({
 	customLogger: logger,
 	plugins: [
-		...(isDev ? [inlineEditPlugin(), editModeDevPlugin()] : []),
+		...(isDev && !isHeadless ? [inlineEditPlugin(), editModeDevPlugin()] : []),
 		react(),
-		addTransformIndexHtml
+		...(isDev && !isHeadless ? [addTransformIndexHtml] : [])
 	],
 	server: {
 		host: '0.0.0.0',
