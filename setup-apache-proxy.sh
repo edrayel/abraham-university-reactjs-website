@@ -287,7 +287,7 @@ EOF
     ServerAlias www.${DOMAIN}
     
     # Document root (for static files if needed)
-    DocumentRoot ${APP_DIR}/dist
+    DocumentRoot ${APP_DIR}/src
     
     # Logging
     ErrorLog /var/log/httpd/${APP_NAME}_error.log
@@ -326,7 +326,7 @@ EOF
     ProxyPassReverse / http://localhost:${APP_PORT}/
     
     # MIME type configuration for static assets
-    <Directory "${APP_DIR}/dist">
+    <Directory "${APP_DIR}/src">
         Options -Indexes
         AllowOverride None
         Require all granted
@@ -336,7 +336,7 @@ EOF
             Header set Content-Type "text/css"
         </FilesMatch>
         
-        <FilesMatch "\.(js|mjs)$">
+        <FilesMatch "\.(js|jsx|mjs)$">
             Header set Content-Type "application/javascript"
         </FilesMatch>
         
@@ -361,12 +361,12 @@ EOF
         </FilesMatch>
     </Directory>
     
-    # Handle static files directly (serve from dist folder)
-    <LocationMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
-        # Try to serve static files directly from dist folder
+    # Handle static files directly (serve from src folder)
+    <LocationMatch "\.(js|jsx|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
+        # Try to serve static files directly from src folder
         RewriteEngine On
-        RewriteCond ${APP_DIR}/dist%{REQUEST_URI} -f
-        RewriteRule ^(.*)$ ${APP_DIR}/dist\$1 [L]
+        RewriteCond ${APP_DIR}/src%{REQUEST_URI} -f
+        RewriteRule ^(.*)$ ${APP_DIR}/src\$1 [L]
         
         # If file doesn't exist, proxy to React app
         ProxyPass http://localhost:${APP_PORT}/
@@ -374,7 +374,7 @@ EOF
         
         # Cache static assets
         ExpiresActive On
-        ExpiresDefault "access plus 1 month"
+        ExpiresDefault "access plus 1 day"
     </LocationMatch>
     
     # Gzip compression
@@ -402,7 +402,7 @@ EOF
 #     ServerName abrahamuniversity.us
 #     ServerAlias www.abrahamuniversity.us
 #     
-#     DocumentRoot /var/www/abraham-university/dist
+#     DocumentRoot /var/www/abraham-university/src
 #     
 #     # MIME type definitions (fallback)
 #     AddType text/css .css
@@ -439,7 +439,7 @@ EOF
 #     ProxyPassReverse / http://localhost:10000/
 #     
 #     # MIME type configuration for static assets
-#     <Directory "/var/www/abraham-university/dist">
+#     <Directory "/var/www/abraham-university/src">
 #         Options -Indexes
 #         AllowOverride None
 #         Require all granted
@@ -448,7 +448,7 @@ EOF
 #             Header set Content-Type "text/css"
 #         </FilesMatch>
 #         
-#         <FilesMatch "\.(js|mjs)$">
+#         <FilesMatch "\.(js|jsx|mjs)$">
 #             Header set Content-Type "application/javascript"
 #         </FilesMatch>
 #         
@@ -473,17 +473,17 @@ EOF
 #         </FilesMatch>
 #     </Directory>
 #     
-#     # Handle static files directly (serve from dist folder)
-#     <LocationMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
+#     # Handle static files directly (serve from src folder)
+#     <LocationMatch "\.(js|jsx|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
 #         RewriteEngine On
-#         RewriteCond /var/www/abraham-university/dist%{REQUEST_URI} -f
-#         RewriteRule ^(.*)$ /var/www/abraham-university/dist\$1 [L]
+#         RewriteCond /var/www/abraham-university/src%{REQUEST_URI} -f
+#         RewriteRule ^(.*)$ /var/www/abraham-university/src\$1 [L]
 #         
 #         ProxyPass http://localhost:10000/
 #         ProxyPassReverse http://localhost:10000/
 #         
 #         ExpiresActive On
-#         ExpiresDefault "access plus 1 month"
+#         ExpiresDefault "access plus 1 day"
 #     </LocationMatch>
 #     
 #     # Gzip compression
@@ -518,10 +518,10 @@ Type=simple
 User=${APP_NAME}
 Group=${APP_NAME}
 WorkingDirectory=${APP_DIR}
-Environment=NODE_ENV=production
+Environment=NODE_ENV=development
 Environment=PORT=${APP_PORT}
 Environment=HOST=0.0.0.0
-ExecStart=/usr/bin/npm start
+ExecStart=/usr/bin/npm run dev
 ExecReload=/bin/kill -HUP \$MAINPID
 Restart=always
 RestartSec=10
@@ -570,12 +570,12 @@ module.exports = {
   apps: [{
     name: '${APP_NAME}',
     script: 'npm',
-    args: 'start',
+    args: 'run dev',
     cwd: '${APP_DIR}',
     instances: 'max',
     exec_mode: 'cluster',
     env: {
-      NODE_ENV: 'production',
+      NODE_ENV: 'development',
       PORT: ${APP_PORT},
       HOST: '0.0.0.0'
     },
@@ -658,11 +658,11 @@ deploy_application() {
     # Check if we're in the React app directory
     if [[ -f "package.json" && -f "vite.config.js" ]]; then
         # Check if application is already deployed
-        if [[ -f "${APP_DIR}/package.json" ]] && [[ -d "${APP_DIR}/dist" ]] && [[ -d "${APP_DIR}/node_modules" ]]; then
-            log "Application already deployed and built in ${APP_DIR}"
+        if [[ -f "${APP_DIR}/package.json" ]] && [[ -d "${APP_DIR}/node_modules" ]]; then
+            log "Application already deployed in ${APP_DIR}"
             
             # Check if source has been updated (compare modification times)
-            if [[ "package.json" -nt "${APP_DIR}/package.json" ]] || [[ "src" -nt "${APP_DIR}/dist" ]] || [[ "$FORCE_DEPLOY_LOCAL" == true ]]; then
+            if [[ "package.json" -nt "${APP_DIR}/package.json" ]] || [[ "src" -nt "${APP_DIR}/src" ]] || [[ "$FORCE_DEPLOY_LOCAL" == true ]]; then
                 log "Source files have been updated, redeploying..."
             else
                 log "Application is up to date, skipping deployment"
@@ -689,26 +689,10 @@ deploy_application() {
             log "Dependencies already installed and up to date"
         fi
         
-        # Check if build is needed (skip if force deploy)
-        if [[ ! -d "dist" ]] || [[ "src" -nt "dist" ]] || [[ "package.json" -nt "dist" ]] || [[ "$FORCE_DEPLOY_LOCAL" == true ]]; then
-            log "Building application..."
-            sudo -u ${APP_NAME} npm run build
-            
-            # Verify build was successful
-            if [[ -d "${APP_DIR}/dist" ]]; then
-                log "Application built successfully - dist directory created"
-            else
-                error "Build failed - dist directory not found"
-                exit 1
-            fi
-        else
-            log "Application already built and up to date"
-        fi
-        
-        log "Application deployed and built successfully"
+        log "Application deployed successfully (serving source files directly)"
     else
         warn "No React app found in current directory. You'll need to deploy your app manually to ${APP_DIR}"
-        warn "Make sure to run 'npm ci && npm run build' after deploying your code"
+        warn "Make sure to run 'npm ci' after deploying your code"
     fi
 }
 
@@ -733,19 +717,12 @@ start_services() {
     
     # Start the React app service
     if [[ -f "${APP_DIR}/package.json" ]]; then
-        # Ensure the app is built before starting
-        if [[ ! -d "${APP_DIR}/dist" ]]; then
-            log "Building application before starting service..."
-            cd ${APP_DIR}
-            sudo -u ${APP_NAME} npm run build
-        fi
-        
         # Check if service is already running
         if systemctl is-active ${APP_NAME} >/dev/null 2>&1; then
             log "${APP_NAME} service is already running, restarting..."
             systemctl restart ${APP_NAME}
         else
-            log "Starting ${APP_NAME} service..."
+            log "Starting ${APP_NAME} development service..."
             systemctl start ${APP_NAME}
         fi
         
@@ -785,6 +762,11 @@ show_completion_info() {
     echo "  - View Apache logs: tail -f /var/log/httpd/${APP_NAME}_*.log"
     echo "  - Restart app: systemctl restart ${APP_NAME}"
     echo "  - Restart Apache: systemctl restart httpd"
+    echo ""
+    echo "Configuration:"
+    echo "  - Mode: Development (serving source files directly)"
+    echo "  - Build: Skipped (using Vite dev server)"
+    echo "  - Hot Reload: Enabled"
     echo ""
     echo "Next Steps:"
     echo "  1. Update DNS to point ${DOMAIN} to this server"
