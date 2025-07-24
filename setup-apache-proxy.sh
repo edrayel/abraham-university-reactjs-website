@@ -22,7 +22,7 @@ CONFIG_BACKUP_DIR="/etc/abraham-university/backups"
 LOCK_FILE="/var/lock/abraham-university-setup.lock"
 
 # Configuration variables for ReactJS App
-REACT_APP_NAME="abraham-university-react"
+REACT_APP_NAME="abraham-university-reactjs"
 REACT_APP_DIR="/var/www/${REACT_APP_NAME}"
 REACT_APP_PORT="3000"  # Port where React production server will run
 
@@ -203,8 +203,8 @@ verify_port_availability() {
     local port_conflicts=()
     
     for port in "${ports_to_check[@]}"; do
-        if netstat -tlnp | grep -q ":$port "; then
-            local process=$(netstat -tlnp | grep ":$port " | awk '{print $7}' | head -1)
+        if ss -tlnp | grep -q ":$port "; then
+            local process=$(ss -tlnp | grep ":$port " | awk '{print $7}' | head -1)
             port_conflicts+=("Port $port is already in use by: $process")
         fi
     done
@@ -367,8 +367,8 @@ resolve_port_conflicts() {
     local ports_to_check=("$REACT_APP_PORT" "$WORDPRESS_APP_PORT" 80 443)
     
     for port in "${ports_to_check[@]}"; do
-        if netstat -tlnp | grep -q ":$port "; then
-            local process_info=$(netstat -tlnp | grep ":$port " | awk '{print $7}' | head -1)
+        if ss -tlnp | grep -q ":$port "; then
+            local process_info=$(ss -tlnp | grep ":$port " | awk '{print $7}' | head -1)
             local pid=$(echo "$process_info" | cut -d'/' -f1)
             local process_name=$(echo "$process_info" | cut -d'/' -f2)
             
@@ -512,7 +512,7 @@ check_app_health() {
     fi
     
     # Check if port is responding
-    if ! netstat -tlnp | grep -q ":$app_port "; then
+    if ! ss -tlnp | grep -q ":$app_port "; then
         warn "Port $app_port is not listening for $app_name"
         return 1
     fi
@@ -669,7 +669,7 @@ check_and_restart() {
     fi
     
     # Check if port is responding
-    if ! netstat -tlnp | grep -q ":$app_port "; then
+    if ! ss -tlnp | grep -q ":$app_port "; then
         log_message "WARNING: $app_name port $app_port not responding, attempting restart..."
         systemctl restart "$app_name"
         sleep 10
