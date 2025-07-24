@@ -266,11 +266,22 @@ EOF
         log "Apache proxy modules already configured"
     fi
 
-    # Check if virtual host configuration already exists
-    if [[ ! -f "/etc/httpd/conf.d/${APP_NAME}.conf" ]] || ! grep -q "ServerName ${DOMAIN}" /etc/httpd/conf.d/${APP_NAME}.conf; then
-        log "Creating Apache virtual host configuration..."
-        # Create virtual host configuration
-        cat > /etc/httpd/conf.d/${APP_NAME}.conf << EOF
+    # Backup existing configuration if it exists and preserve SSL settings
+    EXISTING_SSL_CONFIG=""
+    if [[ -f "/etc/httpd/conf.d/${APP_NAME}.conf" ]]; then
+        log "Backing up existing Apache configuration..."
+        cp "/etc/httpd/conf.d/${APP_NAME}.conf" "/etc/httpd/conf.d/${APP_NAME}.conf.backup.$(date +%Y%m%d_%H%M%S)"
+        
+        # Extract existing SSL configuration if present
+        if grep -q "<VirtualHost \*:443>" "/etc/httpd/conf.d/${APP_NAME}.conf"; then
+            log "Preserving existing SSL configuration..."
+            EXISTING_SSL_CONFIG=$(sed -n '/<VirtualHost \*:443>/,/<\/VirtualHost>/p' "/etc/httpd/conf.d/${APP_NAME}.conf")
+        fi
+    fi
+    
+    log "Creating/updating Apache virtual host configuration..."
+    # Always overwrite the configuration file to ensure latest settings
+    cat > /etc/httpd/conf.d/${APP_NAME}.conf << EOF
 <VirtualHost *:80>
     ServerName ${DOMAIN}
     ServerAlias www.${DOMAIN}
@@ -375,37 +386,119 @@ EOF
             \.(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
     </Location>
 </VirtualHost>
+EOF
+
+    # Append preserved SSL configuration or create default HTTPS template
+    if [[ -n "$EXISTING_SSL_CONFIG" ]]; then
+        log "Appending preserved SSL configuration..."
+        echo "" >> /etc/httpd/conf.d/${APP_NAME}.conf
+        echo "$EXISTING_SSL_CONFIG" >> /etc/httpd/conf.d/${APP_NAME}.conf
+    else
+        log "Adding default HTTPS template (commented out)..."
+        cat >> /etc/httpd/conf.d/${APP_NAME}.conf << 'EOF'
 
 # HTTPS Virtual Host (uncomment and configure SSL certificates)
 # <VirtualHost *:443>
-#     ServerName ${DOMAIN}
-#     ServerAlias www.${DOMAIN}
+#     ServerName abrahamuniversity.us
+#     ServerAlias www.abrahamuniversity.us
 #     
-#     DocumentRoot ${APP_DIR}/dist
+#     DocumentRoot /var/www/abraham-university/dist
 #     
-#     # SSL Configuration
+#     # MIME type definitions (fallback)
+#     AddType text/css .css
+#     AddType application/javascript .js .mjs
+#     AddType application/json .json
+#     AddType image/svg+xml .svg
+#     AddType font/woff2 .woff .woff2
+#     AddType font/ttf .ttf
+#     AddType application/vnd.ms-fontobject .eot
+#     
+#     # SSL Configuration (Let's Encrypt paths)
 #     SSLEngine on
 #     SSLCertificateFile /etc/letsencrypt/live/abrahamuniversity.us/fullchain.pem
 #     SSLCertificateKeyFile /etc/letsencrypt/live/abrahamuniversity.us/privkey.pem
+#     
+#     # Security headers
+#     Header always set X-Content-Type-Options nosniff
+#     Header always set X-Frame-Options DENY
+#     Header always set X-XSS-Protection "1; mode=block"
+#     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+#     Header always set Referrer-Policy "strict-origin-when-cross-origin"
 #     
 #     # Same proxy configuration as HTTP
 #     ProxyPreserveHost On
 #     ProxyRequests Off
 #     
-#     ProxyPass /api/ http://localhost:${APP_PORT}/api/
-#     ProxyPassReverse /api/ http://localhost:${APP_PORT}/api/
+#     ProxyPass /api/ http://localhost:10000/api/
+#     ProxyPassReverse /api/ http://localhost:10000/api/
 #     
-#     ProxyPass /ws ws://localhost:${APP_PORT}/ws
-#     ProxyPassReverse /ws ws://localhost:${APP_PORT}/ws
+#     ProxyPass /ws ws://localhost:10000/ws
+#     ProxyPassReverse /ws ws://localhost:10000/ws
 #     
-#     ProxyPass / http://localhost:${APP_PORT}/
-#     ProxyPassReverse / http://localhost:${APP_PORT}/
+#     ProxyPass / http://localhost:10000/
+#     ProxyPassReverse / http://localhost:10000/
+#     
+#     # MIME type configuration for static assets
+#     <Directory "/var/www/abraham-university/dist">
+#         Options -Indexes
+#         AllowOverride None
+#         Require all granted
+#         
+#         <FilesMatch "\.(css)$">
+#             Header set Content-Type "text/css"
+#         </FilesMatch>
+#         
+#         <FilesMatch "\.(js|mjs)$">
+#             Header set Content-Type "application/javascript"
+#         </FilesMatch>
+#         
+#         <FilesMatch "\.(json)$">
+#             Header set Content-Type "application/json"
+#         </FilesMatch>
+#         
+#         <FilesMatch "\.(svg)$">
+#             Header set Content-Type "image/svg+xml"
+#         </FilesMatch>
+#         
+#         <FilesMatch "\.(woff|woff2)$">
+#             Header set Content-Type "font/woff2"
+#         </FilesMatch>
+#         
+#         <FilesMatch "\.(ttf)$">
+#             Header set Content-Type "font/ttf"
+#         </FilesMatch>
+#         
+#         <FilesMatch "\.(eot)$">
+#             Header set Content-Type "application/vnd.ms-fontobject"
+#         </FilesMatch>
+#     </Directory>
+#     
+#     # Handle static files directly (serve from dist folder)
+#     <LocationMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
+#         RewriteEngine On
+#         RewriteCond /var/www/abraham-university/dist%{REQUEST_URI} -f
+#         RewriteRule ^(.*)$ /var/www/abraham-university/dist\$1 [L]
+#         
+#         ProxyPass http://localhost:10000/
+#         ProxyPassReverse http://localhost:10000/
+#         
+#         ExpiresActive On
+#         ExpiresDefault "access plus 1 month"
+#     </LocationMatch>
+#     
+#     # Gzip compression
+#     <Location />
+#         SetOutputFilter DEFLATE
+#         SetEnvIfNoCase Request_URI \\
+#             \.(?:gif|jpe?g|png|ico)$ no-gzip dont-vary
+#         SetEnvIfNoCase Request_URI \\
+#             \.(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
+#     </Location>
 # </VirtualHost>
 EOF
-        log "Apache virtual host configuration created"
-    else
-        log "Apache virtual host already configured"
     fi
+    
+    log "Apache virtual host configuration updated successfully"
 }
 
 # Create systemd service for the React app
