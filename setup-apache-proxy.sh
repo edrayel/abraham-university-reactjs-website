@@ -259,6 +259,8 @@ LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
 LoadModule lbmethod_byrequests_module modules/mod_lbmethod_byrequests.so
 LoadModule headers_module modules/mod_headers.so
 LoadModule rewrite_module modules/mod_rewrite.so
+LoadModule mime_module modules/mod_mime.so
+LoadModule expires_module modules/mod_expires.so
 EOF
     else
         log "Apache proxy modules already configured"
@@ -279,6 +281,15 @@ EOF
     # Logging
     ErrorLog /var/log/httpd/${APP_NAME}_error.log
     CustomLog /var/log/httpd/${APP_NAME}_access.log combined
+    
+    # MIME type definitions (fallback)
+    AddType text/css .css
+    AddType application/javascript .js .mjs
+    AddType application/json .json
+    AddType image/svg+xml .svg
+    AddType font/woff2 .woff .woff2
+    AddType font/ttf .ttf
+    AddType application/vnd.ms-fontobject .eot
     
     # Security headers
     Header always set X-Content-Type-Options nosniff
@@ -303,9 +314,45 @@ EOF
     ProxyPass / http://localhost:${APP_PORT}/
     ProxyPassReverse / http://localhost:${APP_PORT}/
     
-    # Handle static files directly (optional optimization)
-    <LocationMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
-        # Try to serve static files directly, fallback to proxy
+    # MIME type configuration for static assets
+    <Directory "${APP_DIR}/dist">
+        Options -Indexes
+        AllowOverride None
+        Require all granted
+        
+        # Explicit MIME types for common web assets
+        <FilesMatch "\.(css)$">
+            Header set Content-Type "text/css"
+        </FilesMatch>
+        
+        <FilesMatch "\.(js|mjs)$">
+            Header set Content-Type "application/javascript"
+        </FilesMatch>
+        
+        <FilesMatch "\.(json)$">
+            Header set Content-Type "application/json"
+        </FilesMatch>
+        
+        <FilesMatch "\.(svg)$">
+            Header set Content-Type "image/svg+xml"
+        </FilesMatch>
+        
+        <FilesMatch "\.(woff|woff2)$">
+            Header set Content-Type "font/woff2"
+        </FilesMatch>
+        
+        <FilesMatch "\.(ttf)$">
+            Header set Content-Type "font/ttf"
+        </FilesMatch>
+        
+        <FilesMatch "\.(eot)$">
+            Header set Content-Type "application/vnd.ms-fontobject"
+        </FilesMatch>
+    </Directory>
+    
+    # Handle static files directly (serve from dist folder)
+    <LocationMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|mjs)$">
+        # Try to serve static files directly from dist folder
         RewriteEngine On
         RewriteCond ${APP_DIR}/dist%{REQUEST_URI} -f
         RewriteRule ^(.*)$ ${APP_DIR}/dist\$1 [L]
@@ -338,8 +385,8 @@ EOF
 #     
 #     # SSL Configuration
 #     SSLEngine on
-#     SSLCertificateFile /etc/ssl/certs/${DOMAIN}.crt
-#     SSLCertificateKeyFile /etc/ssl/private/${DOMAIN}.key
+#     SSLCertificateFile /etc/letsencrypt/live/abrahamuniversity.us/fullchain.pem
+#     SSLCertificateKeyFile /etc/letsencrypt/live/abrahamuniversity.us/privkey.pem
 #     
 #     # Same proxy configuration as HTTP
 #     ProxyPreserveHost On
