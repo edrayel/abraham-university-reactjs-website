@@ -191,7 +191,7 @@ sudo tail -f /var/log/httpd/abraham-university_error.log
 sudo systemctl status abraham-university httpd
 
 # Check port usage
-sudo netstat -tlnp | grep -E ':(80|443|3000)'
+sudo ss -tlnp | grep -E ':(80|443|3000)'
 
 # Check disk usage
 df -h /var/www/abraham-university
@@ -227,8 +227,8 @@ df -h /var/www/abraham-university
 
 5. Check if ports are in use:
    ```bash
-   sudo netstat -tlnp | grep :3000
-   sudo netstat -tlnp | grep :8000
+   sudo ss -tlnp | grep :3000
+sudo ss -tlnp | grep :8000
    ```
 
 6. Manual restart with recovery:
