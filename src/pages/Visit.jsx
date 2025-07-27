@@ -9,6 +9,7 @@ import {
   Info,
   Coffee,
   Building,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -20,6 +21,9 @@ const Visit = () => {
   const {
     campusTours,
     campusHighlights,
+    visitorInformation,
+    directionsParking,
+    accommodations,
     contactInfo,
     isLoading,
     error,
@@ -66,13 +70,21 @@ const Visit = () => {
     description: highlight.description,
   }));
 
-  // Use contactInfo for address and contact details
-  const address = contactInfo.visitor_center_location
+  // Use contactInfo and directionsParking for address and contact details
+  const address = directionsParking && directionsParking.length > 0 && directionsParking[0].address
+    ? directionsParking[0].address
+    : contactInfo.visitor_center_location
     ? `${contactInfo.visitor_center_location}, Education City, EC 12345`
     : "123 University Avenue, Education City, EC 12345";
 
   const contactEmail =
-    contactInfo.admissions_email || "admissions@abrahamuniversity.edu";
+    contactInfo.visitor_center_email || contactInfo.admissions_email || "admissions@abrahamuniversity.edu";
+
+  const contactPhone = 
+    contactInfo.visitor_center_phone || contactInfo.admissions_phone || "+1 555 123 4567";
+
+  const visitorCenterHours = 
+    contactInfo.visitor_center_hours || "Mon-Fri (9am-5pm)";
 
   const handleScheduleVisit = (visitType, bookingUrl) => {
     if (bookingUrl) {
@@ -317,6 +329,224 @@ const Visit = () => {
         </div>
       </section>
 
+      {/* Visitor Information Section */}
+      {visitorInformation && visitorInformation.length > 0 && (
+        <section className="section-padding bg-white">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-gray-800 mb-4">
+                Visitor <span className="text-gradient">Information</span>
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Important information to help you prepare for your visit.
+              </p>
+            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {visitorInformation.map((info, index) => (
+                <motion.div
+                  key={info.title}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`bg-white rounded-xl shadow-lg p-6 card-hover ${
+                    info.important ? 'border-2 border-yellow-400' : ''
+                  }`}
+                >
+                  <div className="flex items-center mb-4">
+                    <Info className="h-8 w-8 text-yellow-600 mr-3" />
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      {info.title}
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-4">{info.content}</p>
+                  {info.link_url && (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="border-yellow-600 text-yellow-600 hover:bg-yellow-100"
+                    >
+                      <a
+                        href={info.link_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {info.link_text || 'Learn More'}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Directions & Parking Section */}
+      {directionsParking && directionsParking.length > 0 && (
+        <section className="section-padding bg-gray-100">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-gray-800 mb-4">
+                Directions & <span className="text-gradient">Parking</span>
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Find your way to campus and learn about parking options.
+              </p>
+            </motion.div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {directionsParking.map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white rounded-xl shadow-lg p-6 card-hover"
+                >
+                  <div className="flex items-center mb-4">
+                    <MapPin className="h-8 w-8 text-yellow-600 mr-3" />
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  {item.address && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      <strong>Address:</strong> {item.address}
+                    </p>
+                  )}
+                  {item.hours && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      <strong>Hours:</strong> {item.hours}
+                    </p>
+                  )}
+                  {item.cost && (
+                    <p className="text-sm text-gray-500 mb-4">
+                      <strong>Cost:</strong> {item.cost}
+                    </p>
+                  )}
+                  {item.map_url && (
+                    <Button
+                      asChild
+                      className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900"
+                    >
+                      <a
+                        href={item.map_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View on Map
+                        <MapPin className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Accommodations Section */}
+      {accommodations && accommodations.length > 0 && (
+        <section className="section-padding bg-white">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-bold text-gray-800 mb-4">
+                <span className="text-gradient">Accommodations</span>
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Comfortable places to stay during your visit to campus.
+              </p>
+            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {accommodations.map((accommodation, index) => (
+                <motion.div
+                  key={accommodation.name}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`bg-white rounded-xl shadow-lg p-6 card-hover ${
+                    accommodation.recommended ? 'border-2 border-yellow-400' : ''
+                  }`}
+                >
+                  <div className="flex items-center mb-4">
+                    <Building className="h-8 w-8 text-yellow-600 mr-3" />
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        {accommodation.name}
+                      </h3>
+                      {accommodation.recommended && (
+                        <span className="text-sm text-yellow-600 font-medium">
+                          Recommended
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  {accommodation.description && (
+                    <p className="text-gray-600 mb-4">{accommodation.description}</p>
+                  )}
+                  {accommodation.address && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      <strong>Address:</strong> {accommodation.address}
+                    </p>
+                  )}
+                  {accommodation.phone && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      <strong>Phone:</strong> {accommodation.phone}
+                    </p>
+                  )}
+                  {accommodation.price_range && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      <strong>Price:</strong> {accommodation.price_range}
+                    </p>
+                  )}
+                  {accommodation.amenities && (
+                    <p className="text-sm text-gray-500 mb-4">
+                      <strong>Amenities:</strong> {accommodation.amenities}
+                    </p>
+                  )}
+                  {accommodation.website && (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="border-yellow-600 text-yellow-600 hover:bg-yellow-100 w-full"
+                    >
+                      <a
+                        href={accommodation.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Visit Website
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Plan Your Visit Section */}
       <section className="section-padding bg-white">
         <div className="container mx-auto px-4">
@@ -378,33 +608,104 @@ const Visit = () => {
 
       {/* Contact for Visits */}
       <section className="section-padding hero-gradient text-white">
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            className="max-w-3xl mx-auto"
+            className="max-w-5xl mx-auto"
           >
-            <Coffee className="h-12 w-12 mx-auto mb-6 text-sky-300" />
-            <h2 className="text-3xl font-bold mb-4">
-              Questions About Visiting?
-            </h2>
-            <p className="text-xl text-white/80 mb-8 leading-relaxed">
-              Our admissions team is happy to assist you with planning your
-              visit or answering any questions you may have.
-            </p>
-            <Button
-              asChild
-              size="lg"
-              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 font-semibold px-8 py-3 rounded-md shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              <a
-                href={`mailto:${contactEmail}`}
-                aria-label="Contact Admissions"
-              >
-                Contact Admissions
-              </a>
-            </Button>
+            <div className="text-center mb-12">
+              <Coffee className="h-12 w-12 mx-auto mb-6 text-sky-300" />
+              <h2 className="text-3xl font-bold mb-4">
+                Questions About Visiting?
+              </h2>
+              <p className="text-xl text-white/80 leading-relaxed">
+                Our team is happy to assist you with planning your visit or answering any questions you may have.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Visitor Center */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
+                <Info className="h-8 w-8 mx-auto mb-4 text-yellow-400" />
+                <h3 className="text-xl font-semibold mb-3">Visitor Center</h3>
+                {contactPhone && (
+                  <p className="text-white/80 mb-2">
+                    <strong>Phone:</strong> {contactPhone}
+                  </p>
+                )}
+                {contactEmail && (
+                  <p className="text-white/80 mb-2">
+                    <strong>Email:</strong> {contactEmail}
+                  </p>
+                )}
+                {visitorCenterHours && (
+                  <p className="text-white/80 mb-4">
+                    <strong>Hours:</strong> {visitorCenterHours}
+                  </p>
+                )}
+                <Button
+                  asChild
+                  size="sm"
+                  className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700"
+                >
+                  <a href={`mailto:${contactEmail}`}>
+                    Contact Us
+                  </a>
+                </Button>
+              </div>
+              
+              {/* Admissions */}
+              {contactInfo.admissions_email && (
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
+                  <Users className="h-8 w-8 mx-auto mb-4 text-yellow-400" />
+                  <h3 className="text-xl font-semibold mb-3">Admissions</h3>
+                  {contactInfo.admissions_phone && (
+                    <p className="text-white/80 mb-2">
+                      <strong>Phone:</strong> {contactInfo.admissions_phone}
+                    </p>
+                  )}
+                  <p className="text-white/80 mb-4">
+                    <strong>Email:</strong> {contactInfo.admissions_email}
+                  </p>
+                  <Button
+                    asChild
+                    size="sm"
+                    className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700"
+                  >
+                    <a href={`mailto:${contactInfo.admissions_email}`}>
+                      Contact Admissions
+                    </a>
+                  </Button>
+                </div>
+              )}
+              
+              {/* Emergency Contact */}
+              {contactInfo.emergency_contact && (
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
+                  <Phone className="h-8 w-8 mx-auto mb-4 text-red-400" />
+                  <h3 className="text-xl font-semibold mb-3">Emergency</h3>
+                  <p className="text-white/80 mb-2">
+                    <strong>Emergency:</strong> {contactInfo.emergency_contact}
+                  </p>
+                  {contactInfo.campus_security && (
+                    <p className="text-white/80 mb-4">
+                      <strong>Security:</strong> {contactInfo.campus_security}
+                    </p>
+                  )}
+                  <Button
+                    asChild
+                    size="sm"
+                    variant="outline"
+                    className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                  >
+                    <a href={`tel:${contactInfo.emergency_contact}`}>
+                      Call Emergency
+                    </a>
+                  </Button>
+                </div>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>

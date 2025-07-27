@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import HeroSection from "@/components/home/HeroSection";
 import StatsSection from "@/components/home/StatsSection";
+import AcademicExcellenceSection from "@/components/home/AcademicExcellenceSection";
 import ProgramsSection from "@/components/home/ProgramsSection";
 import AboutSection from "@/components/home/AboutSection";
 import NewsSection from "@/components/home/NewsSection";
@@ -46,6 +47,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50">
       <HeroSection />
       <StatsSection />
+      <AcademicExcellenceSection />
       {upcomingEvents && upcomingEvents.length > 0 && <EventFliersSection />}
       <ProgramsSection />
       <AboutSection />
