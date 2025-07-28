@@ -139,6 +139,54 @@ const AwardsApplication = () => {
         </div>
       </section> */}
 
+      <section>
+        {/* <div className="flex flex-col md:flex-row items-center justify-between w-full bg-gray-100 p-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full md:w-1/2 border border-gray-200 z-10">
+            <h2 className="text-2xl font-bold mb-2">Graduate Studies</h2>
+            <hr className="border-red-800 w-16 mb-4" />
+            <p className="text-gray-600 mb-4">
+              We offer a unique experience to graduate students. Boost your
+              career with a postgraduate qualification. Flexible study options
+              include graduate certificates, graduate diplomas or masters
+              degrees.
+            </p>
+            <button className="bg-red-800 text-white px-4 py-2 rounded hover:bg-red-700">
+              Learn more →
+            </button>
+          </div>
+          <div className="w-full md:w-1/2 mt-[-20px] md:mt-0">
+            <img
+              src="https://images.unsplash.com/photo-1551845728-6820a30c64e2?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Students celebrating"
+              className="w-full h-auto rounded-lg shadow-lg"
+            />
+          </div>
+        </div> */}
+
+        {/* <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-100 p-4">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-full md:w-2/5 lg:w-1/3 mb-4 md:mb-0 md:mr-4 border border-gray-200 z-10 transform md:-translate-y-8">
+            <h2 className="text-3xl font-bold mb-3">Graduate Studies</h2>
+            <hr className="border-red-800 w-20 mb-5" />
+            <p className="text-gray-600 mb-5">
+              We offer a unique experience to graduate students. Boost your
+              career with a postgraduate qualification. Flexible study options
+              include graduate certificates, graduate diplomas or masters
+              degrees.
+            </p>
+            <button className="bg-red-800 text-white px-5 py-3 rounded hover:bg-red-700 text-lg">
+              Learn more →
+            </button>
+          </div>
+          <div className="w-full md:w-2/5 lg:w-1/3">
+            <img
+              src="https://images.unsplash.com/photo-1551845728-6820a30c64e2?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Student working on laptop"
+              className="w-full h-auto rounded-lg shadow-lg"
+            />
+          </div>
+        </div> */}
+      </section>
+
       <section className="section-padding bg-white">
         <div className="container mx-auto px-4">
           <motion.div
