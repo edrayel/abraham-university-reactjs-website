@@ -16,11 +16,11 @@ const VisitSection = () => {
             viewport={{ once: true, amount: 0.3 }}
           >
             <div className="rounded-lg overflow-hidden shadow-md aspect-w-16 aspect-h-9">
-              <ImagePlaceholder
+              {/* <ImagePlaceholder
                 src={`${WORDPRESS_BASE_URL}/photo-by-%e7%82%ab%e9%93%ad/`}
                 alt="Students walking on a beautiful university campus"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
+              /> */}
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300"></div>
             </div>
           </motion.div>
