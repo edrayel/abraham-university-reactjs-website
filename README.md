@@ -28,7 +28,21 @@ cd abraham-university-reactjs-website
 npm install
 # or
 yarn install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env file with your local configuration
 ```
+
+## Environment Configuration
+
+Copy `.env.example` to `.env` and configure the following variables:
+
+- `VITE_WP_SITE_URL` - WordPress site URL (e.g., http://localhost:8000)
+- `VITE_WP_API_URL` - WordPress REST API URL (e.g., http://localhost:8000/wp-json)
+- `VITE_API_BASE_URL` - WordPress REST API v2 URL (e.g., http://localhost:8000/wp-json/wp/v2)
+- `VITE_API_KEY` - API key for authentication
+- Other configuration options as needed
 
 ## Development
 

@@ -6,10 +6,10 @@
  */
 
 // WordPress base URL for content uploads
-const WORDPRESS_BASE_URL = import.meta.env.VITE_WORDPRESS_BASE_URL;
+const WORDPRESS_BASE_URL = import.meta.env.VITE_WP_SITE_URL;
 
-// Base URL for the WordPress API (derived from WordPress base URL)
-const API_BASE_URL = `${WORDPRESS_BASE_URL}/index.php/wp-json`;
+// Base URL for the WordPress API
+const API_BASE_URL = import.meta.env.VITE_WP_API_URL || `${WORDPRESS_BASE_URL}/wp-json`;
 
 // Abraham API namespace
 const API_NAMESPACE = 'abraham/v1';
