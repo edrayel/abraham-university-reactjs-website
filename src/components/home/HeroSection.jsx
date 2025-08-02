@@ -86,7 +86,7 @@ const HeroSection = () => {
   const ctaLink = hero?.cta_link || "";
   const backgroundImage =
     hero?.background_image ||
-    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1740&amp;q=80";
+    "https://wp.abrahamuniversity.us/wp-content/uploads/2025/08/kd5cxwzok4.jpg";
 
   return (
     <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-black via-black to-black text-white pt-[80px]">
