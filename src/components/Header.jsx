@@ -61,7 +61,7 @@ const Header = () => {
         <div className="flex items-center justify-between py-2">
           <Link to="/" onClick={closeMobileMenu} className="flex items-center space-x-2">
             <img
-              src="/assets/img/abraham-logo.avif"
+              src="https://wp.abrahamuniversity.us/wp-content/uploads/2025/08/abraham-logo.avif"
               alt="Abraham University Logo"
               className="w-20 filter-none"
             />
