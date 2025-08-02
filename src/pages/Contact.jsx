@@ -30,7 +30,7 @@ const Contact = () => {
 
   useEffect(() => {
     fetchAllData();
-    
+
     // Fetch awards data for Financial Aid contact info
     const fetchAwardsData = async () => {
       try {
@@ -38,12 +38,12 @@ const Contact = () => {
         const data = await apiService.getAwardsData();
         setAwardsData(data);
       } catch (err) {
-        console.error('Error fetching awards data:', err);
+        console.error("Error fetching awards data:", err);
       } finally {
         setAwardsLoading(false);
       }
     };
-    
+
     fetchAwardsData();
   }, [fetchAllData]);
 
@@ -102,7 +102,10 @@ const Contact = () => {
   // Map JSON departments to departmentContactsData format
   const departmentContactsData = departments.map((dept) => {
     // Use awards contact info for Financial Aid department if available
-    if (dept.name.toLowerCase() === 'financial aid' && awardsData?.contact_info) {
+    if (
+      dept.name.toLowerCase() === "financial aid" &&
+      awardsData?.contact_info
+    ) {
       const awardsContact = awardsData.contact_info;
       return {
         name: dept.name,
@@ -112,7 +115,7 @@ const Contact = () => {
         icon: departmentIconMap[dept.name.toLowerCase()] || Users,
       };
     }
-    
+
     // Use regular contact data for other departments
     return {
       name: dept.name,
@@ -168,117 +171,121 @@ const Contact = () => {
     return <LoadingState type="page" message="Loading Contact Information" />;
   }
 
+  // if (error) {
+  //   return (
+  //     <ErrorBoundary
+  //       error={error}
+  //       onRetry={() => {
+  //         fetchAllData();
+  //       }}
+  //       customMessage="We're having trouble loading our contact information. This could be due to server maintenance or connectivity issues."
+  //     />
+  //   );
+  // }
+
+  // // Continue with existing loading skeleton if only awards is loading
+  // if (awardsLoading && !isLoading) {
+  //   return (
+  //     <div className="min-h-screen bg-gray-50">
+  //       {/* Hero Section Skeleton */}
+  //       <section className="section-padding hero-gradient">
+  //         <div className="container mx-auto px-4">
+  //           <div className="text-center max-w-4xl mx-auto">
+  //             <div className="h-12 bg-gray-200 rounded mb-6"></div>
+  //             <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto mb-8"></div>
+  //           </div>
+  //         </div>
+  //       </section>
+  //       {/* Contact Info Grid Skeleton */}
+  //       <section className="section-padding bg-white">
+  //         <div className="container mx-auto px-4">
+  //           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+  //             {[...Array(4)].map((_, index) => (
+  //               <div
+  //                 key={index}
+  //                 className="bg-gray-50 p-6 rounded-lg shadow-sm animate-pulse"
+  //               >
+  //                 <div className="h-6 bg-gray-200 rounded mb-2"></div>
+  //                 <div className="h-4 bg-gray-200 rounded mb-2"></div>
+  //                 <div className="h-4 bg-gray-200 rounded"></div>
+  //               </div>
+  //             ))}
+  //           </div>
+  //         </div>
+  //       </section>
+  //       {/* Contact Form Section Skeleton */}
+  //       <section className="section-padding bg-gray-100">
+  //         <div className="container mx-auto px-4">
+  //           <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-xl">
+  //             <div className="h-10 bg-gray-200 rounded mb-6"></div>
+  //             <div className="grid md:grid-cols-2 gap-8">
+  //               <div>
+  //                 <div className="h-6 bg-gray-200 rounded mb-4"></div>
+  //                 <div className="h-4 bg-gray-200 rounded mb-4"></div>
+  //                 <div className="h-4 bg-gray-200 rounded mb-4"></div>
+  //                 <div className="h-10 bg-gray-200 rounded"></div>
+  //               </div>
+  //               <div>
+  //                 <div className="h-6 bg-gray-200 rounded mb-4"></div>
+  //                 <div className="h-4 bg-gray-200 rounded mb-4"></div>
+  //                 <div className="h-10 bg-gray-200 rounded"></div>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </section>
+  //       {/* Department Contacts Skeleton */}
+  //       <section className="section-padding bg-white">
+  //         <div className="container mx-auto px-4">
+  //           <div className="text-center mb-16">
+  //             <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
+  //           </div>
+  //           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+  //             {[...Array(4)].map((_, index) => (
+  //               <div
+  //                 key={index}
+  //                 className="bg-gray-50 p-6 rounded-lg shadow-sm animate-pulse"
+  //               >
+  //                 <div className="h-6 bg-gray-200 rounded mb-2"></div>
+  //                 <div className="h-4 bg-gray-200 rounded mb-2"></div>
+  //                 <div className="h-4 bg-gray-200 rounded"></div>
+  //               </div>
+  //             ))}
+  //           </div>
+  //         </div>
+  //       </section>
+  //       {/* FAQ Section Skeleton */}
+  //       <section className="section-padding bg-gray-100">
+  //         <div className="container mx-auto px-4">
+  //           <div className="text-center mb-16">
+  //             <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
+  //           </div>
+  //           <div className="max-w-3xl mx-auto space-y-4">
+  //             {[...Array(6)].map((_, index) => (
+  //               <div
+  //                 key={index}
+  //                 className="bg-white p-6 rounded-lg shadow-sm animate-pulse"
+  //               >
+  //                 <div className="h-6 bg-gray-200 rounded mb-2"></div>
+  //                 <div className="h-4 bg-gray-200 rounded"></div>
+  //               </div>
+  //             ))}
+  //           </div>
+  //         </div>
+  //       </section>
+  //     </div>
+  //   );
+  // }
+
   if (error) {
     return (
-      <ErrorBoundary 
-        error={error} 
-        onRetry={() => {
-          fetchAllData();
-        }}
-        customMessage="We're having trouble loading our contact information. This could be due to server maintenance or connectivity issues."
+      <EmptyState
+        type="data"
+        title="No University Information Available"
+        message="Information about Abraham University is currently unavailable."
+        onRetry={fetchAllData}
+        className="min-h-screen"
       />
-    );
-  }
-
-  // Continue with existing loading skeleton if only awards is loading
-  if (awardsLoading && !isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero Section Skeleton */}
-        <section className="section-padding hero-gradient">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="h-12 bg-gray-200 rounded mb-6"></div>
-              <div className="h-6 bg-gray-200 rounded max-w-3xl mx-auto mb-8"></div>
-            </div>
-          </div>
-        </section>
-        {/* Contact Info Grid Skeleton */}
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 p-6 rounded-lg shadow-sm animate-pulse"
-                >
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        {/* Contact Form Section Skeleton */}
-        <section className="section-padding bg-gray-100">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-xl">
-              <div className="h-10 bg-gray-200 rounded mb-6"></div>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-10 bg-gray-200 rounded"></div>
-                </div>
-                <div>
-                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-10 bg-gray-200 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Department Contacts Skeleton */}
-        <section className="section-padding bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 p-6 rounded-lg shadow-sm animate-pulse"
-                >
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        {/* FAQ Section Skeleton */}
-        <section className="section-padding bg-gray-100">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <div className="h-10 bg-gray-200 rounded mb-4 max-w-md mx-auto"></div>
-            </div>
-            <div className="max-w-3xl mx-auto space-y-4">
-              {[...Array(6)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white p-6 rounded-lg shadow-sm animate-pulse"
-                >
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 text-center">
-        Error: {error}
-      </div>
     );
   }
 

@@ -216,7 +216,7 @@ const Header = () => {
     { name: 'Admissions', path: '/admissions' },
     { name: 'Awards & Application', path: '/awards-application', icon: Award },
     { name: 'Campus Life', path: '/campus-life' },
-    { name: 'Faculty', path: '/faculty', icon: Users },
+    // { name: 'Faculty', path: '/faculty', icon: Users },
     { name: 'Research', path: '/research' },
   ];
 
