@@ -21,7 +21,7 @@ const ApplicationProcess = ({ steps }) => {
 
         <div className="max-w-4xl mx-auto">
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-blue-200 hidden lg:block"></div>
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-yellow-200 hidden lg:block"></div>
             {steps.map((step, index) => (
               <motion.div
                 key={step.number}
@@ -36,16 +36,16 @@ const ApplicationProcess = ({ steps }) => {
                 <div className={`w-full lg:w-1/2 ${index % 2 === 0 ? 'lg:pr-8 lg:text-right' : 'lg:pl-8 lg:text-left'}`}>
                   <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                     <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center text-gray-900 font-bold text-lg">
                         {step.number}
                       </div>
-                      <step.icon className="h-8 w-8 text-blue-600" />
+                      <step.icon className="h-8 w-8 text-victorian-dark" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{step.title}</h3>
                     <p className="text-gray-600">{step.description}</p>
                   </div>
                 </div>
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-lg hidden lg:block"></div>
+                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full border-4 border-white shadow-lg hidden lg:block"></div>
               </motion.div>
             ))}
           </div>

@@ -15,28 +15,28 @@ const ResearchCollaboration = ({ onCollaborateClick }) => {
             className="text-white"
           >
             <h2 className="text-4xl font-bold mb-6">Research Collaboration</h2>
-            <p className="text-xl text-blue-100 mb-6 leading-relaxed">
+            <p className="text-xl text-white/80 mb-6 leading-relaxed">
               Partner with our world-class researchers and access cutting-edge facilities 
               to advance your research goals and make breakthrough discoveries.
             </p>
             <ul className="space-y-4 mb-8">
               <li className="flex items-start space-x-3">
                 <Users className="h-6 w-6 text-cyan-300 mt-1" />
-                <span className="text-blue-100">Interdisciplinary research teams</span>
+                <span className="text-white/80">Interdisciplinary research teams</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Globe className="h-6 w-6 text-cyan-300 mt-1" />
-                <span className="text-blue-100">International partnerships</span>
+                <span className="text-white/80">International partnerships</span>
               </li>
               <li className="flex items-start space-x-3">
                 <BookOpen className="h-6 w-6 text-cyan-300 mt-1" />
-                <span className="text-blue-100">Access to specialized resources</span>
+                <span className="text-white/80">Access to specialized resources</span>
               </li>
             </ul>
             <Button
               size="lg"
               onClick={onCollaborateClick}
-              className="bg-white text-blue-600 hover:bg-blue-50 font-semibold"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 hover:from-yellow-500 hover:to-yellow-700 font-semibold"
             >
               Start Collaboration
             </Button>

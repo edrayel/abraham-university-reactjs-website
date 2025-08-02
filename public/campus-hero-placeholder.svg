@@ -1,0 +1,41 @@
+<svg width="1740" height="980" viewBox="0 0 1740 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="campusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="buildingPattern" patternUnits="userSpaceOnUse" width="200" height="200">
+      <rect width="200" height="200" fill="url(#campusGradient)" opacity="0.1"/>
+      <rect x="20" y="80" width="40" height="100" fill="white" opacity="0.1"/>
+      <rect x="80" y="60" width="40" height="120" fill="white" opacity="0.1"/>
+      <rect x="140" y="70" width="40" height="110" fill="white" opacity="0.1"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1740" height="980" fill="url(#campusGradient)"/>
+  
+  <!-- Building silhouettes pattern -->
+  <rect width="1740" height="980" fill="url(#buildingPattern)"/>
+  
+  <!-- Abstract campus elements -->
+  <circle cx="300" cy="200" r="80" fill="white" opacity="0.05"/>
+  <circle cx="1400" cy="300" r="120" fill="white" opacity="0.05"/>
+  <circle cx="800" cy="700" r="100" fill="white" opacity="0.05"/>
+  
+  <!-- Geometric shapes representing buildings -->
+  <polygon points="100,800 200,600 300,800" fill="white" opacity="0.08"/>
+  <polygon points="1200,850 1350,650 1500,850" fill="white" opacity="0.08"/>
+  
+  <!-- Abstract pathways -->
+  <path d="M0,900 Q400,850 800,900 T1740,900" stroke="white" stroke-width="2" fill="none" opacity="0.1"/>
+  <path d="M0,950 Q600,920 1200,950 T1740,950" stroke="white" stroke-width="1" fill="none" opacity="0.08"/>
+  
+  <!-- University emblem placeholder -->
+  <g transform="translate(870,490)">
+    <circle r="50" fill="white" opacity="0.1"/>
+    <circle r="30" fill="none" stroke="white" stroke-width="2" opacity="0.15"/>
+    <rect x="-15" y="-15" width="30" height="30" fill="white" opacity="0.1"/>
+  </g>
+</svg>

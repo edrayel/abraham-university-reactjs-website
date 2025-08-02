@@ -29,7 +29,7 @@ const ResearchFacilities = ({ facilities }) => {
               transition={{ delay: index * 0.1 }}
               className="bg-white rounded-xl shadow-lg overflow-hidden card-hover"
             >
-              <div className="h-64 bg-gradient-to-br from-blue-500 to-cyan-500 relative overflow-hidden">
+              <div className="h-64 bg-gradient-to-br from-yellow-500 to-yellow-600 relative overflow-hidden">
                 <img  className="w-full h-full object-cover" alt={facility.image} src="https://images.unsplash.com/photo-1693801241056-44d1dbba7d85" />
               </div>
               <div className="p-6">
@@ -39,7 +39,7 @@ const ResearchFacilities = ({ facilities }) => {
                   <div className="text-sm font-medium text-gray-900">Key Equipment:</div>
                   {facility.equipment.map((item, idx) => (
                     <div key={idx} className="flex items-center text-sm text-gray-600">
-                      <div className="w-2 h-2 bg-blue-600 rounded-full mr-2"></div>
+                      <div className="w-2 h-2 bg-yellow-600 rounded-full mr-2"></div>
                       {item}
                     </div>
                   ))}

@@ -21,7 +21,7 @@ const ResearchStats = () => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <div className="text-4xl font-bold text-blue-600 mb-2">{stat.value}</div>
+              <div className="text-4xl font-bold text-yellow-600 mb-2">{stat.value}</div>
               <div className="text-gray-600">{stat.label}</div>
             </motion.div>
           ))}

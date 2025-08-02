@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react';
 import { createLogger, defineConfig } from 'vite';
 
 const isDev = process.env.NODE_ENV !== 'production';
+const isHeadless = process.env.HEADLESS === 'true';
+const port = process.env.PORT || 3000; 
+
 let inlineEditPlugin, editModeDevPlugin;
 
 if (isDev) {
@@ -126,14 +129,14 @@ window.fetch = function(...args) {
 					const responseClone = response.clone();
 					const errorFromRes = await responseClone.text();
 					const requestUrl = response.url;
-					console.error(\`Fetch error from \${requestUrl}: \${errorFromRes}\`);
+					// console.error(\`Fetch error from \${requestUrl}: \${errorFromRes}\`);
 			}
 
 			return response;
 		})
 		.catch(error => {
-			if (!url.match(/\.html?$/i)) {
-				console.error(error);
+			if (!url.match(/.html?$/i)) {
+				// console.error(error);
 			}
 
 			throw error;
@@ -176,10 +179,11 @@ const addTransformIndexHtml = {
 	},
 };
 
-console.warn = () => {};
+// Suppress console warnings
+// console.warn = () => {};
 
-const logger = createLogger()
-const loggerError = logger.error
+const logger = createLogger();
+const loggerError = logger.error;
 
 logger.error = (msg, options) => {
 	if (options?.error?.toString().includes('CssSyntaxError: [postcss]')) {
@@ -187,36 +191,51 @@ logger.error = (msg, options) => {
 	}
 
 	loggerError(msg, options);
-}
+};
 
 export default defineConfig({
 	customLogger: logger,
 	plugins: [
-		...(isDev ? [inlineEditPlugin(), editModeDevPlugin()] : []),
+		...(isDev && !isHeadless ? [inlineEditPlugin(), editModeDevPlugin()] : []),
 		react(),
-		addTransformIndexHtml
+		...(isDev && !isHeadless ? [addTransformIndexHtml] : [])
 	],
 	server: {
+		host: '0.0.0.0',
+		port: port,
 		cors: true,
 		headers: {
 			'Cross-Origin-Embedder-Policy': 'credentialless',
 		},
 		allowedHosts: true,
+  hmr: {
+    clientPort: 80
+  },
 	},
 	resolve: {
-		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json', ],
+		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json'],
 		alias: {
 			'@': path.resolve(__dirname, './src'),
 		},
 	},
 	build: {
+		outDir: 'dist',
+		assetsDir: 'assets',
+		sourcemap: false,
 		rollupOptions: {
-			external: [
-				'@babel/parser',
-				'@babel/traverse',
-				'@babel/generator',
-				'@babel/types'
-			]
-		}
+			output: {
+				manualChunks: {
+					vendor: ['react', 'react-dom'],
+				},
+			},
+		},
+	},
+	preview: {
+		host: '0.0.0.0',
+		port: port,
+		cors: true,
+		headers: {
+			'Cross-Origin-Embedder-Policy': 'credentialless',
+		},
 	}
 });

@@ -12,15 +12,15 @@ const ProgramTypesTabs = ({ programTypes, selectedProgram, setSelectedProgram })
                 onClick={() => setSelectedProgram(program.id)}
                 className={`p-6 rounded-xl border-2 transition-all ${
                   selectedProgram === program.id
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-gray-200 hover:border-blue-300'
+                    ? 'border-yellow-500 bg-gradient-to-br from-yellow-50 to-yellow-100'
+                    : 'border-gray-200 hover:border-victorian-dark'
                 }`}
               >
                 <program.icon className={`h-8 w-8 mx-auto mb-3 ${
-                  selectedProgram === program.id ? 'text-blue-600' : 'text-gray-600'
+                  selectedProgram === program.id ? 'text-yellow-600' : 'text-gray-600'
                 }`} />
                 <div className={`font-semibold ${
-                  selectedProgram === program.id ? 'text-blue-600' : 'text-gray-900'
+                  selectedProgram === program.id ? 'text-yellow-700' : 'text-gray-900'
                 }`}>
                   {program.name}
                 </div>

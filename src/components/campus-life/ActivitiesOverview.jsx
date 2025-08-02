@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 const ActivitiesOverview = ({ activities, onJoinClick }) => {
   return (
@@ -15,7 +15,8 @@ const ActivitiesOverview = ({ activities, onJoinClick }) => {
             Get <span className="text-gradient">Involved</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            With hundreds of opportunities to get involved, you'll find your place in our diverse campus community.
+            With hundreds of opportunities to get involved, you'll find your
+            place in our diverse campus community.
           </p>
         </motion.div>
 
@@ -30,16 +31,20 @@ const ActivitiesOverview = ({ activities, onJoinClick }) => {
               className="bg-white rounded-xl shadow-lg p-6 text-center card-hover cursor-pointer"
               onClick={onJoinClick}
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                <activity.icon className="h-8 w-8 text-blue-600" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
+                <activity.icon className="h-8 w-8 text-yellow-600" />
               </div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">{activity.count}</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">{activity.category}</h3>
+              <div className="text-3xl font-bold text-yellow-600 mb-2">
+                {activity.count}
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                {activity.category}
+              </h3>
               <p className="text-gray-600 mb-4">{activity.description}</p>
               <ul className="text-sm text-gray-500 space-y-1">
                 {activity.items.map((item, idx) => (
                   <li key={idx} className="flex items-center justify-center">
-                    <div className="w-1 h-1 bg-blue-600 rounded-full mr-2"></div>
+                    <div className="w-1 h-1 bg-yellow-600 rounded-full mr-2"></div>
                     {item}
                   </li>
                 ))}

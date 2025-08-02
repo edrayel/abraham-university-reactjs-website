@@ -1,0 +1,11 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#eef2ff"/>
+  <g fill="#c7d2fe">
+    <rect x="150" y="80" width="100" height="120" rx="5"/>
+    <rect x="170" y="100" width="60" height="10" rx="2"/>
+    <rect x="170" y="120" width="60" height="10" rx="2"/>
+    <rect x="170" y="140" width="60" height="10" rx="2"/>
+    <rect x="170" y="160" width="60" height="10" rx="2"/>
+  </g>
+  <text x="200" y="220" font-family="Arial" font-size="14" text-anchor="middle" fill="#4f46e5">Academic Event</text>
+</svg>

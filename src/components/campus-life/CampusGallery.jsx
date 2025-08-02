@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 const CampusGallery = ({ images, onEventClick }) => {
   return (
@@ -30,8 +30,12 @@ const CampusGallery = ({ images, onEventClick }) => {
               className="relative rounded-xl overflow-hidden shadow-lg card-hover cursor-pointer"
               onClick={onEventClick}
             >
-              <div className="h-64 bg-gradient-to-br from-blue-500 to-cyan-500">
-                <img  className="w-full h-full object-cover" alt={`Campus life ${index + 1}`} src="https://images.unsplash.com/photo-1595872018818-97555653a011" />
+              <div className="h-64 bg-gradient-to-br from-yellow-500 to-yellow-600">
+                <img
+                  className="w-full h-full object-cover"
+                  alt={`Campus life ${index + 1}`}
+                  src="https://images.unsplash.com/photo-1595872018818-97555653a011"
+                />
               </div>
               <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors"></div>
             </motion.div>

@@ -19,7 +19,7 @@ const DeadlinesSection = ({ deadlines }) => {
             transition={{ delay: index * 0.1 }}
             className={`bg-white rounded-xl shadow-lg p-6 border-l-4 ${
               deadline.status === 'open' ? 'border-green-500' :
-              deadline.status === 'upcoming' ? 'border-blue-500' : 'border-gray-300'
+              deadline.status === 'upcoming' ? 'border-yellow-500' : 'border-gray-300'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -29,7 +29,7 @@ const DeadlinesSection = ({ deadlines }) => {
               </div>
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                 deadline.status === 'open' ? 'bg-green-100 text-green-800' :
-                deadline.status === 'upcoming' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                deadline.status === 'upcoming' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
               }`}>
                 {deadline.status.charAt(0).toUpperCase() + deadline.status.slice(1)}
               </span>
